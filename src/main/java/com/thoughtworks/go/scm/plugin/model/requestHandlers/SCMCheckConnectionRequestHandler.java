@@ -1,0 +1,75 @@
+package com.thoughtworks.go.scm.plugin.model.requestHandlers;
+
+import com.thoughtworks.go.scm.plugin.jgit.GitHelper;
+import com.thoughtworks.go.scm.plugin.jgit.JGitHelper;
+import com.thoughtworks.go.scm.plugin.model.GitConfig;
+import com.thoughtworks.go.scm.plugin.util.JsonUtils;
+import com.thoughtworks.go.scm.plugin.util.StringUtils;
+import com.thoughtworks.go.scm.plugin.util.Validator;
+import com.thoughtworks.go.plugin.api.logging.Logger;
+import com.thoughtworks.go.plugin.api.request.GoPluginApiRequest;
+import com.thoughtworks.go.plugin.api.response.GoPluginApiResponse;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
+public class SCMCheckConnectionRequestHandler implements RequestHandler {
+    private static Logger LOGGER = Logger.getLoggerFor(SCMCheckConnectionRequestHandler.class);
+
+    @Override
+    public GoPluginApiResponse handle(GoPluginApiRequest goPluginApiRequest) {
+        GitConfig gitConfig = GitConfig.create(goPluginApiRequest);
+
+        Map<String, Object> response = new HashMap<>();
+        ArrayList<String> messages = new ArrayList<>();
+
+        checkConnection(gitConfig, response, messages);
+
+        if (response.get("status") == null) {
+            response.put("status", "success");
+            messages.add("Could connect to URL successfully");
+        }
+        response.put("messages", messages);
+        return JsonUtils.renderSuccessApiResponse(response);
+    }
+
+    private void checkConnection(GitConfig gitConfig, Map<String, Object> response, ArrayList<String> messages) {
+        LOGGER.info("SCMCheckConnectionRequestHandler In handle");
+        try {
+            if (StringUtils.isEmpty(gitConfig.getUrl())) {
+                response.put("status", "failure");
+                messages.add("URL is empty");
+            } else if (gitConfig.getUrl().startsWith("/")) {
+                if (!new File(gitConfig.getUrl()).exists()) {
+                    response.put("status", "failure");
+                    messages.add("Could not find Git repository");
+                } else {
+                    GitHelper gitHelper = JGitHelper.create(gitConfig, null);
+                    gitHelper.checkConnection();
+                }
+            } else {
+                if (!Validator.isValidURL(gitConfig.getUrl())) {
+                    response.put("status", "failure");
+                    messages.add("Invalid URL format");
+                } else {
+                    try {
+                        GitHelper gitHelper = JGitHelper.create(gitConfig, null);
+                        gitHelper.checkConnection();
+                    } catch (Exception e) {
+                        response.put("status", "failure");
+                        messages.add("ls-remote failed");
+                    }
+                }
+            }
+        } catch (Exception e) {
+            response.put("status", "failure");
+            if (e.getMessage() != null) {
+                messages.add(e.getMessage());
+            } else {
+                messages.add(e.getClass().getCanonicalName());
+            }
+        }
+    }
+}

@@ -1,0 +1,65 @@
+group 'com.thoughtworks.com'
+version '1.0-SNAPSHOT'
+
+apply plugin: 'java'
+apply plugin: "jacoco"
+
+sourceCompatibility = 1.7
+targetCompatibility = 1.7
+
+// these values that go into plugin.xml
+project.ext.pluginDesc = [
+        id         : 'com.thoughtworks.gocd',
+        version    : project.version,
+        goCdVersion: '15.1.0',
+        name       : 'Git Path Material',
+        description: 'Git Path Material plugin for GoCD',
+        vendorName : 'GoCd Contributors',
+        vendorUrl  : 'https://github.com/TWChennai/gocd-git-path-material-plugin'
+]
+
+repositories {
+    jcenter()
+    mavenLocal()
+}
+
+jacoco {
+    toolVersion = "0.7.6.201602180812"
+    reportsDir = file("$buildDir/reports")
+}
+
+jacocoTestReport {
+    reports {
+        xml.enabled false
+        csv.enabled false
+        html.destination "${buildDir}/jacocoHtml"
+    }
+}
+
+dependencies {
+    compile group: 'cd.go.plugin', name: 'go-plugin-api', version: project.pluginDesc.goCdVersion
+    compile group: 'org.codehaus.jackson', name: 'jackson-mapper-asl', version: '1.9.13'
+    compile group: 'commons-validator', name: 'commons-validator', version: '1.4.0'
+    compile group: 'org.eclipse.jgit', name: 'org.eclipse.jgit', version: '4.5.0.201609210915-r'
+    compile group: 'joda-time', name: 'joda-time', version: '2.3'
+    compile group: 'commons-io', name: 'commons-io', version: '2.4'
+    compile group: 'org.projectlombok', name: 'lombok', version: '1.16.10'
+    compile group: 'ch.qos.logback', name: 'logback-classic', version: '1.1.7'
+    testCompile group: 'junit', name: 'junit', version: '4.11'
+    testCompile group: 'org.hamcrest', name: 'hamcrest-all', version: '1.3'
+    testCompile group: 'org.mockito', name: 'mockito-all', version: '1.10.19'
+}
+
+jar {
+    from(configurations.compile) {
+        into "lib/"
+    }
+}
+
+test {
+    jacoco {
+        append = false
+        destinationFile = file("$buildDir/jacoco/jacocoTest.exec")
+        classDumpFile = file("$buildDir/jacoco/classpathdumps")
+    }
+}

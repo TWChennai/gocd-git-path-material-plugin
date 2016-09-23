@@ -1,0 +1,45 @@
+package com.thoughtworks.go.scm.plugin;
+
+import com.thoughtworks.go.scm.plugin.model.requestHandlers.RequestHandler;
+import com.thoughtworks.go.scm.plugin.model.requestHandlers.RequestHandlerFactory;
+import com.thoughtworks.go.plugin.api.GoApplicationAccessor;
+import com.thoughtworks.go.plugin.api.GoPlugin;
+import com.thoughtworks.go.plugin.api.GoPluginIdentifier;
+import com.thoughtworks.go.plugin.api.annotation.Extension;
+import com.thoughtworks.go.plugin.api.annotation.Load;
+import com.thoughtworks.go.plugin.api.info.PluginContext;
+import com.thoughtworks.go.plugin.api.logging.Logger;
+import com.thoughtworks.go.plugin.api.request.GoPluginApiRequest;
+import com.thoughtworks.go.plugin.api.response.GoPluginApiResponse;
+
+import java.util.Arrays;
+import java.util.List;
+
+@Extension
+public class GitChangeDetector implements GoPlugin {
+    private static final String EXTENSION_NAME = "scm";
+    private static final List<String> goSupportedVersions = Arrays.asList("1.0");
+    private static Logger LOGGER = Logger.getLoggerFor(GitChangeDetector.class);
+
+    @Override
+    public void initializeGoApplicationAccessor(GoApplicationAccessor goApplicationAccessor) {
+        // ignore
+    }
+
+    @Override
+    public GoPluginApiResponse handle(GoPluginApiRequest apiRequest) {
+        String requestName = apiRequest.requestName();
+        RequestHandler requestHandler = RequestHandlerFactory.create(requestName);
+        return requestHandler.handle(apiRequest);
+    }
+
+    @Override
+    public GoPluginIdentifier pluginIdentifier() {
+        return new GoPluginIdentifier(EXTENSION_NAME, goSupportedVersions);
+    }
+
+    @Load
+    public void onLoad(PluginContext context){
+        LOGGER.info("Loading GitChangeDetector...");
+    }
+}
