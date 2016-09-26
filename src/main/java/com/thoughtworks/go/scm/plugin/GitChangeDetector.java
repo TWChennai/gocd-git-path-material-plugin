@@ -29,8 +29,13 @@ public class GitChangeDetector implements GoPlugin {
     @Override
     public GoPluginApiResponse handle(GoPluginApiRequest apiRequest) {
         String requestName = apiRequest.requestName();
+        LOGGER.info("Got request: " + requestName);
+        LOGGER.info("With request body: " + apiRequest.requestBody());
         RequestHandler requestHandler = RequestHandlerFactory.create(requestName);
-        return requestHandler.handle(apiRequest);
+        GoPluginApiResponse response = requestHandler.handle(apiRequest);
+        LOGGER.info("Response code: " + response.responseCode());
+        LOGGER.info("With response body: " + response.responseBody());
+        return response;
     }
 
     @Override
@@ -39,7 +44,7 @@ public class GitChangeDetector implements GoPlugin {
     }
 
     @Load
-    public void onLoad(PluginContext context){
-        LOGGER.info("Loading GitChangeDetector...");
+    public void onLoad(PluginContext context) {
+        LOGGER.info("Loading GitPathMaterialPlugin...");
     }
 }
