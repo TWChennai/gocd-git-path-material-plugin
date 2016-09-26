@@ -31,10 +31,6 @@ public class DateUtils {
         }
     }
 
-    public static String formatRFC822(Date date) {
-        return new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss ZZZZZ").format(date);
-    }
-
     private static SimpleDateFormat dateFormatFor(String simpleDateFormat, String timeZone) {
         SimpleDateFormat dateFormat = new SimpleDateFormat(simpleDateFormat);
         dateFormat.setTimeZone(TimeZone.getTimeZone(timeZone));
