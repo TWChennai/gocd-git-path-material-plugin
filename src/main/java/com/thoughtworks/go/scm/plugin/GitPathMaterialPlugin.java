@@ -16,10 +16,10 @@ import java.util.Arrays;
 import java.util.List;
 
 @Extension
-public class GitChangeDetector implements GoPlugin {
+public class GitPathMaterialPlugin implements GoPlugin {
     private static final String EXTENSION_NAME = "scm";
     private static final List<String> goSupportedVersions = Arrays.asList("1.0");
-    private static Logger LOGGER = Logger.getLoggerFor(GitChangeDetector.class);
+    private static Logger LOGGER = Logger.getLoggerFor(GitPathMaterialPlugin.class);
 
     @Override
     public void initializeGoApplicationAccessor(GoApplicationAccessor goApplicationAccessor) {
@@ -44,7 +44,7 @@ public class GitChangeDetector implements GoPlugin {
     }
 
     @Load
-    public void onLoad(PluginContext context) {
+    public void onLoad(PluginContext context){
         LOGGER.info("Loading GitPathMaterialPlugin...");
     }
 }
