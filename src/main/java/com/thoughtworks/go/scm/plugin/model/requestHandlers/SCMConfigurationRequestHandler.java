@@ -14,7 +14,7 @@ public class SCMConfigurationRequestHandler implements RequestHandler {
         Map<String, Object> response = new HashMap<>();
         response.put("url", createField("URL", null, true, true, false, "0"));
         response.put("branch", createField("Branch", "master", true, false, false, "1"));
-        response.put("path", createField("Path", null, false, true, false, "1"));
+        response.put("path", createField("Path", null, true, true, false, "2"));
         return JsonUtils.renderSuccessApiResponse(response);
     }
 

@@ -74,9 +74,9 @@ public class SCMConfigurationRequestHandlerTests {
         Map<String, String> urlField = (Map<String, String>) response.get("path");
 
         assertThat(urlField, hasEntry("display-name", "Path"));
-        assertThat(urlField, hasEntry("part-of-identity", (Object) false));
+        assertThat(urlField, hasEntry("part-of-identity", (Object) true));
         assertThat(urlField, hasEntry("required", (Object) true));
         assertThat(urlField, hasEntry("secure", (Object) false));
-        assertThat(urlField, hasEntry("display-order", "1"));
+        assertThat(urlField, hasEntry("display-order", "2"));
     }
 }
