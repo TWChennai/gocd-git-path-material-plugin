@@ -26,6 +26,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
+import static jdk.nashorn.internal.runtime.regexp.joni.Config.log;
+
 public class JGitHelper extends GitHelper {
 
     public JGitHelper(GitConfig gitConfig, File workingDir) {
@@ -181,11 +183,17 @@ public class JGitHelper extends GitHelper {
 
     @Override
     public List<Revision> getRevisionsSince(String previousRevision) {
+        return getRevisionsSince(previousRevision, null);
+    }
+
+    @Override
+    public List<Revision> getRevisionsSince(String previousRevision, String subDirectoryPath) {
         Repository repository = null;
         try {
             repository = getRepository(workingDir);
             Git git = new Git(repository);
             LogCommand logCmd = git.log();
+            if (subDirectoryPath != null) logCmd.addPath(subDirectoryPath);
             Iterable<RevCommit> log = logCmd.call();
             List<RevCommit> newCommits = new ArrayList<RevCommit>();
             for (RevCommit commit : log) {

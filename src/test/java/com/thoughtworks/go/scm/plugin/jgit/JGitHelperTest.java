@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 
 public class JGitHelperTest {
@@ -64,8 +65,21 @@ public class JGitHelperTest {
 
         List<Revision> revisions = helper.getRevisionsSince(initialCommit.getName());
 
-        assertEquals(1, revisions.size());
-        assertEquals(commit2.getName(), revisions.get(0).getRevision());
+        assertArrayEquals(new Object[]{commit2.getName()}, revisions.stream().map(Revision::getRevision).toArray());
+    }
+
+    @Test
+    public void shouldGetRevisionsSinceForGivenPath() throws Exception {
+        String service1 = "service1";
+        RevCommit service1Commit = addContentAndCommit(TEST_REPO.getPath() + File.separator + service1, "Service 1 commit");
+        String service2 = "service2";
+        RevCommit service2Commit = addContentAndCommit(TEST_REPO.getPath() + File.separator + service2, "Service 2 commit");
+
+        List<Revision> revisions = helper.getRevisionsSince(initialCommit.getName(), service1);
+        assertArrayEquals(new Object[]{service1Commit.getName()}, revisions.stream().map(Revision::getRevision).toArray());
+
+        revisions = helper.getRevisionsSince(initialCommit.getName(), service2);
+        assertArrayEquals(new Object[]{service2Commit.getName()}, revisions.stream().map(Revision::getRevision).toArray());
     }
 
     private RevCommit addContentAndCommit(String path, String msg) throws IOException, GitAPIException {
