@@ -65,7 +65,8 @@ public class JGitHelperTest {
 
         List<Revision> revisions = helper.getRevisionsSince(initialCommit.getName());
 
-        assertArrayEquals(new Object[]{commit2.getName()}, revisions.stream().map(Revision::getRevision).toArray());
+        assertEquals(1, revisions.size());
+        assertEquals(commit2.getName(), revisions.get(0).getRevision());
     }
 
     @Test
@@ -76,10 +77,11 @@ public class JGitHelperTest {
         RevCommit service2Commit = addContentAndCommit(TEST_REPO.getPath() + File.separator + service2, "Service 2 commit");
 
         List<Revision> revisions = helper.getRevisionsSince(initialCommit.getName(), service1);
-        assertArrayEquals(new Object[]{service1Commit.getName()}, revisions.stream().map(Revision::getRevision).toArray());
-
+        assertEquals(1, revisions.size());
+        assertEquals(service1Commit.getName(), revisions.get(0).getRevision());
         revisions = helper.getRevisionsSince(initialCommit.getName(), service2);
-        assertArrayEquals(new Object[]{service2Commit.getName()}, revisions.stream().map(Revision::getRevision).toArray());
+        assertEquals(1, revisions.size());
+        assertEquals(service2Commit.getName(), revisions.get(0).getRevision());
     }
 
     private RevCommit addContentAndCommit(String path, String msg) throws IOException, GitAPIException {
