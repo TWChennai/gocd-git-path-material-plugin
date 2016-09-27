@@ -153,11 +153,17 @@ public class JGitHelper extends GitHelper {
 
     @Override
     public Revision getLatestRevision() {
+        return getLatestRevision(null);
+    }
+
+    @Override
+    public Revision getLatestRevision(String subDirectoryPath) {
         Repository repository = null;
         try {
             repository = getRepository(workingDir);
             Git git = new Git(repository);
             LogCommand logCmd = git.log().setMaxCount(1);
+            if (subDirectoryPath != null) logCmd.addPath(subDirectoryPath);
             Iterable<RevCommit> log = logCmd.call();
             Iterator<RevCommit> iterator = log.iterator();
             if (iterator.hasNext()) {

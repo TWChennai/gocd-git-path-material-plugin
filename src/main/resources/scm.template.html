@@ -20,8 +20,15 @@
     </span>
 </div>
 <div class="form_item_block">
+    <label>Path:</label>
+    <input type="text" ng-model="path" ng-required="true" tabindex="4"/>
+    <span class="form_error" ng-show="GOINPUTNAME[path].$error.server">
+        {{ GOINPUTNAME[path].$error.server }}
+    </span>
+</div>
+<div class="form_item_block">
     <label>Branch:</label>
-    <input type="text" ng-model="branch" ng-required="false" tabindex="4"/>
+    <input type="text" ng-model="branch" ng-required="false" tabindex="5"/>
     <span class="form_error" ng-show="GOINPUTNAME[branch].$error.server">
         {{ GOINPUTNAME[branch].$error.server }}
     </span>

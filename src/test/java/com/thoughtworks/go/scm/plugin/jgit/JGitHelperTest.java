@@ -10,7 +10,9 @@ import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 
@@ -25,9 +27,7 @@ public class JGitHelperTest {
         if (TEST_REPO.exists()) FileUtils.delete(TEST_REPO, FileUtils.RECURSIVE);
         FileUtils.mkdir(TEST_REPO);
         FileUtils.createNewFile(new File(TEST_REPO.getPath() + File.separator + "content1.txt"));
-        Git repo = Git.init().setDirectory(TEST_REPO).call();
-        repo.add().addFilepattern(".").call();
-        initialCommit = repo.commit().setMessage("Initial commit.").call();
+        initialCommit = addAndCommit("Initial commit");
         helper = JGitHelper.create(null, TEST_REPO.getAbsolutePath());
     }
 
@@ -38,11 +38,24 @@ public class JGitHelperTest {
     }
 
     @Test
+    public void shouldGetLatestRevisionForGivenPath() throws Exception {
+        String[] subDirs = {"service1", "service2"};
+        Map<String, RevCommit> commits = new HashMap<>();
+        for (String subDirName : subDirs) {
+            File subdir = new File(TEST_REPO.getPath() + File.separator + subDirName);
+            FileUtils.mkdir(subdir);
+            FileUtils.createNewFile(new File(subdir.getPath() + File.separator + "content.txt"));
+            commits.put(subDirName, addAndCommit(subDirName + " commit"));
+        }
+        assertEquals(commits.get(subDirs[1]).getName(), helper.getLatestRevision().getRevision());
+        assertEquals(commits.get(subDirs[0]).getName(), helper.getLatestRevision(subDirs[0]).getRevision());
+        assertEquals(commits.get(subDirs[1]).getName(), helper.getLatestRevision(subDirs[1]).getRevision());
+    }
+
+    @Test
     public void shouldGetAllRevisions() throws Exception {
-        Git repo = Git.init().setDirectory(TEST_REPO).call();
         FileUtils.createNewFile(new File(TEST_REPO.getPath() + File.separator + "content2.txt"));
-        repo.add().addFilepattern(".").call();
-        RevCommit commit2 = repo.commit().setMessage("Another commit.").call();
+        RevCommit commit2 = addAndCommit("Another commit.");
 
         List<Revision> revisions = helper.getAllRevisions();
 
@@ -53,15 +66,19 @@ public class JGitHelperTest {
 
     @Test
     public void shouldGetRevisionsSince() throws Exception {
-        Git repo = Git.init().setDirectory(TEST_REPO).call();
         FileUtils.createNewFile(new File(TEST_REPO.getPath() + File.separator + "content2.txt"));
-        repo.add().addFilepattern(".").call();
-        RevCommit commit2 = repo.commit().setMessage("Another commit.").call();
+        RevCommit commit2 = addAndCommit("Another commit.");
 
         List<Revision> revisions = helper.getRevisionsSince(initialCommit.getName());
 
         assertEquals(1, revisions.size());
         assertEquals(commit2.getName(), revisions.get(0).getRevision());
+    }
+
+    private RevCommit addAndCommit(String msg) throws GitAPIException {
+        Git repo = Git.init().setDirectory(TEST_REPO).call();
+        repo.add().addFilepattern(".").call();
+        return repo.commit().setMessage(msg).call();
     }
 
 }

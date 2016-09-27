@@ -71,6 +71,8 @@ public abstract class GitHelper {
 
     public abstract Revision getLatestRevision();
 
+    public abstract Revision getLatestRevision(String subDirectoryPath);
+
     public abstract List<Revision> getRevisionsSince(String revision);
 
     public abstract Revision getDetailsForRevision(String sha);
@@ -157,4 +159,5 @@ public abstract class GitHelper {
     public abstract void changeSubmoduleUrl(String submoduleName, String newUrl);
 
     public abstract void push();
+
 }
