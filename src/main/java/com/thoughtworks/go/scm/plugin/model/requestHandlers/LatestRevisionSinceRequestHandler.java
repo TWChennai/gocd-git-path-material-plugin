@@ -42,7 +42,9 @@ public class LatestRevisionSinceRequestHandler implements RequestHandler {
         try {
             GitHelper git = JGitHelper.create(gitConfig, flyweightFolder);
             git.cloneOrFetch();
-            List<Revision> newerRevisions = git.getRevisionsSince(previousRevision);
+            Map<String, String> configuration = JsonUtils.parseScmConfiguration(apiRequest);
+            LOGGER.info("Fetching newerRevisions for path " + configuration.get("path"));
+            List<Revision> newerRevisions = git.getRevisionsSince(previousRevision, configuration.get("path"));
 
             if (ListUtils.isEmpty(newerRevisions)) {
                 return JsonUtils.renderSuccessApiResponse(null);

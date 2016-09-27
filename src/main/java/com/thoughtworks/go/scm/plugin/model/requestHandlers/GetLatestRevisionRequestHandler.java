@@ -35,7 +35,9 @@ public class GetLatestRevisionRequestHandler implements RequestHandler {
         try {
             GitHelper git = JGitHelper.create(gitConfig, flyweightFolder);
             git.cloneOrFetch();
-            final Revision revision = git.getLatestRevision();
+            Map<String, String> configuration = JsonUtils.parseScmConfiguration(apiRequest);
+            LOGGER.info("Fetching latestRevision for path " + configuration.get("path"));
+            final Revision revision = git.getLatestRevision(configuration.get("path"));
 
             if (revision == null) {
                 return JsonUtils.renderSuccessApiResponse(null);
