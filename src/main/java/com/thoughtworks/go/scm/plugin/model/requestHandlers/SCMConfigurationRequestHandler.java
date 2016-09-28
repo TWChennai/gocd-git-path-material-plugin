@@ -13,8 +13,10 @@ public class SCMConfigurationRequestHandler implements RequestHandler {
     public GoPluginApiResponse handle(GoPluginApiRequest apiRequest) {
         Map<String, Object> response = new HashMap<>();
         response.put("url", createField("URL", null, true, true, false, "0"));
-        response.put("branch", createField("Branch", "master", true, false, false, "1"));
-        response.put("path", createField("Path", null, true, true, false, "2"));
+        response.put("username", createField("Username", null, true, false, false, "1"));
+        response.put("password", createField("Password", null, true, false, true, "2"));
+        response.put("path", createField("Path", null, true, true, false, "3"));
+        response.put("branch", createField("Branch", "master", true, false, false, "4"));
         return JsonUtils.renderSuccessApiResponse(response);
     }
 

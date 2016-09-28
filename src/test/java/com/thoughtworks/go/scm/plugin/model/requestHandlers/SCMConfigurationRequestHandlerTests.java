@@ -62,7 +62,7 @@ public class SCMConfigurationRequestHandlerTests {
         assertThat(urlField, hasEntry("part-of-identity", (Object) true));
         assertThat(urlField, hasEntry("required", (Object) false));
         assertThat(urlField, hasEntry("secure", (Object) false));
-        assertThat(urlField, hasEntry("display-order", "1"));
+        assertThat(urlField, hasEntry("display-order", "4"));
     }
 
     @Test
@@ -77,6 +77,6 @@ public class SCMConfigurationRequestHandlerTests {
         assertThat(urlField, hasEntry("part-of-identity", (Object) true));
         assertThat(urlField, hasEntry("required", (Object) true));
         assertThat(urlField, hasEntry("secure", (Object) false));
-        assertThat(urlField, hasEntry("display-order", "2"));
+        assertThat(urlField, hasEntry("display-order", "3"));
     }
 }
