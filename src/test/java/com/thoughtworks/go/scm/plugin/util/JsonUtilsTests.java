@@ -54,7 +54,7 @@ public class JsonUtilsTests {
 
         assertThat(apiResponse.responseCode(), is(equalTo(200)));
         assertThat(apiResponse.responseHeaders(), is(nullValue()));
-        assertThat(apiResponse.responseBody(), is(equalTo(JsonHelper.toJson(response, Response.class))));
+        assertThat(apiResponse.responseBody(), is(equalTo(JsonHelper.toJson(response))));
     }
 
     @Test
@@ -64,7 +64,7 @@ public class JsonUtilsTests {
 
         assertThat(apiResponse.responseCode(), is(equalTo(500)));
         assertThat(apiResponse.responseHeaders(), is(nullValue()));
-        assertThat(apiResponse.responseBody(), is(equalTo(JsonHelper.toJson(response, Response.class))));
+        assertThat(apiResponse.responseBody(), is(equalTo(JsonHelper.toJson(response))));
     }
 
     @Test

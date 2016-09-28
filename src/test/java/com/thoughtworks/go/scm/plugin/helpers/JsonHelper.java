@@ -6,7 +6,6 @@ import org.codehaus.jackson.annotate.JsonMethod;
 import org.codehaus.jackson.map.ObjectMapper;
 
 import java.io.IOException;
-import java.lang.reflect.Type;
 import java.util.Map;
 
 public class JsonHelper {
@@ -17,14 +16,9 @@ public class JsonHelper {
         return objectMapper.readValue(apiResponse.responseBody(), Map.class);
     }
 
-    public static String toJson(Object object, Type type) throws IOException {
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.setVisibility(JsonMethod.FIELD, JsonAutoDetect.Visibility.ANY);
-        return objectMapper.writeValueAsString(object);
-    }
-
     public static String toJson(Object object) throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.setVisibility(JsonMethod.FIELD, JsonAutoDetect.Visibility.ANY);
         return objectMapper.writeValueAsString(object);
     }
 }
