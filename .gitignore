@@ -18,3 +18,5 @@ data/
 build/
 bin/
 classes/
+
+.vagrant

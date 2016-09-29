@@ -1,8 +1,21 @@
 group 'com.thoughtworks.com'
 version '1.0-SNAPSHOT'
 
+
+buildscript {
+    repositories {
+        jcenter()
+        mavenLocal()
+    }
+    dependencies {
+        classpath 'org.hidetake:gradle-ssh-plugin:2.7.0'
+    }
+}
+
+
 apply plugin: 'java'
 apply plugin: "jacoco"
+apply plugin: 'org.hidetake.ssh'
 
 sourceCompatibility = 1.7
 targetCompatibility = 1.7
@@ -61,5 +74,23 @@ test {
         append = false
         destinationFile = file("$buildDir/jacoco/jacocoTest.exec")
         classDumpFile = file("$buildDir/jacoco/classpathdumps")
+    }
+}
+
+remotes {
+  goServer {
+    host = '192.168.1.101'
+    user = 'vagrant'
+    identity = file('./.vagrant/machines/default/virtualbox/private_key')
+    knownHosts = addHostKey(file("$buildDir/known_hosts"))
+  }
+}
+
+task reload(dependsOn: [build]) << {
+    description 'Reload gocd-git-path-material-plugin in go-server'
+    ssh.run {
+        session(remotes.goServer) {
+            execute 'sudo service go-server restart'
+        }
     }
 }

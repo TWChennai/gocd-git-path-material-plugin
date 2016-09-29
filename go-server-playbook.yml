@@ -1,0 +1,11 @@
+---
+- name: configure go server
+  hosts: go-server
+  vars:
+    GOCD_SCM_GIT: true
+    GOCD_CONFIGURE: false
+    GOCD_DEBIAN_REPOSITORY: https://download.go.cd
+    GOCD_ADMIN_EMAIL: admin@gocd.test
+  roles:
+    - tpbrown.gocd/roles/common
+    - tpbrown.gocd/roles/server
