@@ -15,6 +15,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.thoughtworks.go.scm.plugin.util.Validator.isValidURL;
+
 public class SCMCheckConnectionRequestHandler implements RequestHandler {
     private static Logger LOGGER = Logger.getLoggerFor(SCMCheckConnectionRequestHandler.class);
 
@@ -50,9 +52,9 @@ public class SCMCheckConnectionRequestHandler implements RequestHandler {
                     gitHelper.checkConnection();
                 }
             } else {
-                if (!Validator.isValidURL(gitConfig.getUrl())) {
+                if (!isValidURL(gitConfig.getUrl())) {
                     response.put("status", "failure");
-                    messages.add("Invalid URL format");
+                    messages.add("Invalid URL format. Should match "+Validator.GIT_URL_REGEX);
                 } else {
                     try {
                         GitHelper gitHelper = JGitHelper.create(gitConfig, null);

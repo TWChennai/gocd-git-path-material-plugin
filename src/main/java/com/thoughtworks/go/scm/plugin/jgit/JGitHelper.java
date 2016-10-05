@@ -26,7 +26,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
-import static jdk.nashorn.internal.runtime.regexp.joni.Config.log;
 
 public class JGitHelper extends GitHelper {
 
