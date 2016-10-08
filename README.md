@@ -29,7 +29,7 @@ You can quickly test the plugin using Docker, ensure you have installed docker, 
 
 Execute the following gradle task to start the go-server
 ```bash
-gradlew clean startGoCd
+./gradlew clean startGoCd
 ```
 
 You can now access the [go-server via port 8153](http://localhost:8153)
