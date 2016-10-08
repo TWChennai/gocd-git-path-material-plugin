@@ -23,29 +23,27 @@ execute the following command to build the plugin
 ./gradlew clean build
 ```
 
-#### Vagrant
+#### Docker
 
-You can quickly test the plugin by using vagrant, ensure you have installed `vagrant`, refer [vagrant installation guide](https://www.vagrantup.com/docs/installation/) for installing vagrant for different environments
+You can quickly test the plugin using Docker, ensure you have installed docker, refer [docker installation guide](https://www.docker.com/products/overview) for installing docker for different environments
 
-
-### Ansible
-
-Ansible is used to provision the the vagrant machine with [go-server](https://www.go.cd/) along with [git](https://git-scm.com/) and [gocd-git-path-material-plugin](https://github.com/TWChennai/gocd-git-path-material-plugin) 
-
-
-Execute to start the go-server
-
+Execute the following gradle task to start the go-server
 ```bash
-vagrant up --provision
+gradlew clean startGoCd
 ```
 
 You can now access the [go-server via port 8153](http://localhost:8153)
 
-
-### reload
+#### reload
 
 If you like to reload the go-server with new build run,
-
+```bash
+./gradlew clean restartGoCd
 ```
-./gradlew clean reload
+
+#### stop
+
+You can stop the running docker instance with the following gradle task
+```bash
+./gradlew clean stopGoCd
 ```
