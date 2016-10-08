@@ -2,11 +2,10 @@
 
 GoCD plugin to introduce a material, that watches on a sub-directory of git repository. 
 
-![gocd-git-path-material-plugin-add](docs/add-material.png)
-![gocd-git-path-material-plugin-popup](docs/gitmaterial-popup.png)
-
 [![Build Status](https://snap-ci.com/TWChennai/gocd-git-path-material-plugin/branch/master/build_image)](https://snap-ci.com/TWChennai/gocd-git-path-material-plugin/branch/master)
 
+![gocd-git-path-material-plugin-add](docs/add-material.png)
+![gocd-git-path-material-plugin-popup](docs/gitmaterial-popup.png)
 
 ### Installation
 
