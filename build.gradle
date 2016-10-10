@@ -78,3 +78,16 @@ task restartGoCd(dependsOn: build, type: Exec) {
 task stopGoCd(type: Exec) {
     commandLine "docker-compose", "stop"
 }
+
+buildscript {
+    repositories {
+        maven {
+            url 'https://plugins.gradle.org/m2/'
+        }
+    }
+    dependencies {
+        classpath 'net.researchgate:gradle-release:2.4.0'
+    }
+}
+
+apply plugin: 'net.researchgate.release'
