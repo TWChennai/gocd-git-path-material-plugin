@@ -26,10 +26,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
-
 public class JGitHelper extends GitHelper {
 
-    public JGitHelper(GitConfig gitConfig, File workingDir) {
+    private JGitHelper(GitConfig gitConfig, File workingDir) {
         super(gitConfig, workingDir);
     }
 
@@ -46,7 +45,7 @@ public class JGitHelper extends GitHelper {
     @Override
     public void checkConnection() {
         try {
-            LsRemoteCommand lsRemote = Git.lsRemoteRepository().setHeads(true).setRemote(gitConfig.getUrl());
+            TransportCommand lsRemote = Git.lsRemoteRepository().setHeads(true).setRemote(gitConfig.getUrl());
             setCredentials(lsRemote);
             lsRemote.call();
         } catch (Exception e) {
@@ -111,7 +110,7 @@ public class JGitHelper extends GitHelper {
             Git git = new Git(repository);
             LogCommand logCmd = git.log();
             Iterable<RevCommit> log = logCmd.call();
-            for (RevCommit commit : log) {
+            for (RevCommit ignored : log) {
                 count++;
             }
         } catch (Exception e) {
@@ -137,7 +136,7 @@ public class JGitHelper extends GitHelper {
             Git git = new Git(repository);
             LogCommand logCmd = git.log();
             Iterable<RevCommit> log = logCmd.call();
-            List<Revision> revisionObjs = new ArrayList<Revision>();
+            List<Revision> revisionObjs = new ArrayList<>();
             for (RevCommit commit : log) {
                 Revision revisionObj = getRevisionObj(repository, commit);
                 revisionObjs.add(revisionObj);
@@ -194,7 +193,7 @@ public class JGitHelper extends GitHelper {
             LogCommand logCmd = git.log();
             if (subDirectoryPath != null) logCmd.addPath(subDirectoryPath);
             Iterable<RevCommit> log = logCmd.call();
-            List<RevCommit> newCommits = new ArrayList<RevCommit>();
+            List<RevCommit> newCommits = new ArrayList<>();
             for (RevCommit commit : log) {
                 if (commit.getName().equals(previousRevision)) {
                     break;
@@ -202,7 +201,7 @@ public class JGitHelper extends GitHelper {
                 newCommits.add(commit);
             }
 
-            List<Revision> revisionObjs = new ArrayList<Revision>();
+            List<Revision> revisionObjs = new ArrayList<>();
             if (!newCommits.isEmpty()) {
                 for (RevCommit newCommit : newCommits) {
                     Revision revisionObj = getRevisionObj(repository, newCommit);
@@ -248,7 +247,7 @@ public class JGitHelper extends GitHelper {
         try {
             repository = getRepository(workingDir);
             Map<String, Ref> allRefs = repository.getAllRefs();
-            Map<String, String> branchToRevisionMap = new HashMap<String, String>();
+            Map<String, String> branchToRevisionMap = new HashMap<>();
             for (String refName : allRefs.keySet()) {
                 if (refName.contains(pattern)) {
                     String branch = refName.replace(pattern, "");
@@ -376,7 +375,7 @@ public class JGitHelper extends GitHelper {
             Git git = new Git(repository);
             SubmoduleStatusCommand submoduleStatus = git.submoduleStatus();
             Map<String, SubmoduleStatus> submoduleStatusMap = submoduleStatus.call();
-            List<String> submoduleFolders = new ArrayList<String>();
+            List<String> submoduleFolders = new ArrayList<>();
             for (String submoduleFolder : submoduleStatusMap.keySet()) {
                 submoduleFolders.add(submoduleFolder);
             }
@@ -454,7 +453,7 @@ public class JGitHelper extends GitHelper {
             subModuleRepository = SubmoduleWalk.getSubmoduleRepository(repository, subModuleFolder);
             Git git = new Git(subModuleRepository);
             Iterable<RevCommit> log = git.log().call();
-            for (RevCommit commit : log) {
+            for (RevCommit ignored : log) {
                 count++;
             }
         } catch (Exception e) {
@@ -658,7 +657,7 @@ public class JGitHelper extends GitHelper {
         String comment = commit.getFullMessage().trim();
         String user = commit.getAuthorIdent().getName();
         String emailId = commit.getAuthorIdent().getEmailAddress();
-        List<ModifiedFile> modifiedFiles = new ArrayList<ModifiedFile>();
+        List<ModifiedFile> modifiedFiles = new ArrayList<>();
         if (commit.getParentCount() == 0) {
             TreeWalk treeWalk = new TreeWalk(repository);
             treeWalk.addTree(commit.getTree());
