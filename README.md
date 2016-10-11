@@ -1,6 +1,6 @@
 # gocd-git-path-material-plugin
 
-GoCD plugin to introduce a material, that watches on a sub-directory of git repository a.k.a GoCD plugin to support for [Monorepos][https://developer.atlassian.com/blog/2015/10/monorepos-in-git/]
+GoCD plugin to introduce a material, that watches on a sub-directory of git repository a.k.a GoCD plugin to support for [Monorepos](https://developer.atlassian.com/blog/2015/10/monorepos-in-git/)
 
 [![Build Status](https://snap-ci.com/TWChennai/gocd-git-path-material-plugin/branch/master/build_image)](https://snap-ci.com/TWChennai/gocd-git-path-material-plugin/branch/master)
 
