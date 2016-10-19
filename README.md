@@ -9,7 +9,8 @@ GoCD plugin to introduce a material, that watches on a sub-directory of git repo
 
 ### Installation
 
-Have a look [here](https://docs.go.cd/current/extension_points/plugin_user_guide.html)
+* Download from [releases](https://github.com/TWChennai/gocd-git-path-material-plugin/releases/)
+* Follow the installation instructions [here](https://docs.go.cd/current/extension_points/plugin_user_guide.html#installing-and-uninstalling-of-plugins)
 
 **Known bug/feature:** After plugin installation, you will be able to see *GitPathMaterial* as a material type only in edit. So add a git material when you add new pipeline, edit to add new *GitPathMaterial* and remove the old one. 
 
