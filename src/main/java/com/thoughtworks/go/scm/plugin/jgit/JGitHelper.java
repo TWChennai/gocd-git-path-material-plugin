@@ -163,7 +163,7 @@ public class JGitHelper extends GitHelper {
             repository = getRepository(workingDir);
             Git git = new Git(repository);
             LogCommand logCmd = git.log().setMaxCount(1);
-            if (subDirectoryPath != null) logCmd.addPath(subDirectoryPath);
+            addPathsToLogCommand(logCmd, subDirectoryPath);
             Iterable<RevCommit> log = logCmd.call();
             Iterator<RevCommit> iterator = log.iterator();
             if (iterator.hasNext()) {
@@ -191,7 +191,7 @@ public class JGitHelper extends GitHelper {
             repository = getRepository(workingDir);
             Git git = new Git(repository);
             LogCommand logCmd = git.log();
-            if (subDirectoryPath != null) logCmd.addPath(subDirectoryPath);
+            addPathsToLogCommand(logCmd, subDirectoryPath);
             Iterable<RevCommit> log = logCmd.call();
             List<RevCommit> newCommits = new ArrayList<>();
             for (RevCommit commit : log) {
@@ -330,21 +330,6 @@ public class JGitHelper extends GitHelper {
         }
     }
 
-    private void cleanSubmoduleOfAllUnversionedFiles(SubmoduleWalk walk) {
-        Repository submoduleRepository = null;
-        try {
-            submoduleRepository = walk.getRepository();
-            CleanCommand clean = Git.wrap(submoduleRepository).clean().setCleanDirectories(true);
-            clean.call();
-        } catch (Exception e) {
-            throw new RuntimeException("sub-module clean failed", e);
-        } finally {
-            if (submoduleRepository != null) {
-                submoduleRepository.close();
-            }
-        }
-    }
-
     @Override
     public void gc() {
         Repository repository = null;
@@ -424,21 +409,6 @@ public class JGitHelper extends GitHelper {
         } finally {
             if (repository != null) {
                 repository.close();
-            }
-        }
-    }
-
-    private void checkoutSubmodule(SubmoduleWalk walk) {
-        Repository submoduleRepository = null;
-        try {
-            submoduleRepository = walk.getRepository();
-            CheckoutCommand checkout = Git.wrap(submoduleRepository).checkout();
-            checkout.call();
-        } catch (Exception e) {
-            throw new RuntimeException("sub-module checkout failed", e);
-        } finally {
-            if (submoduleRepository != null) {
-                submoduleRepository.close();
             }
         }
     }
@@ -627,6 +597,53 @@ public class JGitHelper extends GitHelper {
         }
     }
 
+    @Override
+    public void changeSubmoduleUrl(String submoduleName, String newUrl) {
+    }
+
+    @Override
+    public void push() {
+    }
+
+    private void checkoutSubmodule(SubmoduleWalk walk) {
+        Repository submoduleRepository = null;
+        try {
+            submoduleRepository = walk.getRepository();
+            CheckoutCommand checkout = Git.wrap(submoduleRepository).checkout();
+            checkout.call();
+        } catch (Exception e) {
+            throw new RuntimeException("sub-module checkout failed", e);
+        } finally {
+            if (submoduleRepository != null) {
+                submoduleRepository.close();
+            }
+        }
+    }
+
+    private void addPathsToLogCommand(LogCommand logCmd, String subDirectoryPath) {
+        if (subDirectoryPath != null) {
+            String[] subDirs = subDirectoryPath.split(",");
+            for (String path : subDirs) {
+                logCmd.addPath(path.trim());
+            }
+        }
+    }
+
+    private void cleanSubmoduleOfAllUnversionedFiles(SubmoduleWalk walk) {
+        Repository submoduleRepository = null;
+        try {
+            submoduleRepository = walk.getRepository();
+            CleanCommand clean = Git.wrap(submoduleRepository).clean().setCleanDirectories(true);
+            clean.call();
+        } catch (Exception e) {
+            throw new RuntimeException("sub-module clean failed", e);
+        } finally {
+            if (submoduleRepository != null) {
+                submoduleRepository.close();
+            }
+        }
+    }
+
     private void configRemoveSection(String folderName) {
         Repository repository = null;
         try {
@@ -641,14 +658,6 @@ public class JGitHelper extends GitHelper {
                 repository.close();
             }
         }
-    }
-
-    @Override
-    public void changeSubmoduleUrl(String submoduleName, String newUrl) {
-    }
-
-    @Override
-    public void push() {
     }
 
     private Revision getRevisionObj(Repository repository, RevCommit commit) throws IOException {

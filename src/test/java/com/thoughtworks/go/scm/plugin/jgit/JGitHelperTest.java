@@ -71,6 +71,19 @@ public class JGitHelperTest {
     }
 
     @Test
+    public void shouldGetLatestRevisionForGivenCommaSeparatedPath() throws Exception {
+        GitHelper helper = JGitHelper.create(gitConfig, destinationFolder);
+        String service1 = "service1";
+        String service2 = "service2";
+
+        RevCommit service1Commit = addContentAndCommit(getFilePath(service1), "Service 1 commit");
+        RevCommit service2Commit = addContentAndCommit(getFilePath(service2), "Service 2 commit");
+
+        assertThat(helper.getLatestRevision().getRevision(), is(equalTo(service2Commit.getName())));
+        assertThat(helper.getLatestRevision("service1, service2").getRevision(), is(equalTo(service2Commit.getName())));
+    }
+
+    @Test
     public void shouldGetAllRevisions() throws Exception {
         GitHelper helper = JGitHelper.create(gitConfig, destinationFolder);
         RevCommit commit2 = addContentAndCommit(TEST_REPO.getPath(), "Another commit.");
@@ -110,6 +123,21 @@ public class JGitHelperTest {
 
         assertThat(revisions, hasSize(1));
         assertThat(revisions.get(0).getRevision(), is(equalTo(service2Commit.getName())));
+    }
+
+    @Test
+    public void shouldGetRevisionsSinceForCommaSeparatedGivenPath() throws Exception {
+        GitHelper helper = JGitHelper.create(gitConfig, destinationFolder);
+        String service1 = "service1";
+        String service2 = "service2";
+        RevCommit service1Commit = addContentAndCommit(getFilePath(service1), "Service 1 commit");
+        RevCommit service2Commit = addContentAndCommit(getFilePath(service2), "Service 2 commit");
+
+        List<Revision> revisions = helper.getRevisionsSince(initialCommit.getName(), "service1, service2");
+
+        assertThat(revisions, hasSize(2));
+        assertThat(revisions.get(0).getRevision(), is(equalTo(service2Commit.getName())));
+        assertThat(revisions.get(1).getRevision(), is(equalTo(service1Commit.getName())));
     }
 
     @Test
