@@ -14,7 +14,7 @@ services:
   server:
     image: twchennai/gocd-server
     volumes:
-      - ./build/libs/go-cd-git-path-material-plugin-1.0-SNAPSHOT.jar:/plugins/go-cd-git-path-material-plugin-1.0-SNAPSHOT.jar
+      - ./build/libs/go-cd-git-path-material-plugin-1.2-SNAPSHOT.jar:/plugins/go-cd-git-path-material-plugin-1.2-SNAPSHOT.jar
       - ./extras/yaml-config-plugin-0.1.0.jar:/plugins/yaml-config-plugin-0.1.0.jar
       - ./extras/config.xml:/etc/go/cruise-config.xml
       - ~/.ssh:/var/go/.ssh

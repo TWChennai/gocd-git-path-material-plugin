@@ -1,16 +1,17 @@
 package com.thoughtworks.go.scm.plugin.model.requestHandlers;
 
+import com.thoughtworks.go.plugin.api.logging.Logger;
+import com.thoughtworks.go.plugin.api.request.GoPluginApiRequest;
+import com.thoughtworks.go.plugin.api.response.GoPluginApiResponse;
 import com.thoughtworks.go.scm.plugin.jgit.GitHelper;
 import com.thoughtworks.go.scm.plugin.jgit.JGitHelper;
 import com.thoughtworks.go.scm.plugin.model.GitConfig;
 import com.thoughtworks.go.scm.plugin.util.JsonUtils;
-import com.thoughtworks.go.plugin.api.logging.Logger;
-import com.thoughtworks.go.plugin.api.request.GoPluginApiRequest;
-import com.thoughtworks.go.plugin.api.response.GoPluginApiResponse;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+
+import static org.apache.commons.lang3.exception.ExceptionUtils.getRootCauseMessage;
 
 public class CheckoutRequestHandler implements RequestHandler {
     private static Logger LOGGER = Logger.getLoggerFor(CheckoutRequestHandler.class);
@@ -32,16 +33,14 @@ public class CheckoutRequestHandler implements RequestHandler {
             git.cloneOrFetch();
             git.resetHard(revision);
 
-            Map<String, Object> response = new HashMap<>();
-            ArrayList<String> messages = new ArrayList<>();
+            Map<String, String> response = new HashMap<>();
             response.put("status", "success");
-            messages.add("Checked out to revision " + revision);
-            response.put("messages", messages);
-
+            response.put("messages", String.format("Checked out to revision %s", revision));
             return JsonUtils.renderSuccessApiResponse(response);
         } catch (Throwable t) {
             LOGGER.warn("checkout: ", t);
-            return JsonUtils.renderErrrorApiResponse(null);
+            LOGGER.warn(getRootCauseMessage(t));
+            return JsonUtils.renderErrrorApiResponse(getRootCauseMessage(t));
         }
     }
 }

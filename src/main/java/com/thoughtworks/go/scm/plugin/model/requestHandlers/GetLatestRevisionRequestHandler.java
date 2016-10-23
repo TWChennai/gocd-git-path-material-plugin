@@ -1,17 +1,19 @@
 package com.thoughtworks.go.scm.plugin.model.requestHandlers;
 
+import com.thoughtworks.go.plugin.api.logging.Logger;
+import com.thoughtworks.go.plugin.api.request.GoPluginApiRequest;
+import com.thoughtworks.go.plugin.api.response.GoPluginApiResponse;
 import com.thoughtworks.go.scm.plugin.jgit.GitHelper;
 import com.thoughtworks.go.scm.plugin.jgit.JGitHelper;
 import com.thoughtworks.go.scm.plugin.model.GitConfig;
 import com.thoughtworks.go.scm.plugin.model.Revision;
 import com.thoughtworks.go.scm.plugin.util.JsonUtils;
 import com.thoughtworks.go.scm.plugin.util.Validator;
-import com.thoughtworks.go.plugin.api.logging.Logger;
-import com.thoughtworks.go.plugin.api.request.GoPluginApiRequest;
-import com.thoughtworks.go.plugin.api.response.GoPluginApiResponse;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import static org.apache.commons.lang3.exception.ExceptionUtils.getRootCauseMessage;
 
 public class GetLatestRevisionRequestHandler implements RequestHandler {
     private static Logger LOGGER = Logger.getLoggerFor(GetLatestRevisionRequestHandler.class);
@@ -29,7 +31,7 @@ public class GetLatestRevisionRequestHandler implements RequestHandler {
         Validator.validateUrl(gitConfig, fieldMap);
         if (!fieldMap.isEmpty()) {
             LOGGER.warn("invalid url");
-            JsonUtils.renderErrrorApiResponse(null);
+            return JsonUtils.renderErrrorApiResponse(fieldMap.get("message"));
         }
 
         try {
@@ -49,7 +51,7 @@ public class GetLatestRevisionRequestHandler implements RequestHandler {
             }
         } catch (Throwable t) {
             LOGGER.warn("get latest revision: ", t);
-            return JsonUtils.renderErrrorApiResponse(null);
+            return JsonUtils.renderErrrorApiResponse(getRootCauseMessage(t));
         }
     }
 }

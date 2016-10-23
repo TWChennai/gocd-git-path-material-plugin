@@ -1,5 +1,8 @@
 package com.thoughtworks.go.scm.plugin.model.requestHandlers;
 
+import com.thoughtworks.go.plugin.api.logging.Logger;
+import com.thoughtworks.go.plugin.api.request.GoPluginApiRequest;
+import com.thoughtworks.go.plugin.api.response.GoPluginApiResponse;
 import com.thoughtworks.go.scm.plugin.jgit.GitHelper;
 import com.thoughtworks.go.scm.plugin.jgit.JGitHelper;
 import com.thoughtworks.go.scm.plugin.model.GitConfig;
@@ -7,14 +10,13 @@ import com.thoughtworks.go.scm.plugin.model.Revision;
 import com.thoughtworks.go.scm.plugin.util.JsonUtils;
 import com.thoughtworks.go.scm.plugin.util.ListUtils;
 import com.thoughtworks.go.scm.plugin.util.Validator;
-import com.thoughtworks.go.plugin.api.logging.Logger;
-import com.thoughtworks.go.plugin.api.request.GoPluginApiRequest;
-import com.thoughtworks.go.plugin.api.response.GoPluginApiResponse;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static org.apache.commons.lang3.exception.ExceptionUtils.getRootCauseMessage;
 
 public class LatestRevisionSinceRequestHandler implements RequestHandler {
     private static Logger LOGGER = Logger.getLoggerFor(LatestRevisionSinceRequestHandler.class);
@@ -29,7 +31,6 @@ public class LatestRevisionSinceRequestHandler implements RequestHandler {
         String flyweightFolder = (String) responseMap.get("flyweight-folder");
         Map<String, Object> previousRevisionMap = (Map<String, Object>) responseMap.get("previous-revision");
         String previousRevision = (String) previousRevisionMap.get("revision");
-
         LOGGER.warn("flyweight: " + flyweightFolder + ". previous commit: " + previousRevision);
 
         Map<String, Object> fieldMap = new HashMap<>();
@@ -62,7 +63,7 @@ public class LatestRevisionSinceRequestHandler implements RequestHandler {
             }
         } catch (Throwable t) {
             LOGGER.warn("get latest revisions since: ", t);
-            return JsonUtils.renderErrrorApiResponse(null);
+            return JsonUtils.renderErrrorApiResponse(getRootCauseMessage(t));
         }
     }
 }
