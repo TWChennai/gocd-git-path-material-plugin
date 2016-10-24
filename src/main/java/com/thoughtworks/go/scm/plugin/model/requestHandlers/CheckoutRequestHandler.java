@@ -8,6 +8,7 @@ import com.thoughtworks.go.scm.plugin.jgit.JGitHelper;
 import com.thoughtworks.go.scm.plugin.model.GitConfig;
 import com.thoughtworks.go.scm.plugin.util.JsonUtils;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -33,9 +34,12 @@ public class CheckoutRequestHandler implements RequestHandler {
             git.cloneOrFetch();
             git.resetHard(revision);
 
-            Map<String, String> response = new HashMap<>();
+            Map<String, Object> response = new HashMap<>();
+            ArrayList<String> messages = new ArrayList<>();
+
             response.put("status", "success");
-            response.put("messages", String.format("Checked out to revision %s", revision));
+            messages.add(String.format("Checked out to revision %s", revision));
+            response.put("messages", messages);
             return JsonUtils.renderSuccessApiResponse(response);
         } catch (Throwable t) {
             LOGGER.warn("checkout: ", t);

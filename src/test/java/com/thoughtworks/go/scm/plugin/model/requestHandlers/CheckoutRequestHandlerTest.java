@@ -14,6 +14,7 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -21,6 +22,7 @@ import static org.apache.commons.lang3.exception.ExceptionUtils.getRootCauseMess
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.collection.IsMapContaining.hasEntry;
+import static org.hamcrest.core.IsCollectionContaining.hasItem;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
 
@@ -72,9 +74,11 @@ public class CheckoutRequestHandlerTest {
         verify(jGitHelperMock).cloneOrFetch();
         verify(jGitHelperMock).resetHard(revision);
 
-        Map<String, String> responseMap = responseArgumentCaptor.getValue();
-        assertThat(responseMap, hasEntry("status", "success"));
-        assertThat(responseMap, hasEntry("messages", String.format("Checked out to revision %s", revision)));
+        Map<String, Object> responseMap = responseArgumentCaptor.getValue();
+        ArrayList<String> messages = (ArrayList<String>)responseMap.get("messages");
+
+        assertThat(responseMap, hasEntry("status", (Object) "success"));
+        assertThat(messages, hasItem(String.format("Checked out to revision %s", revision)));
     }
 
     @Test
