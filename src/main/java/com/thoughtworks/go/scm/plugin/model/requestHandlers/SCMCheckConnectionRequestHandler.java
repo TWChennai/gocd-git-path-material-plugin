@@ -38,7 +38,7 @@ public class SCMCheckConnectionRequestHandler implements RequestHandler {
     }
 
     private void checkConnection(GitConfig gitConfig, Map<String, Object> response, ArrayList<String> messages) {
-        LOGGER.info("SCMCheckConnectionRequestHandler In handle");
+        LOGGER.debug("SCMCheckConnectionRequestHandler In handle");
         try {
             if (StringUtils.isEmpty(gitConfig.getUrl())) {
                 response.put("status", "failure");

@@ -21,8 +21,6 @@ public class GetLatestRevisionRequestHandler implements RequestHandler {
     @Override
     @SuppressWarnings("unchecked")
     public GoPluginApiResponse handle(GoPluginApiRequest apiRequest) {
-        LOGGER.info("In handle" + apiRequest);
-
         GitConfig gitConfig = GitConfig.create(apiRequest);
         Map<String, Object> responseMap = (Map<String, Object>) JsonUtils.parseJSON(apiRequest.requestBody());
         String flyweightFolder = (String) responseMap.get("flyweight-folder");
@@ -30,16 +28,18 @@ public class GetLatestRevisionRequestHandler implements RequestHandler {
         Map<String, Object> fieldMap = new HashMap<>();
         Validator.validateUrl(gitConfig, fieldMap);
         if (!fieldMap.isEmpty()) {
-            LOGGER.warn("invalid url");
-            return JsonUtils.renderErrrorApiResponse(fieldMap.get("message"));
+            String message = (String) fieldMap.get("message");
+            LOGGER.error(String.format("Invalid url: %s", message));
+            return JsonUtils.renderErrrorApiResponse(message);
         }
 
         try {
             GitHelper git = JGitHelper.create(gitConfig, flyweightFolder);
             git.cloneOrFetch();
             Map<String, String> configuration = JsonUtils.parseScmConfiguration(apiRequest);
-            LOGGER.info("Fetching latestRevision for path " + configuration.get("path"));
             final Revision revision = git.getLatestRevision(configuration.get("path"));
+
+            LOGGER.debug(String.format("Fetching latestRevision for path %s", configuration.get("path")));
 
             if (revision == null) {
                 return JsonUtils.renderSuccessApiResponse(null);
@@ -50,7 +50,7 @@ public class GetLatestRevisionRequestHandler implements RequestHandler {
                 return JsonUtils.renderSuccessApiResponse(response);
             }
         } catch (Throwable t) {
-            LOGGER.warn("get latest revision: ", t);
+            LOGGER.error("get latest revision: ", t);
             return JsonUtils.renderErrrorApiResponse(getRootCauseMessage(t));
         }
     }

@@ -27,7 +27,7 @@ public class CheckoutRequestHandler implements RequestHandler {
         Map<String, Object> revisionMap = (Map<String, Object>) responseMap.get("revision");
         String revision = (String) revisionMap.get("revision");
 
-        LOGGER.warn("destination: " + destinationFolder + ". commit: " + revision);
+        LOGGER.debug(String.format("destination: %s , commit: %s", destinationFolder, revision));
 
         try {
             GitHelper git = JGitHelper.create(gitConfig, destinationFolder);
@@ -42,8 +42,7 @@ public class CheckoutRequestHandler implements RequestHandler {
             response.put("messages", messages);
             return JsonUtils.renderSuccessApiResponse(response);
         } catch (Throwable t) {
-            LOGGER.warn("checkout: ", t);
-            LOGGER.warn(getRootCauseMessage(t));
+            LOGGER.error("checkout: ", t);
             return JsonUtils.renderErrrorApiResponse(getRootCauseMessage(t));
         }
     }

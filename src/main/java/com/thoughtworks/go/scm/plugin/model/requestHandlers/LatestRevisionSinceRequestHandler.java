@@ -31,26 +31,28 @@ public class LatestRevisionSinceRequestHandler implements RequestHandler {
         String flyweightFolder = (String) responseMap.get("flyweight-folder");
         Map<String, Object> previousRevisionMap = (Map<String, Object>) responseMap.get("previous-revision");
         String previousRevision = (String) previousRevisionMap.get("revision");
-        LOGGER.warn("flyweight: " + flyweightFolder + ". previous commit: " + previousRevision);
+        LOGGER.debug(String.format("flyweight: %s, previous commit: %s", flyweightFolder, previousRevision));
 
         Map<String, Object> fieldMap = new HashMap<>();
         Validator.validateUrl(gitConfig, fieldMap);
         if (!fieldMap.isEmpty()) {
-            LOGGER.warn("invalid url");
-            return JsonUtils.renderErrrorApiResponse(null);
+            String message = (String) fieldMap.get("message");
+            LOGGER.error(String.format("Invalid url: %s", message));
+            return JsonUtils.renderErrrorApiResponse(message);
         }
 
         try {
             GitHelper git = JGitHelper.create(gitConfig, flyweightFolder);
             git.cloneOrFetch();
             Map<String, String> configuration = JsonUtils.parseScmConfiguration(apiRequest);
-            LOGGER.info("Fetching newerRevisions for path " + configuration.get("path"));
             List<Revision> newerRevisions = git.getRevisionsSince(previousRevision, configuration.get("path"));
+
+            LOGGER.debug(String.format("Fetching newerRevisions for path %s", configuration.get("path")));
 
             if (ListUtils.isEmpty(newerRevisions)) {
                 return JsonUtils.renderSuccessApiResponse(null);
             } else {
-                LOGGER.warn("new commits: " + newerRevisions.size());
+                LOGGER.debug(String.format("New commits: %s", newerRevisions.size()));
 
                 Map<String, Object> response = new HashMap<>();
                 List<Map> revisions = new ArrayList<>();
@@ -62,7 +64,7 @@ public class LatestRevisionSinceRequestHandler implements RequestHandler {
                 return JsonUtils.renderSuccessApiResponse(response);
             }
         } catch (Throwable t) {
-            LOGGER.warn("get latest revisions since: ", t);
+            LOGGER.error("get latest revisions since: ", t);
             return JsonUtils.renderErrrorApiResponse(getRootCauseMessage(t));
         }
     }
