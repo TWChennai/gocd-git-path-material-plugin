@@ -39,12 +39,15 @@ public class ValidatorTest {
                 "http://host.xz/path/to/repo.git/",
                 "https://host.xz/path/to/repo.git/",
                 "git@github.com:user/some-project.git",
-                "git@github.com:user/some_project.git"
+                "git@github.com:user/some_project.git",
+                "git@git.my-org.com:user/some_project.git",
+                "git@git.my01-org.com:user/some_project.git"
         };
 
         String[] invalidURLs = new String[]{
                 "git@github.com:user/some_project.gitfoo",
                 "git@github.com:user/some_project.git/foo",
+                "git@git.my01-.com:user/some_project.git",
                 "/path/to/repo.git/",
                 "path/to/repo.git/",
                 "~/path/to/repo.git",
@@ -62,5 +65,4 @@ public class ValidatorTest {
         for (String validUrl : validURLs) assertTrue("Failing for " + validUrl, isValidURL(validUrl));
         for (String invaildUrl : invalidURLs) assertFalse("Failing for " + invaildUrl, isValidURL(invaildUrl));
     }
-
 }
