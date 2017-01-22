@@ -20,3 +20,5 @@ bin/
 classes/
 
 .vagrant
+token.sh
+*github-release.tar.bz2

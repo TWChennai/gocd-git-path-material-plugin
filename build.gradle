@@ -89,12 +89,3 @@ buildscript {
         classpath 'net.researchgate:gradle-release:2.4.0'
     }
 }
-
-apply plugin: 'net.researchgate.release'
-
-release {
-    preTagCommitMessage = 'pre release tag commit: '
-    tagCommitMessage = 'creating new release tag: '
-    newVersionCommitMessage = 'new release version commit: '
-    buildTasks = ['build']
-}
