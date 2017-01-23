@@ -1,0 +1,5 @@
+language: java
+script: gradle clean test
+jdk:
+  - openjdk7
+  - oraclejdk8
