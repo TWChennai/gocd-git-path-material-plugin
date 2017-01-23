@@ -17,7 +17,7 @@ if [ ! -f  "./bin/${os}/amd64/github-release" ]; then
     tar xf ${filename}
 fi
 
-VERSION="1.2.2"
+VERSION="1.2.3"
 GIT_HUB_RELEASE_BIN="./bin/${os}/amd64/github-release"
 
 case "$1" in
