@@ -101,7 +101,6 @@ public abstract class GitHelper {
             removeSubmoduleSectionsFromGitConfig();
         }
         fetch(refSpec);
-        gc();
         resetHard(revision);
         if (isSubmoduleEnabled()) {
             checkoutAllModifiedFilesInSubmodules();
