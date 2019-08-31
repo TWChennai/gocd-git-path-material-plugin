@@ -12,7 +12,7 @@ import java.util.Map;
 public class JsonUtils {
     private static final int SUCCESS_RESPONSE_CODE = 200;
     private static final int INTERNAL_ERROR_RESPONSE_CODE = 500;
-    private static Logger LOGGER = Logger.getLoggerFor(JsonUtils.class);
+    private static final Logger LOGGER = Logger.getLoggerFor(JsonUtils.class);
 
 
     public static GoPluginApiResponse renderSuccessApiResponse(Object response) {
@@ -62,7 +62,7 @@ public class JsonUtils {
         } catch (IOException e) {
             LOGGER.error(e.getMessage());
         }
-        LOGGER.info("GoPluginApiResponse: " + tempJson);
+        LOGGER.debug("GoPluginApiResponse: " + tempJson);
 
         final String json = tempJson;
         return new GoPluginApiResponse() {
