@@ -2,14 +2,17 @@ package com.thoughtworks.go.scm.plugin.util;
 
 import org.junit.Test;
 
+import java.util.List;
+
 import static com.thoughtworks.go.scm.plugin.util.Validator.isValidURL;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 
 public class ValidatorTest {
     @Test
-    public void shouldValidateUrl() throws Exception {
-        String[] validURLs = new String[]{
+    public void shouldValidateUrl() {
+        List.of(
                 "git://github.com/ember-cli/ember-cli.git#v0.1.0",
                 "git://github.com/ember-cli/ember-cli.git#ff786f9f",
                 "git://github.com/ember-cli/ember-cli.git#master",
@@ -42,9 +45,9 @@ public class ValidatorTest {
                 "git@github.com:user/some_project.git",
                 "git@git.my-org.com:user/some_project.git",
                 "git@git.my01-org.com:user/some_project.git"
-        };
+        ).forEach(url -> assertTrue("Expected to be valid: " + url, isValidURL(url)));
 
-        String[] invalidURLs = new String[]{
+        List.of(
                 "git@github.com:user/some_project.gitfoo",
                 "git@github.com:user/some_project.git/foo",
                 "git@git.my01-.com:user/some_project.git",
@@ -60,9 +63,6 @@ public class ValidatorTest {
                 "user@host.xz:path/to/repo.git",
                 "host.xz:path/to/repo.git",
                 "rsync://host.xz/path/to/repo.git/"
-        };
-
-        for (String validUrl : validURLs) assertTrue("Failing for " + validUrl, isValidURL(validUrl));
-        for (String invaildUrl : invalidURLs) assertFalse("Failing for " + invaildUrl, isValidURL(invaildUrl));
+        ).forEach(url -> assertFalse("Expected to be invalid: " + url, isValidURL(url)));
     }
 }

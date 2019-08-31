@@ -2,51 +2,54 @@ package com.thoughtworks.go.scm.plugin.jgit;
 
 import com.thoughtworks.go.scm.plugin.model.GitConfig;
 import com.thoughtworks.go.scm.plugin.model.Revision;
-import java.io.File;
-import java.io.IOException;
-import java.util.List;
-import java.util.UUID;
+import org.apache.commons.io.FileUtils;
 import org.eclipse.jgit.api.CloneCommand;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.LsRemoteCommand;
 import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.lib.ConfigConstants;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.transport.CredentialItem;
 import org.eclipse.jgit.transport.CredentialsProvider;
-import org.eclipse.jgit.util.FileUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.List;
+import java.util.UUID;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(Git.class)
+@PowerMockIgnore({"com.sun.org.apache.xerces.*", "javax.xml.*", "org.xml.*", "javax.management.*"})
 public class JGitHelperTest {
 
-    private static final File TEST_REPO = new File(System.getProperty("java.io.tmpdir"), "test_repo");
+    private static final Path TEST_REPO = Paths.get(System.getProperty("java.io.tmpdir"), "test_repo");
     private RevCommit initialCommit;
     private String destinationFolder;
     private GitConfig gitConfig;
 
     @Before
-    public void after() throws IOException, GitAPIException {
-        if (TEST_REPO.exists()) FileUtils.delete(TEST_REPO, FileUtils.RECURSIVE);
-        FileUtils.mkdir(TEST_REPO);
-        initialCommit = addContentAndCommit(TEST_REPO.getPath(), "Initial commit");
-        destinationFolder = TEST_REPO.getAbsolutePath();
+    public void before() throws IOException, GitAPIException {
+        FileUtils.deleteDirectory(TEST_REPO.toFile());
+        Files.createDirectory(TEST_REPO);
+        initialCommit = addContentAndCommit(TEST_REPO, "Initial commit");
+        destinationFolder = TEST_REPO.toAbsolutePath().toString();
         gitConfig = new GitConfig("http://url.test", "username", "password", "master");
     }
 
@@ -89,7 +92,7 @@ public class JGitHelperTest {
     @Test
     public void shouldGetAllRevisions() throws Exception {
         GitHelper helper = JGitHelper.create(gitConfig, destinationFolder);
-        RevCommit commit2 = addContentAndCommit(TEST_REPO.getPath(), "Another commit.");
+        RevCommit commit2 = addContentAndCommit(TEST_REPO, "Another commit.");
 
         List<Revision> revisions = helper.getAllRevisions();
 
@@ -101,7 +104,7 @@ public class JGitHelperTest {
     @Test
     public void shouldGetRevisionsSince() throws Exception {
         GitHelper helper = JGitHelper.create(gitConfig, destinationFolder);
-        RevCommit commit2 = addContentAndCommit(TEST_REPO.getPath(), "Another commit.");
+        RevCommit commit2 = addContentAndCommit(TEST_REPO, "Another commit.");
 
         List<Revision> revisions = helper.getRevisionsSince(initialCommit.getName());
 
@@ -232,25 +235,34 @@ public class JGitHelperTest {
         assertThat(fileArgumentCaptor.getValue().getPath(), is(equalTo(destinationFolder)));
     }
 
-    private String getFilePath(String service1) {
-        return new File(TEST_REPO.getPath(), service1).getPath();
+    private Path getFilePath(String service1) {
+        return TEST_REPO.resolve(service1);
     }
 
-    private RevCommit addContentAndCommit(String path, String msg) throws IOException, GitAPIException {
+    private RevCommit addContentAndCommit(Path path, String msg) throws IOException, GitAPIException {
         addContent(path);
         return commit(msg);
     }
 
     private RevCommit commit(String msg) throws GitAPIException {
-        Git repo = Git.init().setDirectory(TEST_REPO).call();
+        Git repo = Git.init().setDirectory(TEST_REPO.toFile()).call();
+        disableGpg(repo);
         repo.add().addFilepattern(".").call();
         return repo.commit().setMessage(msg).call();
     }
 
-    private void addContent(String path) throws IOException {
-        File dir = new File(path);
-        FileUtils.mkdir(dir, true);
-        FileUtils.createNewFile(new File(dir.getPath(), UUID.randomUUID().toString()));
+    private void disableGpg(Git repo) {
+        // In case user has it enabled globally
+        repo.getRepository()
+                .getConfig()
+                .setBoolean(
+                        ConfigConstants.CONFIG_COMMIT_SECTION, null,
+                        ConfigConstants.CONFIG_KEY_GPGSIGN, false);
+    }
+
+    private void addContent(Path path) throws IOException {
+        if (!Files.exists(path)) Files.createDirectory(path);
+        Files.createTempFile(path, UUID.randomUUID().toString(), "");
     }
 
 }

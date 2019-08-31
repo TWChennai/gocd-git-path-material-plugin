@@ -4,6 +4,7 @@
 # generated files
 bin/
 gen/
+out/
 
 # Intellij project files
 *.iml

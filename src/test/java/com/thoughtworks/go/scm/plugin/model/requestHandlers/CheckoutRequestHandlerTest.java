@@ -77,7 +77,7 @@ public class CheckoutRequestHandlerTest {
         Map<String, Object> responseMap = responseArgumentCaptor.getValue();
         ArrayList<String> messages = (ArrayList<String>)responseMap.get("messages");
 
-        assertThat(responseMap, hasEntry("status", (Object) "success"));
+        assertThat(responseMap, hasEntry("status", "success"));
         assertThat(messages, hasItem(String.format("Checked out to revision %s", revision)));
     }
 
