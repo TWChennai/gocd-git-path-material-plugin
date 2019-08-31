@@ -1,24 +1,25 @@
-version: '2'
+version: '3.7'
 
 services:
   agent:
-    image: gocd/gocd-agent-ubuntu-18.04:v19.9.0
+    image: gocd/gocd-agent-alpine-3.10:v20.3.0
     depends_on:
       - server
     environment:
-      GO_SERVER_URL: https://server:8154/go
+      GO_SERVER_URL: http://server:8153/go
       AGENT_AUTO_REGISTER_KEY: 079e578b-87cc-46c9-9ab5-88997fc7ac59
+      GIT_TRACE: 1
     restart: on-failure
-    volumes:
-      - ~/.ssh:/var/go/.ssh
 
   server:
-    image: gocd/gocd-server:v19.9.0
+    image: gocd/gocd-server:v20.3.0
+    environment:
+      GOCD_PLUGIN_INSTALL_script-executor-task:
+        https://github.com/gocd-contrib/script-executor-task/releases/download/0.3/script-executor-0.3.0.jar
+    ports:
+      - 8153:8153
+      - 8154:8154
     volumes:
-      - ./build/libs/gocd-git-path-material-plugin-$VERSION.jar:/gocd-git-path-material-plugin-$VERSION.jar
+      - ./build/libs/gocd-git-path-material-plugin-${PLUGIN_VERSION}.jar:/gocd-git-path-material-plugin-${PLUGIN_VERSION}.jar
       - ./extras/config.xml:/config.xml
       - ./extras/server-extra-entrypoint.sh:/docker-entrypoint.d/server-extra-entrypoint.sh
-      - ~/.ssh:/var/go/.ssh
-    ports:
-      - "8153:8153"
-      - "8154:8154"
