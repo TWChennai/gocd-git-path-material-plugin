@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<go-plugin id="GitPathMaterial" version="1">
+<go-plugin id="git-path" version="1">
     <about>
-        <name>GitPathMaterial Plugin</name>
-        <version>1.2.3</version>
-        <target-go-version>15.1.0</target-go-version>
+        <name>Git Path Material Plugin</name>
+        <version>2.0.0-alpha1</version>
+        <target-go-version>19.7.0</target-go-version>
         <description>Plugin that polls a Git repository and triggers pipeline based on the sub-directory</description>
         <vendor>
             <name>ThoughtWorks</name>
-            <url>https://github.com/TWChennai/gocd-git-path-material-plugin</url>
+            <url>https://github.com/chadlwilson/gocd-git-path-material-plugin</url>
         </vendor>
     </about>
 </go-plugin>

@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class SCMViewRequestHandler implements RequestHandler {
-    public static final String PLUGIN_NAME = "GitPathMaterial";
+    public static final String PLUGIN_NAME = "Git Path";
 
     @Override
     public GoPluginApiResponse handle(GoPluginApiRequest apiRequest) {
