@@ -5,21 +5,38 @@ plugins {
     id 'net.researchgate.release' version '2.8.1'
 }
 
+apply from: "https://raw.githubusercontent.com/gocd/gocd-plugin-gradle-task-helpers/master/helper.gradle?_=${(int) (new Date().toInstant().epochSecond / 60)}"
+
 group 'com.thoughtworks.com'
 
-sourceCompatibility = 1.11
-targetCompatibility = 1.11
+sourceCompatibility = 1.9
+targetCompatibility = 1.9
 
-// these values that go into plugin.xml
-project.ext.pluginDesc = [
-        id         : 'com.thoughtworks.gocd',
-        version    : project.version,
-        goCdVersion: '19.8.0',
-        name       : 'Git Path Material',
-        description: 'Git Path Material plugin for GoCD',
-        vendorName : 'GoCd Contributors',
-        vendorUrl  : 'https://github.com/TWChennai/gocd-git-path-material-plugin'
-]
+gocdPlugin {
+    id = 'git-path'
+    pluginVersion = '2.1.0'
+    goCdVersion = '18.10.0'
+    name = 'Git Path Material Plugin'
+    description = 'Plugin that polls a Git repository and triggers pipelines based on sub-directory path matches'
+    vendorName = 'ThoughtWorks, Inc / GoCD contributors'
+    vendorUrl = 'https://github.com/' + (System.getenv('GITHUB_USER') ?: 'TWChennai') + '/gocd-git-path-material-plugin'
+
+    githubRepo {
+        owner = System.getenv('GITHUB_USER') ?: 'TWChennai'
+        repo = 'gocd-git-path-material-plugin'
+        token = System.getenv('GITHUB_TOKEN') ?: 'bad-token'
+    }
+
+    pluginProject = project
+
+    prerelease = !"No".equalsIgnoreCase(System.getenv('PRERELEASE'))
+    assetsToRelease = [project.tasks.jar]
+}
+
+// specify the version of your project
+allprojects {
+    version = gocdPlugin.fullVersion(project)
+}
 
 repositories {
     jcenter()
@@ -38,7 +55,7 @@ jacocoTestReport {
 check.dependsOn jacocoTestReport
 
 dependencies {
-    implementation "cd.go.plugin:go-plugin-api:${project.pluginDesc.goCdVersion}"
+    implementation "cd.go.plugin:go-plugin-api:${gocdPlugin.goCdVersion}"
 
     implementation 'in.ashwanthkumar:git-cmd:2.0'
     implementation 'org.codehaus.jackson:jackson-mapper-asl:1.9.13'
