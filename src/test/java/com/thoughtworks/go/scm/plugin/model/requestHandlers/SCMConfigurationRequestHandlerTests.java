@@ -9,8 +9,8 @@ import org.junit.Test;
 import java.io.IOException;
 import java.util.Map;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.collection.IsMapContaining.hasEntry;
 import static org.mockito.Mockito.mock;
@@ -22,7 +22,7 @@ public class SCMConfigurationRequestHandlerTests {
     private GoPluginApiRequest apiRequest;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         requestHandler = new SCMConfigurationRequestHandler();
         apiRequest = mock(GoPluginApiRequest.class);
     }

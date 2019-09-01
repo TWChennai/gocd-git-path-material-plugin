@@ -3,19 +3,19 @@ package com.thoughtworks.go.scm.plugin.model.requestHandlers;
 import com.thoughtworks.go.plugin.api.logging.Logger;
 import com.thoughtworks.go.plugin.api.request.GoPluginApiRequest;
 import com.thoughtworks.go.plugin.api.response.GoPluginApiResponse;
-import com.thoughtworks.go.scm.plugin.jgit.GitHelper;
-import com.thoughtworks.go.scm.plugin.jgit.JGitHelper;
-import com.thoughtworks.go.scm.plugin.model.GitConfig;
-import com.thoughtworks.go.scm.plugin.model.Revision;
+import com.thoughtworks.go.scm.plugin.HelperFactory;
 import com.thoughtworks.go.scm.plugin.util.JsonUtils;
-import com.thoughtworks.go.scm.plugin.util.ListUtils;
 import com.thoughtworks.go.scm.plugin.util.Validator;
+import com.tw.go.plugin.GitHelper;
+import com.tw.go.plugin.model.GitConfig;
+import com.tw.go.plugin.model.Revision;
 
-import java.util.ArrayList;
+import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static java.util.stream.Collectors.toList;
 import static org.apache.commons.lang3.exception.ExceptionUtils.getRootCauseMessage;
 
 public class LatestRevisionSinceRequestHandler implements RequestHandler {
@@ -26,9 +26,9 @@ public class LatestRevisionSinceRequestHandler implements RequestHandler {
     public GoPluginApiResponse handle(GoPluginApiRequest apiRequest) {
         Map<String, Object> responseMap = (Map<String, Object>) JsonUtils.parseJSON(apiRequest.requestBody());
 
-        GitConfig gitConfig = GitConfig.create(apiRequest);
+        GitConfig gitConfig = JsonUtils.toGitConfig(apiRequest);
 
-        String flyweightFolder = (String) responseMap.get("flyweight-folder");
+        File flyweightFolder = new File((String) responseMap.get("flyweight-folder"));
         Map<String, Object> previousRevisionMap = (Map<String, Object>) responseMap.get("previous-revision");
         String previousRevision = (String) previousRevisionMap.get("revision");
         LOGGER.debug(String.format("flyweight: %s, previous commit: %s", flyweightFolder, previousRevision));
@@ -42,26 +42,24 @@ public class LatestRevisionSinceRequestHandler implements RequestHandler {
         }
 
         try {
-            GitHelper git = JGitHelper.create(gitConfig, flyweightFolder);
+            GitHelper git = HelperFactory.git(gitConfig, flyweightFolder);
             git.cloneOrFetch();
             Map<String, String> configuration = JsonUtils.parseScmConfiguration(apiRequest);
-            List<Revision> newerRevisions = git.getRevisionsSince(previousRevision, configuration.get("path"));
+            final List<String> paths = List.of(configuration.get("path").split(","));
+            List<Revision> newerRevisions = git.getRevisionsSince(previousRevision, paths);
 
-            LOGGER.debug(String.format("Fetching newerRevisions for path %s", configuration.get("path")));
+            LOGGER.debug(String.format("Fetching newerRevisions for paths %s", paths));
 
-            if (ListUtils.isEmpty(newerRevisions)) {
+            if (newerRevisions.isEmpty()) {
                 return JsonUtils.renderSuccessApiResponse(null);
             } else {
                 LOGGER.debug(String.format("New commits: %s", newerRevisions.size()));
-
-                Map<String, Object> response = new HashMap<>();
-                List<Map> revisions = new ArrayList<>();
-                for (Revision revision : newerRevisions) {
-                    Map<String, Object> revisionMap = revision.getRevisionMap();
-                    revisions.add(revisionMap);
-                }
-                response.put("revisions", revisions);
-                return JsonUtils.renderSuccessApiResponse(response);
+                return JsonUtils.renderSuccessApiResponse(
+                        Map.of("revisions",
+                                newerRevisions
+                                        .stream()
+                                        .map(RevisionUtil::toMap)
+                                        .collect(toList())));
             }
         } catch (Throwable t) {
             LOGGER.error("get latest revisions since: ", t);

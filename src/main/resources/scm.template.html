@@ -1,35 +1,71 @@
-<div class="form_item_block">
-    <label>URL:<span class="asterisk">*</span></label>
-    <input type="text" ng-model="url" ng-required="true" tabindex="1"/>
-    <span class="form_error" ng-show="GOINPUTNAME[url].$error.server">
-        {{ GOINPUTNAME[url].$error.server }}
-    </span>
-</div>
-<div class="form_item_block">
-    <label>Username:</label>
-    <input type="text" ng-model="username" ng-required="false" tabindex="2"/>
-    <span class="form_error" ng-show="GOINPUTNAME[username].$error.server">
-        {{ GOINPUTNAME[username].$error.server }}
-    </span>
-</div>
-<div class="form_item_block">
-    <label>Password:</label>
-    <input type="password" ng-model="password" ng-required="false" tabindex="3"/>
-    <span class="form_error" ng-show="GOINPUTNAME[password].$error.server">
-        {{ GOINPUTNAME[password].$error.server }}
-    </span>
-</div>
-<div class="form_item_block">
-    <label>Path:</label>
-    <input type="text" ng-model="path" ng-required="true" tabindex="4"/>
-    <span class="form_error" ng-show="GOINPUTNAME[path].$error.server">
-        {{ GOINPUTNAME[path].$error.server }}
-    </span>
-</div>
-<div class="form_item_block">
-    <label>Branch:</label>
-    <input type="text" ng-model="branch" ng-required="false" tabindex="5"/>
-    <span class="form_error" ng-show="GOINPUTNAME[branch].$error.server">
-        {{ GOINPUTNAME[branch].$error.server }}
-    </span>
+<div data-plugin-style-id="git-path-plugin">
+    <style>
+        [data-plugin-style-id="git-path-plugin"] .form-help-content {
+            color: #666;
+            clear: both;
+            font-size: 0.82rem;
+            font-style: italic;
+            margin-top: -15px;
+            padding-left: 2px;
+            margin-bottom: 10px;
+        }
+
+        [data-plugin-style-id="git-path-plugin"] .form-help-content code {
+            border: 0px;
+            padding: 2px 5px;
+            border-radius: 3px;
+            background-color: #eee;
+        }
+
+        [data-plugin-style-id="git-path-plugin"] .form-help-content .code {
+            padding: 16px;
+            overflow: auto;
+            font-size: 85%;
+            line-height: 1.45;
+            border-radius: 3px;
+            background-color: #f6f8fa;
+        }
+    </style>
+
+    <div class="form_item_block required">
+        <label>URL<span class="asterisk">*</span></label>
+        <input type="text" ng-model="url" ng-required="true" tabindex="1"/>
+        <span class="form_error" ng-show="GOINPUTNAME[url].$error.server">
+            {{ GOINPUTNAME[url].$error.server }}
+        </span>
+    </div>
+    <div class="form_item_block">
+        <label>Username</label>
+        <input type="text" ng-model="username" ng-required="false" tabindex="2"/>
+        <span class="form_error" ng-show="GOINPUTNAME[username].$error.server">
+            {{ GOINPUTNAME[username].$error.server }}
+        </span>
+    </div>
+    <div class="form_item_block">
+        <label>Password</label>
+        <input type="password" ng-model="password" ng-required="false" tabindex="3"/>
+        <span class="form_error" ng-show="GOINPUTNAME[password].$error.server">
+            {{ GOINPUTNAME[password].$error.server }}
+        </span>
+    </div>
+    <div class="form_item_block">
+        <label>Monitored Paths (separate multiple entries with a comma)</label>
+        <input type="text" ng-model="path" ng-required="true" tabindex="4"/>
+        <span class="form_error" ng-show="GOINPUTNAME[path].$error.server">
+            {{ GOINPUTNAME[path].$error.server }}
+        </span>
+        <label class="form-help-content">
+            Sub-paths such as <code>folder/subfolder</code> are supported. For purposes of
+            <a href="https://docs.gocd.org/current/advanced_usage/fan_in.html">fan-in</a>; the exact string
+            of this path will be matched; so if you want two pipelines to fan-in, their monitored paths setting must be
+            identical.
+        </label>
+    </div>
+    <div class="form_item_block">
+        <label>Branch</label>
+        <input type="text" ng-model="branch" ng-required="false" tabindex="5"/>
+        <span class="form_error" ng-show="GOINPUTNAME[branch].$error.server">
+            {{ GOINPUTNAME[branch].$error.server }}
+        </span>
+    </div>
 </div>

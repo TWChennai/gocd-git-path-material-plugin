@@ -1,14 +1,14 @@
 package com.thoughtworks.go.scm.plugin.model.requestHandlers;
 
-import com.thoughtworks.go.scm.plugin.jgit.GitHelper;
-import com.thoughtworks.go.scm.plugin.jgit.JGitHelper;
-import com.thoughtworks.go.scm.plugin.model.GitConfig;
-import com.thoughtworks.go.scm.plugin.util.JsonUtils;
-import com.thoughtworks.go.scm.plugin.util.StringUtils;
-import com.thoughtworks.go.scm.plugin.util.Validator;
 import com.thoughtworks.go.plugin.api.logging.Logger;
 import com.thoughtworks.go.plugin.api.request.GoPluginApiRequest;
 import com.thoughtworks.go.plugin.api.response.GoPluginApiResponse;
+import com.thoughtworks.go.scm.plugin.HelperFactory;
+import com.thoughtworks.go.scm.plugin.util.JsonUtils;
+import com.thoughtworks.go.scm.plugin.util.Validator;
+import com.tw.go.plugin.GitHelper;
+import com.tw.go.plugin.model.GitConfig;
+import com.tw.go.plugin.util.StringUtil;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -22,7 +22,7 @@ public class SCMCheckConnectionRequestHandler implements RequestHandler {
 
     @Override
     public GoPluginApiResponse handle(GoPluginApiRequest goPluginApiRequest) {
-        GitConfig gitConfig = GitConfig.create(goPluginApiRequest);
+        GitConfig gitConfig = JsonUtils.toGitConfig(goPluginApiRequest);
 
         Map<String, Object> response = new HashMap<>();
         ArrayList<String> messages = new ArrayList<>();
@@ -40,7 +40,7 @@ public class SCMCheckConnectionRequestHandler implements RequestHandler {
     private void checkConnection(GitConfig gitConfig, Map<String, Object> response, ArrayList<String> messages) {
         LOGGER.debug("SCMCheckConnectionRequestHandler In handle");
         try {
-            if (StringUtils.isEmpty(gitConfig.getUrl())) {
+            if (StringUtil.isEmpty(gitConfig.getUrl())) {
                 response.put("status", "failure");
                 messages.add("URL is empty");
             } else if (gitConfig.getUrl().startsWith("/")) {
@@ -48,7 +48,7 @@ public class SCMCheckConnectionRequestHandler implements RequestHandler {
                     response.put("status", "failure");
                     messages.add("Could not find Git repository");
                 } else {
-                    GitHelper gitHelper = JGitHelper.create(gitConfig, null);
+                    GitHelper gitHelper = HelperFactory.git(gitConfig, null);
                     gitHelper.checkConnection();
                 }
             } else {
@@ -57,7 +57,7 @@ public class SCMCheckConnectionRequestHandler implements RequestHandler {
                     messages.add("Invalid URL format. Should match "+Validator.GIT_URL_REGEX);
                 } else {
                     try {
-                        GitHelper gitHelper = JGitHelper.create(gitConfig, null);
+                        GitHelper gitHelper = HelperFactory.git(gitConfig, null);
                         gitHelper.checkConnection();
                     } catch (Exception e) {
                         response.put("status", "failure");

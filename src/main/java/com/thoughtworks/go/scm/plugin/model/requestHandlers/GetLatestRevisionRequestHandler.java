@@ -3,14 +3,16 @@ package com.thoughtworks.go.scm.plugin.model.requestHandlers;
 import com.thoughtworks.go.plugin.api.logging.Logger;
 import com.thoughtworks.go.plugin.api.request.GoPluginApiRequest;
 import com.thoughtworks.go.plugin.api.response.GoPluginApiResponse;
-import com.thoughtworks.go.scm.plugin.jgit.GitHelper;
-import com.thoughtworks.go.scm.plugin.jgit.JGitHelper;
-import com.thoughtworks.go.scm.plugin.model.GitConfig;
-import com.thoughtworks.go.scm.plugin.model.Revision;
+import com.thoughtworks.go.scm.plugin.HelperFactory;
 import com.thoughtworks.go.scm.plugin.util.JsonUtils;
 import com.thoughtworks.go.scm.plugin.util.Validator;
+import com.tw.go.plugin.GitHelper;
+import com.tw.go.plugin.model.GitConfig;
+import com.tw.go.plugin.model.Revision;
 
+import java.io.File;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static org.apache.commons.lang3.exception.ExceptionUtils.getRootCauseMessage;
@@ -21,9 +23,9 @@ public class GetLatestRevisionRequestHandler implements RequestHandler {
     @Override
     @SuppressWarnings("unchecked")
     public GoPluginApiResponse handle(GoPluginApiRequest apiRequest) {
-        GitConfig gitConfig = GitConfig.create(apiRequest);
+        GitConfig gitConfig = JsonUtils.toGitConfig(apiRequest);
         Map<String, Object> responseMap = (Map<String, Object>) JsonUtils.parseJSON(apiRequest.requestBody());
-        String flyweightFolder = (String) responseMap.get("flyweight-folder");
+        File flyweightFolder = new File((String) responseMap.get("flyweight-folder"));
 
         Map<String, Object> fieldMap = new HashMap<>();
         Validator.validateUrl(gitConfig, fieldMap);
@@ -34,20 +36,18 @@ public class GetLatestRevisionRequestHandler implements RequestHandler {
         }
 
         try {
-            GitHelper git = JGitHelper.create(gitConfig, flyweightFolder);
+            GitHelper git = HelperFactory.git(gitConfig, flyweightFolder);
             git.cloneOrFetch();
             Map<String, String> configuration = JsonUtils.parseScmConfiguration(apiRequest);
-            final Revision revision = git.getLatestRevision(configuration.get("path"));
+            final List<String> paths = List.of(configuration.get("path").split(","));
+            final Revision revision = git.getLatestRevision(paths);
 
-            LOGGER.debug(String.format("Fetching latestRevision for path %s", configuration.get("path")));
+            LOGGER.debug(String.format("Fetching latestRevision for paths %s", paths));
 
             if (revision == null) {
                 return JsonUtils.renderSuccessApiResponse(null);
             } else {
-                Map<String, Object> response = new HashMap<String, Object>() {{
-                    put("revision", revision.getRevisionMap());
-                }};
-                return JsonUtils.renderSuccessApiResponse(response);
+                return JsonUtils.renderSuccessApiResponse(Map.of("revision", RevisionUtil.toMap(revision)));
             }
         } catch (Throwable t) {
             LOGGER.error("get latest revision: ", t);

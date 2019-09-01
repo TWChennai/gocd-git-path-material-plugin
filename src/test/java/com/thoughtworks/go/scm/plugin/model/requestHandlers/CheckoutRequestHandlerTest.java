@@ -2,32 +2,33 @@ package com.thoughtworks.go.scm.plugin.model.requestHandlers;
 
 import com.thoughtworks.go.plugin.api.request.GoPluginApiRequest;
 import com.thoughtworks.go.plugin.api.response.GoPluginApiResponse;
-import com.thoughtworks.go.scm.plugin.jgit.JGitHelper;
-import com.thoughtworks.go.scm.plugin.model.GitConfig;
+import com.thoughtworks.go.scm.plugin.HelperFactory;
 import com.thoughtworks.go.scm.plugin.util.JsonUtils;
+import com.tw.go.plugin.jgit.JGitHelper;
+import com.tw.go.plugin.model.GitConfig;
 import org.eclipse.jgit.errors.TransportException;
+import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
+import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 import static org.apache.commons.lang3.exception.ExceptionUtils.getRootCauseMessage;
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.collection.IsMapContaining.hasEntry;
-import static org.hamcrest.core.IsCollectionContaining.hasItem;
+import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({JsonUtils.class, JGitHelper.class, GitConfig.class})
+@PrepareForTest({JsonUtils.class, JGitHelper.class, GitConfig.class, HelperFactory.class})
 public class CheckoutRequestHandlerTest {
 
     private GoPluginApiRequest pluginApiRequestMock;
@@ -35,10 +36,11 @@ public class CheckoutRequestHandlerTest {
     private String revision;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         PowerMockito.mockStatic(JsonUtils.class);
         PowerMockito.mockStatic(JGitHelper.class);
         PowerMockito.mockStatic(GitConfig.class);
+        PowerMockito.mockStatic(HelperFactory.class);
 
         pluginApiRequestMock = mock(GoPluginApiRequest.class);
         revision = "b6d7a9c";
@@ -48,17 +50,15 @@ public class CheckoutRequestHandlerTest {
         final String destinationFolder = "destination";
         final String responseBody = "mocked body";
 
-        HashMap<String, Object> requestBody = new HashMap<String, Object>() {{
-            put("destination-folder", destinationFolder);
-            put("revision", new HashMap<String, Object>() {{
-                put("revision", revision);
-            }});
-        }};
+        Map<String, Object> requestBody = Map.of(
+                "destination-folder", destinationFolder,
+                "revision", Map.of("revision", revision)
+        );
 
         when(pluginApiRequestMock.requestBody()).thenReturn(responseBody);
         when(JsonUtils.parseJSON(responseBody)).thenReturn(requestBody);
-        when(GitConfig.create(pluginApiRequestMock)).thenReturn(gitConfigMock);
-        when(JGitHelper.create(gitConfigMock, destinationFolder)).thenReturn(jGitHelperMock);
+        when(JsonUtils.toGitConfig(pluginApiRequestMock)).thenReturn(gitConfigMock);
+        when(HelperFactory.git(eq(gitConfigMock), Mockito.any(File.class))).thenReturn(jGitHelperMock);
     }
 
     @Test
@@ -75,10 +75,10 @@ public class CheckoutRequestHandlerTest {
         verify(jGitHelperMock).resetHard(revision);
 
         Map<String, Object> responseMap = responseArgumentCaptor.getValue();
-        ArrayList<String> messages = (ArrayList<String>)responseMap.get("messages");
+        ArrayList<String> messages = (ArrayList<String>) responseMap.get("messages");
 
         assertThat(responseMap, hasEntry("status", "success"));
-        assertThat(messages, hasItem(String.format("Checked out to revision %s", revision)));
+        assertThat(messages, Matchers.contains(String.format("Checked out to revision %s", revision)));
     }
 
     @Test

@@ -2,10 +2,11 @@ package com.thoughtworks.go.scm.plugin.model.requestHandlers;
 
 import com.thoughtworks.go.plugin.api.request.GoPluginApiRequest;
 import com.thoughtworks.go.plugin.api.response.GoPluginApiResponse;
-import com.thoughtworks.go.scm.plugin.jgit.JGitHelper;
-import com.thoughtworks.go.scm.plugin.model.GitConfig;
-import com.thoughtworks.go.scm.plugin.model.Revision;
+import com.thoughtworks.go.scm.plugin.HelperFactory;
 import com.thoughtworks.go.scm.plugin.util.JsonUtils;
+import com.tw.go.plugin.jgit.JGitHelper;
+import com.tw.go.plugin.model.GitConfig;
+import com.tw.go.plugin.model.Revision;
 import org.eclipse.jgit.errors.TransportException;
 import org.junit.Before;
 import org.junit.Test;
@@ -15,28 +16,30 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import java.util.HashMap;
+import java.io.File;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 import static org.apache.commons.lang3.exception.ExceptionUtils.getRootCauseMessage;
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.collection.IsMapContaining.hasEntry;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({JsonUtils.class, JGitHelper.class, GitConfig.class})
+@PrepareForTest({JsonUtils.class, GitConfig.class, HelperFactory.class})
 public class GetLatestRevisionRequestHandlerTest {
     private GoPluginApiRequest pluginApiRequestMock;
     private JGitHelper jGitHelperMock;
     private GitConfig gitConfigMock;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         PowerMockito.mockStatic(JsonUtils.class);
-        PowerMockito.mockStatic(JGitHelper.class);
         PowerMockito.mockStatic(GitConfig.class);
+        PowerMockito.mockStatic(HelperFactory.class);
 
         final String revision = "b6d7a9c";
         pluginApiRequestMock = mock(GoPluginApiRequest.class);
@@ -46,17 +49,14 @@ public class GetLatestRevisionRequestHandlerTest {
         final String flyWeightFolder = "flyweightFolder";
         final String responseBody = "mocked body";
 
-        HashMap<String, Object> requestBody = new HashMap<String, Object>() {{
-            put("flyweight-folder", flyWeightFolder);
-            put("revision", new HashMap<String, Object>() {{
-                put("revision", revision);
-            }});
-        }};
+        Map<String, Object> requestBody = Map.of(
+                "flyweight-folder", flyWeightFolder,
+                "revision", Map.of("revision", revision));
 
         when(pluginApiRequestMock.requestBody()).thenReturn(responseBody);
         when(JsonUtils.parseJSON(responseBody)).thenReturn(requestBody);
-        when(GitConfig.create(pluginApiRequestMock)).thenReturn(gitConfigMock);
-        when(JGitHelper.create(gitConfigMock, flyWeightFolder)).thenReturn(jGitHelperMock);
+        when(JsonUtils.toGitConfig(pluginApiRequestMock)).thenReturn(gitConfigMock);
+        when(HelperFactory.git(gitConfigMock, new File(flyWeightFolder))).thenReturn(jGitHelperMock);
     }
 
     @Test
@@ -75,29 +75,25 @@ public class GetLatestRevisionRequestHandlerTest {
     @Test
     @SuppressWarnings("unchecked")
     public void shouldHandleApiRequestAndRenderSuccessApiResponse() {
-        final Revision revisionMock = mock(Revision.class);
+        Revision revision = new Revision("1", new Date(), "comment", "user", "blah@blah.com", Collections.emptyList());
         RequestHandler checkoutRequestHandler = new GetLatestRevisionRequestHandler();
-        ArgumentCaptor<HashMap> responseArgumentCaptor = ArgumentCaptor.forClass(HashMap.class);
-        final String path = "path1, path2";
+        ArgumentCaptor<Map> responseArgumentCaptor = ArgumentCaptor.forClass(Map.class);
+        final String paths = "path1, path2";
 
-        HashMap<String, Object> revisionMap = new HashMap<>();
-        HashMap<String, String> configuration = new HashMap<String, String>() {{
-            put("path", path);
-        }};
+        Map<String, String> configuration = Map.of("path", paths);
 
         when(JsonUtils.renderSuccessApiResponse(responseArgumentCaptor.capture())).thenReturn(mock(GoPluginApiResponse.class));
         when(JsonUtils.parseScmConfiguration(pluginApiRequestMock)).thenReturn(configuration);
         when(gitConfigMock.getUrl()).thenReturn("https://github.com/TWChennai/gocd-git-path-material-plugin.git");
-        when(jGitHelperMock.getLatestRevision(path)).thenReturn(revisionMock);
-        when(revisionMock.getRevisionMap()).thenReturn(revisionMap);
+        when(jGitHelperMock.getLatestRevision(any())).thenReturn(revision);
 
         checkoutRequestHandler.handle(pluginApiRequestMock);
 
         verify(jGitHelperMock).cloneOrFetch();
-        verify(jGitHelperMock).getLatestRevision(path);
+        verify(jGitHelperMock).getLatestRevision(List.of("path1", " path2"));
 
-        Map<String, String> responseMap = responseArgumentCaptor.getValue();
-        assertThat(responseMap, hasEntry("revision", (Object) revisionMap));
+        Map<String, Object> responseMap = responseArgumentCaptor.getValue();
+        assertThat(responseMap.size(), is(1));
     }
 
     @Test

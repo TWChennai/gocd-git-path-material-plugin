@@ -3,6 +3,7 @@ package com.thoughtworks.go.scm.plugin.util;
 import com.thoughtworks.go.plugin.api.logging.Logger;
 import com.thoughtworks.go.plugin.api.request.GoPluginApiRequest;
 import com.thoughtworks.go.plugin.api.response.GoPluginApiResponse;
+import com.tw.go.plugin.model.GitConfig;
 import org.codehaus.jackson.map.ObjectMapper;
 
 import java.io.IOException;
@@ -81,5 +82,10 @@ public class JsonUtils {
                 return json;
             }
         };
+    }
+
+    public static GitConfig toGitConfig(GoPluginApiRequest apiRequest) {
+        Map<String, String> configuration = parseScmConfiguration(apiRequest);
+        return new GitConfig(configuration.get("url"), configuration.get("username"), configuration.get("password"), configuration.get("branch"));
     }
 }

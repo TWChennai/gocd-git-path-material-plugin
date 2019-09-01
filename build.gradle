@@ -40,12 +40,9 @@ check.dependsOn jacocoTestReport
 dependencies {
     implementation "cd.go.plugin:go-plugin-api:${project.pluginDesc.goCdVersion}"
 
-    implementation 'ch.qos.logback:logback-classic:1.2.3'
-    implementation 'org.apache.commons:commons-lang3:3.9'
-    implementation 'commons-io:commons-io:2.6'
+    implementation 'in.ashwanthkumar:git-cmd:2.0'
     implementation 'org.codehaus.jackson:jackson-mapper-asl:1.9.13'
-    implementation 'org.eclipse.jgit:org.eclipse.jgit:5.4.2.201908231537-r'
-    implementation 'joda-time:joda-time:2.10.3'
+    implementation 'org.apache.commons:commons-lang3:3.9'
 
     testImplementation 'junit:junit:4.12'
     testImplementation 'org.hamcrest:hamcrest-core:2.1'
