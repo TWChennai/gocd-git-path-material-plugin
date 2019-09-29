@@ -26,7 +26,7 @@ public class LatestRevisionSinceRequestHandler implements RequestHandler {
     public GoPluginApiResponse handle(GoPluginApiRequest apiRequest) {
         Map<String, Object> responseMap = (Map<String, Object>) JsonUtils.parseJSON(apiRequest.requestBody());
 
-        GitConfig gitConfig = JsonUtils.toGitConfig(apiRequest);
+        GitConfig gitConfig = JsonUtils.toServerSideGitConfig(apiRequest);
 
         File flyweightFolder = new File((String) responseMap.get("flyweight-folder"));
         Map<String, Object> previousRevisionMap = (Map<String, Object>) responseMap.get("previous-revision");

@@ -37,16 +37,6 @@ public class JsonUtilsTests {
         }
     }
 
-    private class ScmConfigurationResponse implements Serializable {
-        @Getter
-
-        Map<String, Object> scmConfiguration;
-
-        ScmConfigurationResponse(Map<String, Object> scmConfiguration) {
-            this.scmConfiguration = scmConfiguration;
-        }
-    }
-
     @Test
     public void shouldReturnGoPluginApiResponseWithSuccessCode() throws IOException {
         Response response = new Response("Hello");

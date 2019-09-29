@@ -55,7 +55,7 @@ public class GetLatestRevisionRequestHandlerTest {
 
         when(pluginApiRequestMock.requestBody()).thenReturn(responseBody);
         when(JsonUtils.parseJSON(responseBody)).thenReturn(requestBody);
-        when(JsonUtils.toGitConfig(pluginApiRequestMock)).thenReturn(gitConfigMock);
+        when(JsonUtils.toServerSideGitConfig(pluginApiRequestMock)).thenReturn(gitConfigMock);
         when(HelperFactory.git(gitConfigMock, new File(flyWeightFolder))).thenReturn(jGitHelperMock);
     }
 
