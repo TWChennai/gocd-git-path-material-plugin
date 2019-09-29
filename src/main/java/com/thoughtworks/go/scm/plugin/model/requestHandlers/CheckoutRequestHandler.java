@@ -6,11 +6,14 @@ import com.thoughtworks.go.plugin.api.response.GoPluginApiResponse;
 import com.thoughtworks.go.scm.plugin.HelperFactory;
 import com.thoughtworks.go.scm.plugin.util.JsonUtils;
 import com.tw.go.plugin.GitHelper;
+import com.tw.go.plugin.cmd.InMemoryConsumer;
+import com.tw.go.plugin.cmd.ProcessOutputStreamConsumer;
 import com.tw.go.plugin.model.GitConfig;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static org.apache.commons.lang3.exception.ExceptionUtils.getRootCauseMessage;
@@ -31,17 +34,19 @@ public class CheckoutRequestHandler implements RequestHandler {
         LOGGER.debug(String.format("destination: %s , commit: %s", destinationFolder, revision));
 
         try {
-            GitHelper git = HelperFactory.git(gitConfig, new File(destinationFolder));
+            List<String> messages = new ArrayList<>();
+            messages.add(String.format("Start updating %s to revision %s from %s", destinationFolder, revision, gitConfig.getUrl()));
+            ProcessOutputStreamConsumer outputConsumer = new ProcessOutputStreamConsumer(new InMemoryConsumer());
+            GitHelper git = HelperFactory.git(gitConfig, new File(destinationFolder), outputConsumer, outputConsumer);
             git.cloneOrFetch();
             git.resetHard(revision);
 
-            Map<String, Object> response = new HashMap<>();
-            ArrayList<String> messages = new ArrayList<>();
+            messages.addAll(outputConsumer.output());
 
-            response.put("status", "success");
-            messages.add(String.format("Checked out to revision %s", revision));
-            response.put("messages", messages);
-            return JsonUtils.renderSuccessApiResponse(response);
+            return JsonUtils.renderSuccessApiResponse(Map.of(
+                    "status", "success",
+                    "messages", messages)
+            );
         } catch (Throwable t) {
             LOGGER.error("checkout: ", t);
             return JsonUtils.renderErrrorApiResponse(getRootCauseMessage(t));

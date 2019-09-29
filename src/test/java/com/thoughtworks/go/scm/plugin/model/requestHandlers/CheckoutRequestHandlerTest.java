@@ -4,6 +4,7 @@ import com.thoughtworks.go.plugin.api.request.GoPluginApiRequest;
 import com.thoughtworks.go.plugin.api.response.GoPluginApiResponse;
 import com.thoughtworks.go.scm.plugin.HelperFactory;
 import com.thoughtworks.go.scm.plugin.util.JsonUtils;
+import com.tw.go.plugin.cmd.ProcessOutputStreamConsumer;
 import com.tw.go.plugin.jgit.JGitHelper;
 import com.tw.go.plugin.model.GitConfig;
 import org.eclipse.jgit.errors.TransportException;
@@ -33,7 +34,8 @@ public class CheckoutRequestHandlerTest {
 
     private GoPluginApiRequest pluginApiRequestMock;
     private JGitHelper jGitHelperMock;
-    private String revision;
+    private String revision = "b6d7a9c";
+    private final String destinationFolder = "destination";
 
     @Before
     public void setUp() {
@@ -43,11 +45,9 @@ public class CheckoutRequestHandlerTest {
         PowerMockito.mockStatic(HelperFactory.class);
 
         pluginApiRequestMock = mock(GoPluginApiRequest.class);
-        revision = "b6d7a9c";
         jGitHelperMock = mock(JGitHelper.class);
 
         GitConfig gitConfigMock = mock(GitConfig.class);
-        final String destinationFolder = "destination";
         final String responseBody = "mocked body";
 
         Map<String, Object> requestBody = Map.of(
@@ -58,7 +58,10 @@ public class CheckoutRequestHandlerTest {
         when(pluginApiRequestMock.requestBody()).thenReturn(responseBody);
         when(JsonUtils.parseJSON(responseBody)).thenReturn(requestBody);
         when(JsonUtils.toGitConfig(pluginApiRequestMock)).thenReturn(gitConfigMock);
-        when(HelperFactory.git(eq(gitConfigMock), Mockito.any(File.class))).thenReturn(jGitHelperMock);
+        when(HelperFactory.git(eq(gitConfigMock),
+                Mockito.any(File.class),
+                Mockito.any(ProcessOutputStreamConsumer.class),
+                Mockito.any(ProcessOutputStreamConsumer.class))).thenReturn(jGitHelperMock);
     }
 
     @Test
@@ -78,7 +81,7 @@ public class CheckoutRequestHandlerTest {
         ArrayList<String> messages = (ArrayList<String>) responseMap.get("messages");
 
         assertThat(responseMap, hasEntry("status", "success"));
-        assertThat(messages, Matchers.contains(String.format("Checked out to revision %s", revision)));
+        assertThat(messages, Matchers.contains(String.format("Start updating %s to revision %s from null", destinationFolder, revision)));
     }
 
     @Test
