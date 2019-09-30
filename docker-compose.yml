@@ -2,21 +2,22 @@ version: '2'
 
 services:
   agent:
-    image: gocd/gocd-agent:16.12.0
+    image: gocd/gocd-agent-ubuntu-18.04:v19.9.0
     depends_on:
       - server
     environment:
-      GO_SERVER: server
-      AGENT_KEY: 079e578b-87cc-46c9-9ab5-88997fc7ac59
+      GO_SERVER_URL: https://server:8154/go
+      AGENT_AUTO_REGISTER_KEY: 079e578b-87cc-46c9-9ab5-88997fc7ac59
+    restart: on-failure
     volumes:
       - ~/.ssh:/var/go/.ssh
 
   server:
-    image: gocd/gocd-server:16.12.0
+    image: gocd/gocd-server:v19.9.0
     volumes:
-      - ./build/libs/gocd-git-path-material-plugin-$VERSION.jar:/plugins/gocd-git-path-material-plugin-$VERSION.jar
-      - ./extras/yaml-config-plugin-0.1.0.jar:/plugins/yaml-config-plugin-0.1.0.jar
-      - ./extras/config.xml:/etc/go/cruise-config.xml
+      - ./build/libs/gocd-git-path-material-plugin-$VERSION.jar:/gocd-git-path-material-plugin-$VERSION.jar
+      - ./extras/config.xml:/config.xml
+      - ./extras/server-extra-entrypoint.sh:/docker-entrypoint.d/server-extra-entrypoint.sh
       - ~/.ssh:/var/go/.ssh
     ports:
       - "8153:8153"
