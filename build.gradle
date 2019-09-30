@@ -3,14 +3,14 @@ group 'com.thoughtworks.com'
 apply plugin: 'java'
 apply plugin: "jacoco"
 
-sourceCompatibility = 1.7
-targetCompatibility = 1.7
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
 
 // these values that go into plugin.xml
 project.ext.pluginDesc = [
         id         : 'com.thoughtworks.gocd',
         version    : project.version,
-        goCdVersion: '15.1.0',
+        goCdVersion: '19.8.0',
         name       : 'Git Path Material',
         description: 'Git Path Material plugin for GoCD',
         vendorName : 'GoCd Contributors',
@@ -31,7 +31,7 @@ jacocoTestReport {
     reports {
         xml.enabled false
         csv.enabled false
-        html.destination "${buildDir}/jacocoHtml"
+        html.destination file("${buildDir}/jacocoHtml")
     }
 }
 
@@ -43,6 +43,7 @@ dependencies {
     compile group: 'joda-time', name: 'joda-time', version: '2.3'
     compile group: 'commons-io', name: 'commons-io', version: '2.4'
     compile group: 'org.projectlombok', name: 'lombok', version: '1.16.10'
+    annotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.16.10'
     compile group: 'ch.qos.logback', name: 'logback-classic', version: '1.1.7'
     compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.4'
     testCompile group: 'junit', name: 'junit', version: '4.11'
@@ -51,6 +52,7 @@ dependencies {
     testCompile group: 'org.powermock', name: 'powermock-module-junit4', version: '1.6.2'
     testCompile group: 'org.powermock', name: 'powermock-core', version: '1.6.2'
     testCompile group: 'org.powermock', name: 'powermock-api-mockito', version: '1.6.2'
+    testAnnotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.16.10'
 }
 
 jar {
@@ -63,7 +65,7 @@ test {
     jacoco {
         append = false
         destinationFile = file("$buildDir/jacoco/jacocoTest.exec")
-        classDumpFile = file("$buildDir/jacoco/classpathdumps")
+        classDumpDir = file("$buildDir/jacoco/classpathdumps")
     }
 }
 
