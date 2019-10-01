@@ -49,3 +49,5 @@ You can stop the running docker instance with the following gradle task
 ```bash
 ./gradlew clean stopGoCd
 ```
+
+#contributed by Pasan Yasara
