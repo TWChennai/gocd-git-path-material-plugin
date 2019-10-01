@@ -2,6 +2,10 @@ package com.thoughtworks.go.scm.plugin.jgit;
 
 import com.thoughtworks.go.scm.plugin.model.GitConfig;
 import com.thoughtworks.go.scm.plugin.model.Revision;
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
+import java.util.UUID;
 import org.eclipse.jgit.api.CloneCommand;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.LsRemoteCommand;
@@ -18,16 +22,15 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.List;
-import java.util.UUID;
-
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(Git.class)
@@ -224,7 +227,7 @@ public class JGitHelperTest {
 
         verify(cloneCommandMock).setURI(gitConfig.getUrl());
         verify(cloneCommandMock).setDirectory(fileArgumentCaptor.capture());
-        verify(cloneCommandMock.setBranch(gitConfig.getEffectiveBranch()));
+        verify(cloneCommandMock).setBranch(gitConfig.getEffectiveBranch());
 
         assertThat(fileArgumentCaptor.getValue().getPath(), is(equalTo(destinationFolder)));
     }
