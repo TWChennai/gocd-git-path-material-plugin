@@ -4,7 +4,6 @@ import com.thoughtworks.go.plugin.api.request.GoPluginApiRequest;
 import com.thoughtworks.go.plugin.api.response.GoPluginApiResponse;
 import com.thoughtworks.go.scm.plugin.helpers.JsonHelper;
 import com.tw.go.plugin.model.GitConfig;
-import lombok.Getter;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -19,21 +18,27 @@ import static org.mockito.Mockito.when;
 
 public class JsonUtilsTests {
 
-    @Getter
     private class Response {
         private String message;
 
         Response(String message) {
             this.message = message;
         }
+
+        public String getMessage() {
+            return message;
+        }
     }
 
-    @Getter
     private class ConfigurationItem {
         String value;
 
         ConfigurationItem(String value) {
             this.value = value;
+        }
+
+        public String getValue() {
+            return value;
         }
     }
 
