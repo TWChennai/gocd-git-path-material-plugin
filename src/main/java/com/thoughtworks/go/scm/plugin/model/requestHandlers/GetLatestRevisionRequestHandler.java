@@ -38,8 +38,7 @@ public class GetLatestRevisionRequestHandler implements RequestHandler {
         try {
             GitHelper git = HelperFactory.git(gitConfig, flyweightFolder);
             git.cloneOrFetch();
-            Map<String, String> configuration = JsonUtils.parseScmConfiguration(apiRequest);
-            final List<String> paths = List.of(configuration.get("path").split(","));
+            final List<String> paths = JsonUtils.getPaths(apiRequest);
             final Revision revision = git.getLatestRevision(paths);
 
             LOGGER.debug(String.format("Fetching latestRevision for paths %s", paths));

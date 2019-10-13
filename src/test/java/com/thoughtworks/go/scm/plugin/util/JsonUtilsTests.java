@@ -7,8 +7,8 @@ import lombok.Getter;
 import org.junit.Test;
 
 import java.io.IOException;
-import java.io.Serializable;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static org.hamcrest.Matchers.*;
@@ -77,4 +77,14 @@ public class JsonUtilsTests {
         assertThat(actualScmConfiguration, hasEntry("USERNAME", "user"));
         assertThat(actualScmConfiguration, hasEntry("PASSWORD", "pass"));
     }
+
+    @Test
+    public void shouldSplitPath() {
+        assertThat(JsonUtils.splitPaths(null), empty());
+        assertThat(JsonUtils.splitPaths(""), empty());
+        assertThat(JsonUtils.splitPaths("a"), is(List.of("a")));
+        assertThat(JsonUtils.splitPaths(" a   "), is(List.of("a")));
+        assertThat(JsonUtils.splitPaths("a/b, c/d"), is(List.of("a/b", "c/d")));
+    }
+
 }

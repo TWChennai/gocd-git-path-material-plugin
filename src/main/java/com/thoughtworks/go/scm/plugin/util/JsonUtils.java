@@ -4,17 +4,22 @@ import com.thoughtworks.go.plugin.api.logging.Logger;
 import com.thoughtworks.go.plugin.api.request.GoPluginApiRequest;
 import com.thoughtworks.go.plugin.api.response.GoPluginApiResponse;
 import com.tw.go.plugin.model.GitConfig;
+import org.apache.commons.lang3.StringUtils;
 import org.codehaus.jackson.map.ObjectMapper;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class JsonUtils {
     private static final int SUCCESS_RESPONSE_CODE = 200;
     private static final int INTERNAL_ERROR_RESPONSE_CODE = 500;
     private static final Logger LOGGER = Logger.getLoggerFor(JsonUtils.class);
-
+    private static final ObjectMapper objectMapper = new ObjectMapper();
 
     public static GoPluginApiResponse renderSuccessApiResponse(Object response) {
         return renderJSON(SUCCESS_RESPONSE_CODE, response);
@@ -29,7 +34,6 @@ public class JsonUtils {
     }
 
     public static Object parseJSON(String json) {
-        ObjectMapper objectMapper = new ObjectMapper();
         try {
             return objectMapper.readValue(json, Object.class);
         } catch (IOException e) {
@@ -86,12 +90,28 @@ public class JsonUtils {
 
     public static GitConfig toGitConfig(GoPluginApiRequest apiRequest) {
         Map<String, String> configuration = parseScmConfiguration(apiRequest);
-        return new GitConfig(configuration.get("url"), configuration.get("username"), configuration.get("password"), configuration.get("branch"));
+        return new GitConfig(
+                StringUtils.trim(configuration.get("url")),
+                StringUtils.trim(configuration.get("username")),
+                StringUtils.trim(configuration.get("password")),
+                StringUtils.trim(configuration.get("branch")));
     }
 
     public static GitConfig toServerSideGitConfig(GoPluginApiRequest apiRequest) {
         GitConfig config = toGitConfig(apiRequest);
         config.setNoCheckout(true);
         return config;
+    }
+
+    public static List<String> getPaths(GoPluginApiRequest apiRequest) {
+        return splitPaths(parseScmConfiguration(apiRequest).get("path"));
+    }
+
+    static List<String> splitPaths(String paths) {
+        return Stream.ofNullable(paths)
+                .flatMap(rawPaths -> Arrays.stream(rawPaths.split(",")))
+                .map(String::trim)
+                .filter(StringUtils::isNotEmpty)
+                .collect(Collectors.toList());
     }
 }
