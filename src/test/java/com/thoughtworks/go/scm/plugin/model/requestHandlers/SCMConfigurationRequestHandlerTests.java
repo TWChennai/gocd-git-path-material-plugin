@@ -73,10 +73,25 @@ public class SCMConfigurationRequestHandlerTests {
         Map<String, Object> response = JsonHelper.getResponse(apiResponse);
         Map<String, String> urlField = (Map<String, String>) response.get("path");
 
-        assertThat(urlField, hasEntry("display-name", "Path"));
+        assertThat(urlField, hasEntry("display-name", "Monitored Paths"));
         assertThat(urlField, hasEntry("part-of-identity", (Object) true));
         assertThat(urlField, hasEntry("required", (Object) true));
         assertThat(urlField, hasEntry("secure", (Object) false));
         assertThat(urlField, hasEntry("display-order", "3"));
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    public void responseShouldContainShallowCloneField() throws IOException {
+        GoPluginApiResponse apiResponse = requestHandler.handle(apiRequest);
+
+        Map<String, Object> response = JsonHelper.getResponse(apiResponse);
+        Map<String, String> urlField = (Map<String, String>) response.get("shallow_clone");
+
+        assertThat(urlField, hasEntry("display-name", "Shallow Clone"));
+        assertThat(urlField, hasEntry("part-of-identity", (Object) false));
+        assertThat(urlField, hasEntry("required", (Object) false));
+        assertThat(urlField, hasEntry("secure", (Object) false));
+        assertThat(urlField, hasEntry("display-order", "5"));
     }
 }

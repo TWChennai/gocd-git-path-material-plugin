@@ -1,8 +1,9 @@
 package com.thoughtworks.go.scm.plugin.util;
 
-import com.thoughtworks.go.scm.plugin.helpers.JsonHelper;
 import com.thoughtworks.go.plugin.api.request.GoPluginApiRequest;
 import com.thoughtworks.go.plugin.api.response.GoPluginApiResponse;
+import com.thoughtworks.go.scm.plugin.helpers.JsonHelper;
+import com.tw.go.plugin.model.GitConfig;
 import lombok.Getter;
 import org.junit.Test;
 
@@ -11,9 +12,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.hamcrest.Matchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.collection.IsMapContaining.hasEntry;
+import static org.hamcrest.Matchers.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -58,24 +58,49 @@ public class JsonUtilsTests {
     }
 
     @Test
-    public void shouldReturnScmConfiguration() throws IOException {
-        final Map<String, Object> configurationMap = new HashMap<String, Object>() {{
-            put("SCM_URL", new ConfigurationItem("http://localhost.com"));
-            put("USERNAME", new ConfigurationItem("user"));
-            put("PASSWORD", new ConfigurationItem("pass"));
-        }};
+    public void shouldReturnGitConfig() throws IOException {
+        final Map<String, Object> configurationMap = Map.of(
+                "url", new ConfigurationItem("http://localhost.com"),
+                "username", new ConfigurationItem("user"),
+                "password", new ConfigurationItem("pass")
+        );
 
+        GitConfig config = JsonUtils.toAgentGitConfig(mockApiRequestFor(configurationMap));
+
+        assertThat(config.getUrl(), is("http://localhost.com"));
+        assertThat(config.getUsername(), is("user"));
+        assertThat(config.getPassword(), is("pass"));
+        assertThat(config.getEffectiveBranch(), is("master"));
+        assertThat(config.isRecursiveSubModuleUpdate(), is(true));
+        assertThat(config.isShallowClone(), is(false));
+    }
+
+    @Test
+    public void shouldReturnGitConfigWithShallowClone() throws IOException {
+        final Map<String, Object> configurationMap = Map.of(
+                "url", new ConfigurationItem("http://localhost.com"),
+                "username", new ConfigurationItem("user"),
+                "password", new ConfigurationItem("pass"),
+                "shallow_clone", new ConfigurationItem("true")
+        );
+
+        GitConfig config = JsonUtils.toAgentGitConfig(mockApiRequestFor(configurationMap));
+
+        assertThat(config.getUrl(), is("http://localhost.com"));
+        assertThat(config.getUsername(), is("user"));
+        assertThat(config.getPassword(), is("pass"));
+        assertThat(config.getEffectiveBranch(), is("master"));
+        assertThat(config.isRecursiveSubModuleUpdate(), is(true));
+        assertThat(config.isShallowClone(), is(true));
+    }
+
+    private GoPluginApiRequest mockApiRequestFor(Map<String, Object> configurationMap) throws IOException {
         GoPluginApiRequest apiRequest = mock(GoPluginApiRequest.class);
         Map<String, Object> scmConfiguration = new HashMap<>();
         scmConfiguration.put("scm-configuration", configurationMap);
         String responseBody = JsonHelper.toJson(scmConfiguration);
         when(apiRequest.requestBody()).thenReturn(responseBody);
-
-        Map<String, String> actualScmConfiguration = JsonUtils.parseScmConfiguration(apiRequest);
-
-        assertThat(actualScmConfiguration, hasEntry("SCM_URL", "http://localhost.com"));
-        assertThat(actualScmConfiguration, hasEntry("USERNAME", "user"));
-        assertThat(actualScmConfiguration, hasEntry("PASSWORD", "pass"));
+        return apiRequest;
     }
 
     @Test

@@ -12,7 +12,6 @@ import com.tw.go.plugin.model.GitConfig;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -25,7 +24,7 @@ public class CheckoutRequestHandler implements RequestHandler {
     @SuppressWarnings("unchecked")
     public GoPluginApiResponse handle(GoPluginApiRequest apiRequest) {
         Map<String, Object> responseMap = (Map<String, Object>) JsonUtils.parseJSON(apiRequest.requestBody());
-        GitConfig gitConfig = JsonUtils.toGitConfig(apiRequest);
+        GitConfig gitConfig = JsonUtils.toAgentGitConfig(apiRequest);
 
         String destinationFolder = (String) responseMap.get("destination-folder");
         Map<String, Object> revisionMap = (Map<String, Object>) responseMap.get("revision");

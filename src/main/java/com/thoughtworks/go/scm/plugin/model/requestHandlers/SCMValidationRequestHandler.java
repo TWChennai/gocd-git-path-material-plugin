@@ -15,7 +15,7 @@ import java.util.Map;
 public class SCMValidationRequestHandler implements RequestHandler {
     @Override
     public GoPluginApiResponse handle(GoPluginApiRequest apiRequest) {
-        final GitConfig gitConfig = JsonUtils.toGitConfig(apiRequest);
+        final GitConfig gitConfig = JsonUtils.toServerSideGitConfig(apiRequest);
         List<Map<String, Object>> response = new ArrayList<>();
 
         validate(response, fieldValidation -> Validator.validateUrl(gitConfig, fieldValidation));

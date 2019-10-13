@@ -57,7 +57,7 @@ public class CheckoutRequestHandlerTest {
 
         when(pluginApiRequestMock.requestBody()).thenReturn(responseBody);
         when(JsonUtils.parseJSON(responseBody)).thenReturn(requestBody);
-        when(JsonUtils.toGitConfig(pluginApiRequestMock)).thenReturn(gitConfigMock);
+        when(JsonUtils.toAgentGitConfig(pluginApiRequestMock)).thenReturn(gitConfigMock);
         when(HelperFactory.git(eq(gitConfigMock),
                 Mockito.any(File.class),
                 Mockito.any(ProcessOutputStreamConsumer.class),

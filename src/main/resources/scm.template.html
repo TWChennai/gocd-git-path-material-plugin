@@ -68,4 +68,21 @@
             {{ GOINPUTNAME[branch].$error.server }}
         </span>
     </div>
+    <div class="form_item_block checkbox_row material_options">
+        <input id="shallow_clone2" type="checkbox" ng-model="shallow_clone2" ng-init="shallow_clone2 = shallow_clone"
+               ng-change="shallow_clone = shallow_clone2" ng-true-value="true" ng-false-value="false" tabindex="6"/>
+        <input id="shallow_clone" type="hidden" ng-model="shallow_clone" value="{{shallow_clone}}"/>
+        <label>Shallow clone (recommended for large repositories)</label>
+<!--        <input type="radio" ng-model="email_smtp_ssl" value="true" checked="checked"/> Yes-->
+<!--        <input type="radio" ng-model="email_smtp_ssl" value="false"/> No-->
+
+        <span class="form_error" ng-show="GOINPUTNAME[shallow_clone].$error.server">
+            {{ GOINPUTNAME[shallow_clone].$error.server }}
+        </span>
+        <label class="form-help-content" style="margin-top: 0">
+            Shallow clones are only supported on agents which have a full <code>git</code> command-line client available; and
+            should not be used for jobs where a task requires the full Git history (e.g for producing counts of
+            commits/changes).
+        </label>
+    </div>
 </div>

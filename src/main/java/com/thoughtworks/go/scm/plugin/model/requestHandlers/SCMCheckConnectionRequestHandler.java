@@ -22,7 +22,7 @@ public class SCMCheckConnectionRequestHandler implements RequestHandler {
 
     @Override
     public GoPluginApiResponse handle(GoPluginApiRequest goPluginApiRequest) {
-        GitConfig gitConfig = JsonUtils.toGitConfig(goPluginApiRequest);
+        GitConfig gitConfig = JsonUtils.toServerSideGitConfig(goPluginApiRequest);
 
         Map<String, Object> response = new HashMap<>();
         ArrayList<String> messages = new ArrayList<>();
