@@ -5,6 +5,7 @@ GoCD plugin to introduce a material, that watches on a sub-directory of git repo
 [![Build Status](https://travis-ci.org/TWChennai/gocd-git-path-material-plugin.svg?branch=master)](https://travis-ci.org/TWChennai/gocd-git-path-material-plugin)
 
 ![gocd-git-path-material-plugin-add](docs/add-material.png)
+
 ![gocd-git-path-material-plugin-popup](docs/gitmaterial-popup.png)
 
 ### Installation
