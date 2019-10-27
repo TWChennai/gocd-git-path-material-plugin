@@ -24,6 +24,8 @@ public class ValidatorTest {
                 "git@github.com:user/some_project.git",
                 "https://github.com/user/project.git",
                 "http://github.com/user/project.git",
+                "https://github.com/user/project",
+                "http://github.com/user/project",
                 "git@192.168.101.127:user/project.git",
                 "https://192.168.101.127/user/project.git",
                 "http://192.168.101.127/user/project.git",
@@ -48,8 +50,6 @@ public class ValidatorTest {
         ).forEach(url -> assertTrue("Expected to be valid: " + url, isValidURL(url)));
 
         List.of(
-                "git@github.com:user/some_project.gitfoo",
-                "git@github.com:user/some_project.git/foo",
                 "git@git.my01-.com:user/some_project.git",
                 "/path/to/repo.git/",
                 "path/to/repo.git/",

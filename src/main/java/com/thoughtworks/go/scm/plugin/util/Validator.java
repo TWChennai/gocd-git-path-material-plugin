@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
 
 public class Validator {
 
-    public static final String GIT_URL_REGEX = "^(?:git|ssh|https?|git@[\\w-.]+[\\w]+\\.[\\w]+):(?://)?[\\w.@:/~_-]+\\.git(?:/?|#[\\d\\w.\\-_]+?)$";
+    public static final String GIT_URL_REGEX = "^(git|ssh|https?|git@[\\w-.]+[\\w]+\\.[\\w]+):(//)?[\\w.@:/~_-]+(\\.git)?(/?|#[\\d\\w.\\-_]+?)$";
     public static final Pattern pattern = Pattern.compile(GIT_URL_REGEX);
 
     public static boolean isValidURL(String url) {
