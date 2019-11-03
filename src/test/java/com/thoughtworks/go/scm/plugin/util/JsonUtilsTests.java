@@ -55,11 +55,25 @@ public class JsonUtilsTests {
     @Test
     public void shouldReturnGoPluginApiResponseWithFailureCode() throws IOException {
         Response response = new Response("Hello");
-        GoPluginApiResponse apiResponse = JsonUtils.renderErrrorApiResponse(response);
+        GoPluginApiResponse apiResponse = JsonUtils.renderErrorApiResponse(response);
 
         assertThat(apiResponse.responseCode(), is(equalTo(500)));
         assertThat(apiResponse.responseHeaders(), is(nullValue()));
         assertThat(apiResponse.responseBody(), is(equalTo(JsonHelper.toJson(response))));
+    }
+
+    @Test
+    public void shouldReturnGoPluginApiResponseFromThrowable() throws IOException {
+        GoPluginApiRequest request = mock(GoPluginApiRequest.class);
+        when(request.requestName()).thenReturn("test-request");
+
+        Throwable throwable = new IllegalArgumentException("bad args", new IOException("connection failure"));
+
+        GoPluginApiResponse apiResponse = JsonUtils.renderErrorApiResponse(request, throwable);
+
+        assertThat(apiResponse.responseCode(), is(equalTo(500)));
+        assertThat(apiResponse.responseHeaders(), is(nullValue()));
+        assertThat(apiResponse.responseBody(), is(equalTo(JsonHelper.toJson("test-request failed due to [IllegalArgumentException: bad args], rootCause [IOException: connection failure]"))));
     }
 
     @Test

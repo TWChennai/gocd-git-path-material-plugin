@@ -7,6 +7,7 @@ import com.thoughtworks.go.scm.plugin.model.requestHandlers.SCMConfigurationRequ
 import com.tw.go.plugin.model.GitConfig;
 import com.tw.go.plugin.model.ShallowClone;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.codehaus.jackson.map.ObjectMapper;
 
 import java.io.IOException;
@@ -27,8 +28,17 @@ public class JsonUtils {
         return renderJSON(SUCCESS_RESPONSE_CODE, response);
     }
 
-    public static GoPluginApiResponse renderErrrorApiResponse(Object response) {
+    public static GoPluginApiResponse renderErrorApiResponse(Object response) {
         return renderJSON(INTERNAL_ERROR_RESPONSE_CODE, response);
+    }
+
+    public static GoPluginApiResponse renderErrorApiResponse(GoPluginApiRequest apiRequest, Throwable t) {
+        LOGGER.error(apiRequest.requestName() + " failed", t);
+        return renderJSON(INTERNAL_ERROR_RESPONSE_CODE,
+                String.format("%s failed due to [%s], rootCause [%s]",
+                        apiRequest.requestName(),
+                        ExceptionUtils.getMessage(t),
+                        ExceptionUtils.getRootCauseMessage(t)));
     }
 
     public static Map<String, String> parseScmConfiguration(GoPluginApiRequest apiRequest) {

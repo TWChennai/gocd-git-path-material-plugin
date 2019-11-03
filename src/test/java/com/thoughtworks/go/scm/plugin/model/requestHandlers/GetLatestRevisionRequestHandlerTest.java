@@ -64,7 +64,7 @@ public class GetLatestRevisionRequestHandlerTest {
         RequestHandler checkoutRequestHandler = new GetLatestRevisionRequestHandler();
         ArgumentCaptor<String> responseArgumentCaptor = ArgumentCaptor.forClass(String.class);
 
-        when(JsonUtils.renderErrrorApiResponse(responseArgumentCaptor.capture())).thenReturn(mock(GoPluginApiResponse.class));
+        when(JsonUtils.renderErrorApiResponse(responseArgumentCaptor.capture())).thenReturn(mock(GoPluginApiResponse.class));
 
         checkoutRequestHandler.handle(pluginApiRequestMock);
 
@@ -97,17 +97,16 @@ public class GetLatestRevisionRequestHandlerTest {
     @Test
     public void shouldHandleApiRequestAndRenderErrorApiResponseWhenCloneFailed() {
         RequestHandler checkoutRequestHandler = new GetLatestRevisionRequestHandler();
-        ArgumentCaptor<String> responseArgumentCaptor = ArgumentCaptor.forClass(String.class);
+        ArgumentCaptor<Throwable> errorCaptor = ArgumentCaptor.forClass(Throwable.class);
         TransportException cause = new TransportException("git@github.com:lifealike/gocd-config.git: UnknownHostKey: github.com. RSA key fingerprint is 16:27:ac:a5:76:28:2d:36:63:1b:56:4d:eb:df:a6:48");
         RuntimeException runtimeException = new RuntimeException("clone failed", cause);
 
-        when(JsonUtils.renderErrrorApiResponse(responseArgumentCaptor.capture())).thenReturn(mock(GoPluginApiResponse.class));
+        when(JsonUtils.renderErrorApiResponse(eq(pluginApiRequestMock), errorCaptor.capture())).thenReturn(mock(GoPluginApiResponse.class));
         when(gitConfigMock.getUrl()).thenReturn("https://github.com/TWChennai/gocd-git-path-material-plugin.git");
         doThrow(runtimeException).when(jGitHelperMock).cloneOrFetch();
 
         checkoutRequestHandler.handle(pluginApiRequestMock);
 
-        String responseMap = responseArgumentCaptor.getValue();
-        assertThat(responseMap, is(equalTo(getRootCauseMessage(runtimeException))));
+        assertThat(errorCaptor.getValue(), is(runtimeException));
     }
 }

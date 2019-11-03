@@ -38,7 +38,7 @@ public class LatestRevisionSinceRequestHandler implements RequestHandler {
         if (!fieldMap.isEmpty()) {
             String message = (String) fieldMap.get("message");
             LOGGER.error(String.format("Invalid url: %s", message));
-            return JsonUtils.renderErrrorApiResponse(message);
+            return JsonUtils.renderErrorApiResponse(message);
         }
 
         try {
@@ -61,8 +61,7 @@ public class LatestRevisionSinceRequestHandler implements RequestHandler {
                                         .collect(toList())));
             }
         } catch (Throwable t) {
-            LOGGER.error("get latest revisions since: ", t);
-            return JsonUtils.renderErrrorApiResponse(getRootCauseMessage(t));
+            return JsonUtils.renderErrorApiResponse(apiRequest, t);
         }
     }
 }

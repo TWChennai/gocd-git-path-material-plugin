@@ -15,8 +15,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.apache.commons.lang3.exception.ExceptionUtils.getRootCauseMessage;
-
 public class GetLatestRevisionRequestHandler implements RequestHandler {
     private static Logger LOGGER = Logger.getLoggerFor(GetLatestRevisionRequestHandler.class);
 
@@ -32,7 +30,7 @@ public class GetLatestRevisionRequestHandler implements RequestHandler {
         if (!fieldMap.isEmpty()) {
             String message = (String) fieldMap.get("message");
             LOGGER.error(String.format("Invalid url: %s", message));
-            return JsonUtils.renderErrrorApiResponse(message);
+            return JsonUtils.renderErrorApiResponse(message);
         }
 
         try {
@@ -49,8 +47,7 @@ public class GetLatestRevisionRequestHandler implements RequestHandler {
                 return JsonUtils.renderSuccessApiResponse(Map.of("revision", RevisionUtil.toMap(revision)));
             }
         } catch (Throwable t) {
-            LOGGER.error("get latest revision: ", t);
-            return JsonUtils.renderErrrorApiResponse(getRootCauseMessage(t));
+            return JsonUtils.renderErrorApiResponse(apiRequest, t);
         }
     }
 }

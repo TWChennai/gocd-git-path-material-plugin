@@ -87,15 +87,13 @@ public class CheckoutRequestHandlerTest {
     @Test
     public void shouldHandleApiRequestAndRenderErrorApiResponse() {
         RequestHandler checkoutRequestHandler = new CheckoutRequestHandler();
-        ArgumentCaptor<String> responseArgumentCaptor = ArgumentCaptor.forClass(String.class);
+        ArgumentCaptor<Throwable> errorCaptor = ArgumentCaptor.forClass(Throwable.class);
         TransportException cause = new TransportException("git@github.com:lifealike/gocd-config.git: UnknownHostKey: github.com. RSA key fingerprint is 16:27:ac:a5:76:28:2d:36:63:1b:56:4d:eb:df:a6:48");
         RuntimeException runtimeException = new RuntimeException("clone failed", cause);
         doThrow(runtimeException).when(jGitHelperMock).cloneOrFetch();
-        when(JsonUtils.renderErrrorApiResponse(responseArgumentCaptor.capture())).thenReturn(mock(GoPluginApiResponse.class));
+        when(JsonUtils.renderErrorApiResponse(eq(pluginApiRequestMock), errorCaptor.capture())).thenReturn(mock(GoPluginApiResponse.class));
 
         checkoutRequestHandler.handle(pluginApiRequestMock);
-
-        String message = responseArgumentCaptor.getValue();
-        assertThat(message, is(equalTo(getRootCauseMessage(runtimeException))));
+        assertThat(errorCaptor.getValue(), is(runtimeException));
     }
 }

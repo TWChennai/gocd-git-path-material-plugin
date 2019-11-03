@@ -47,8 +47,7 @@ public class CheckoutRequestHandler implements RequestHandler {
                     "messages", messages)
             );
         } catch (Throwable t) {
-            LOGGER.error("checkout: ", t);
-            return JsonUtils.renderErrrorApiResponse(getRootCauseMessage(t));
+            return JsonUtils.renderErrorApiResponse(apiRequest, t);
         }
     }
 }

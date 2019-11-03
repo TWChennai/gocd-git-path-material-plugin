@@ -26,7 +26,7 @@ public class RequestHandlerFactory {
             case REQUEST_CHECKOUT:
                 return new CheckoutRequestHandler();
             default:
-                return new UnkownRequestHandler();
+                return new UnknownRequestHandler();
         }
 
     }

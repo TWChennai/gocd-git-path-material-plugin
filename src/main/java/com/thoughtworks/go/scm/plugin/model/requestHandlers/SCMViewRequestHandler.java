@@ -22,7 +22,7 @@ public class SCMViewRequestHandler implements RequestHandler {
             return JsonUtils.renderSuccessApiResponse(response);
         } catch (IOException e) {
             String message = String.format("Failed to find template: %s", e.getMessage());
-            return JsonUtils.renderErrrorApiResponse(message);
+            return JsonUtils.renderErrorApiResponse(message);
         }
     }
 }
