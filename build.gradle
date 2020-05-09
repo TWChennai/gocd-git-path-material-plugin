@@ -1,13 +1,12 @@
 plugins {
     id 'java'
     id 'jacoco'
-    id 'net.researchgate.release' version '2.8.1'
     id 'com.github.ben-manes.versions' version '0.28.0'
 }
 
 apply from: "https://raw.githubusercontent.com/gocd/gocd-plugin-gradle-task-helpers/master/helper.gradle?_=${(int) (new Date().toInstant().epochSecond / 60)}"
 
-group 'com.thoughtworks.com'
+group 'com.thoughtworks.go'
 
 sourceCompatibility = 1.9
 targetCompatibility = 1.9
@@ -33,7 +32,6 @@ gocdPlugin {
     assetsToRelease = [project.tasks.jar]
 }
 
-// specify the version of your project
 allprojects {
     version = gocdPlugin.fullVersion(project)
 }
