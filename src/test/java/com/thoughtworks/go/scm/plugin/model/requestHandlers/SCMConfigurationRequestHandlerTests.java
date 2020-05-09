@@ -9,8 +9,8 @@ import org.junit.Test;
 import java.io.IOException;
 import java.util.Map;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.collection.IsMapContaining.hasEntry;
 import static org.mockito.Mockito.mock;
@@ -22,7 +22,7 @@ public class SCMConfigurationRequestHandlerTests {
     private GoPluginApiRequest apiRequest;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         requestHandler = new SCMConfigurationRequestHandler();
         apiRequest = mock(GoPluginApiRequest.class);
     }
@@ -73,10 +73,25 @@ public class SCMConfigurationRequestHandlerTests {
         Map<String, Object> response = JsonHelper.getResponse(apiResponse);
         Map<String, String> urlField = (Map<String, String>) response.get("path");
 
-        assertThat(urlField, hasEntry("display-name", "Path"));
+        assertThat(urlField, hasEntry("display-name", "Monitored Paths"));
         assertThat(urlField, hasEntry("part-of-identity", (Object) true));
         assertThat(urlField, hasEntry("required", (Object) true));
         assertThat(urlField, hasEntry("secure", (Object) false));
         assertThat(urlField, hasEntry("display-order", "3"));
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    public void responseShouldContainShallowCloneField() throws IOException {
+        GoPluginApiResponse apiResponse = requestHandler.handle(apiRequest);
+
+        Map<String, Object> response = JsonHelper.getResponse(apiResponse);
+        Map<String, String> urlField = (Map<String, String>) response.get("shallow_clone");
+
+        assertThat(urlField, hasEntry("display-name", "Shallow Clone"));
+        assertThat(urlField, hasEntry("part-of-identity", (Object) false));
+        assertThat(urlField, hasEntry("required", (Object) false));
+        assertThat(urlField, hasEntry("secure", (Object) false));
+        assertThat(urlField, hasEntry("display-order", "5"));
     }
 }

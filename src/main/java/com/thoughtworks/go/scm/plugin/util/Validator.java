@@ -1,16 +1,15 @@
 package com.thoughtworks.go.scm.plugin.util;
 
-import com.thoughtworks.go.scm.plugin.model.GitConfig;
-import org.apache.commons.validator.routines.UrlValidator;
+import com.tw.go.plugin.model.GitConfig;
+import com.tw.go.plugin.util.StringUtil;
 
 import java.io.File;
 import java.util.Map;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Validator {
 
-    public static final String GIT_URL_REGEX = "^(?:git|ssh|https?|git@[\\w-\\.]+[\\w]+\\.[\\w]+):(?:\\/\\/)?[\\w\\.@:\\/~_-]+\\.git(?:\\/?|\\#[\\d\\w\\.\\-_]+?)$";
+    public static final String GIT_URL_REGEX = "^(git|ssh|https?|git@[\\w-.]+[\\w]+\\.[\\w]+):(//)?[\\w.@:/~_-]+(\\.git)?(/?|#[\\d\\w.\\-_]+?)$";
     public static final Pattern pattern = Pattern.compile(GIT_URL_REGEX);
 
     public static boolean isValidURL(String url) {
@@ -18,7 +17,7 @@ public class Validator {
     }
 
     public static void validateUrl(GitConfig gitConfig, Map<String, Object> fieldMap) {
-        if (StringUtils.isEmpty(gitConfig.getUrl())) {
+        if (StringUtil.isEmpty(gitConfig.getUrl())) {
             fieldMap.put("key", "url");
             fieldMap.put("message", "URL is a required field");
         } else {

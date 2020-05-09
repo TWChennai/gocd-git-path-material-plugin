@@ -1,7 +1,5 @@
 package com.thoughtworks.go.scm.plugin;
 
-import com.thoughtworks.go.scm.plugin.model.requestHandlers.RequestHandler;
-import com.thoughtworks.go.scm.plugin.model.requestHandlers.RequestHandlerFactory;
 import com.thoughtworks.go.plugin.api.GoApplicationAccessor;
 import com.thoughtworks.go.plugin.api.GoPlugin;
 import com.thoughtworks.go.plugin.api.GoPluginIdentifier;
@@ -11,6 +9,8 @@ import com.thoughtworks.go.plugin.api.info.PluginContext;
 import com.thoughtworks.go.plugin.api.logging.Logger;
 import com.thoughtworks.go.plugin.api.request.GoPluginApiRequest;
 import com.thoughtworks.go.plugin.api.response.GoPluginApiResponse;
+import com.thoughtworks.go.scm.plugin.model.requestHandlers.RequestHandler;
+import com.thoughtworks.go.scm.plugin.model.requestHandlers.RequestHandlerFactory;
 
 import java.util.Arrays;
 import java.util.List;
@@ -30,11 +30,11 @@ public class GitPathMaterialPlugin implements GoPlugin {
     public GoPluginApiResponse handle(GoPluginApiRequest apiRequest) {
         String requestName = apiRequest.requestName();
         LOGGER.info("Got request: " + requestName);
-        LOGGER.info("With request body: " + apiRequest.requestBody());
+        LOGGER.debug("With request body: " + apiRequest.requestBody());
         RequestHandler requestHandler = RequestHandlerFactory.create(requestName);
         GoPluginApiResponse response = requestHandler.handle(apiRequest);
         LOGGER.info("Response code: " + response.responseCode());
-        LOGGER.info("With response body: " + response.responseBody());
+        LOGGER.debug("With response body: " + response.responseBody());
         return response;
     }
 
@@ -44,7 +44,8 @@ public class GitPathMaterialPlugin implements GoPlugin {
     }
 
     @Load
-    public void onLoad(PluginContext context){
+    public void onLoad(PluginContext context) {
         LOGGER.info("Loading GitPathMaterialPlugin...");
+        LOGGER.info("Type is {}", HelperFactory.determineType());
     }
 }

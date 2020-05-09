@@ -25,7 +25,9 @@ public class RequestHandlerFactory {
                 return new LatestRevisionSinceRequestHandler();
             case REQUEST_CHECKOUT:
                 return new CheckoutRequestHandler();
+            default:
+                return new UnknownRequestHandler();
         }
-        return new UnkownRequestHandler();
+
     }
 }

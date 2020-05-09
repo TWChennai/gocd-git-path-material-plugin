@@ -4,6 +4,7 @@
 # generated files
 bin/
 gen/
+out/
 
 # Intellij project files
 *.iml
@@ -22,3 +23,6 @@ classes/
 .vagrant
 token.sh
 *github-release.tar.bz2
+
+.envrc
+resources-generated/

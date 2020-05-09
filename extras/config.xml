@@ -1,38 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<cruise xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="cruise-config.xsd" schemaVersion="87">
-  <server artifactsdir="artifacts" agentAutoRegisterKey="079e578b-87cc-46c9-9ab5-88997fc7ac59" commandRepositoryLocation="default" serverId="c4100666-f490-408b-8161-bbf75f9eb398" />
-  <scms>
-    <scm id="66458a7e-80f8-4355-bc1a-a41509396ae6" name="action">
-      <pluginConfiguration id="GitPathMaterial" version="1" />
-      <configuration>
-        <property>
-          <key>url</key>
-          <value>https://github.com/TWChennai/gocd-git-path-sample.git</value>
-        </property>
-        <property>
-          <key>path</key>
-          <value>action</value>
-        </property>
-      </configuration>
-    </scm>
-    <scm id="00f75478-0176-4070-8cae-d197f846359c" name="animation">
-      <pluginConfiguration id="GitPathMaterial" version="1" />
-      <configuration>
-        <property>
-          <key>url</key>
-          <value>https://github.com/TWChennai/gocd-git-path-sample.git</value>
-        </property>
-        <property>
-          <key>path</key>
-          <value>animation</value>
-        </property>
-      </configuration>
-    </scm>
-  </scms>
+<cruise xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="cruise-config.xsd" schemaVersion="124">
+  <server artifactsdir="artifacts" agentAutoRegisterKey="079e578b-87cc-46c9-9ab5-88997fc7ac59" webhookSecret="bcf0bb1f-d929-4da9-a1b6-d91271e2536f" commandRepositoryLocation="default" serverId="c4100666-f490-408b-8161-bbf75f9eb398" tokenGenerationKey="d957b18f-ed2f-48fd-920c-dc5ac532d394"/>
   <config-repos>
-    <config-repo plugin="yaml.config.plugin">
-      <git url="https://github.com/TWChennai/gocd-git-path-sample.git" />
+    <config-repo pluginId="yaml.config.plugin" id="gocd-git-path-sample">
+      <git url="https://github.com/TWChennai/gocd-git-path-sample" branch="master" />
     </config-repo>
   </config-repos>
-  <pipelines group="movies" />
 </cruise>
