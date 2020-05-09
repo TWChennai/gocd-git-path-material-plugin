@@ -75,7 +75,7 @@ Available on all compatible versions of GoCD.
 
 ![gocd-git-path-material-plugin-popup](docs/gitmaterial-popup.png)
 
-You can see a sample [here](https://github.com/TWChennai/gocd-git-path-sample/sample-pipelines.gocd.yaml).
+You can see a sample [here](https://github.com/TWChennai/gocd-git-path-sample/blob/master/sample-pipelines.gocd.yaml).
 
 ### Visualising changes
 
