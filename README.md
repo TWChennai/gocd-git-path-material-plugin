@@ -159,9 +159,10 @@ Released via the [gocd-plugin-gradle-task-helpers](https://github.com/gocd/gocd-
 GitHub.
 
 * Check the`gocdPlugin.pluginVersion` version in `build.gradle` and bump if necessary
+    * The release helpers add a `-${COMMIT_NUM}` suffix to the version, so this is not strictly necessary for minor changes.
 * Tag and publish
     ```bash
-    ./gradlew githubRelease                       
-    PRERELEASE=no ./gradlew githubRelease
+    export GITHUB_TOKEN=blah
+    PRERELEASE=no ./gradlew clean build githubRelease
     ```
 * Edit the release description on `GitHub` if necessary.
