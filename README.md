@@ -107,7 +107,7 @@ configure your pipelines as code; you can update the id per the above example.
 
 Custom source control material plugins like the `gocd-git-path-material-plugin` do not have password variables interpolated 
 and populated by the GoCD server using its support for [secrets management](https://docs.gocd.org/current/configuration/secrets_management.html). 
-You can see https://github.com/TWChennai/gocd-git-path-material-plugin/issues/28 and https://github.com/gocd/gocd/issues/8234 for
+You can see [#28](https://github.com/TWChennai/gocd-git-path-material-plugin/issues/28) and [gocd/gocd#8234](https://github.com/gocd/gocd/issues/8234) for
 more detail.
 
 If you use pipelines-as-code to source control your material definitions, it is instead possible to use SSH keys within 
@@ -119,7 +119,7 @@ or any other solution that allows mounting of a file into a container.
 
 Custom source control material plugins like the `gocd-git-path-material-plugin` do not have support for 
 [triggering from webhooks](https://api.gocd.org/current/#webhook), as opposed to the convention material polling approach.
-You can see https://github.com/TWChennai/gocd-git-path-material-plugin/issues/27 and https://github.com/gocd/gocd/issues/8170 for
+You can see [#27](https://github.com/TWChennai/gocd-git-path-material-plugin/issues/27) and [gocd/gocd#8170](https://github.com/gocd/gocd/issues/8170) for
 more detail.
 
 #### Stale data in agent repository clones
