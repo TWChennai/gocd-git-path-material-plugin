@@ -16,7 +16,7 @@ This is the missing GoCD support for [mono-repos](https://developer.atlassian.co
 * Provide **clean, filtered change logs** for pipeline/VSM comparisons showing only changes on the monitored paths within a repository
 
 This plugin is intended as 
-* a **drop-in replacement** for the built-in GoCD Git material
+* a **drop-in replacement** for the built-in GoCD Git material (see [known issues](#known-issues) for some caveats)
 * replaces the problematic use of **whitelists** and **blacklists**
   * whitelists and blacklists in GoCD tend to prevent/block fan-in because materials with different whitelists are still considered equivalent
   by the fan-in algorithm. This makes them unsuitable for use as environment side-channels or dealing with mono-repos.
@@ -103,20 +103,39 @@ configure your pipelines as code; you can update the id per the above example.
 
 ### Known issues
 
-*Creating new pipelines via UI on pre `19.8.0` GoCD versions*
+#### No support for GoCD server secrets management
+
+Custom source control material plugins like the `gocd-git-path-material-plugin` do not have password variables interpolated 
+and populated by the GoCD server using its support for [secrets management](https://docs.gocd.org/current/configuration/secrets_management.html). 
+You can see https://github.com/TWChennai/gocd-git-path-material-plugin/issues/28 and https://github.com/gocd/gocd/issues/8234 for
+more detail.
+
+If you use pipelines-as-code to source control your material definitions, it is instead possible to use SSH keys within 
+your GoCD server and agent to authenticate with a private repository. If running GoCD on Kubernetes, there is support for 
+doing so based on Kubernetes `Secret`s within the [GoCD Helm chart](https://github.com/helm/charts/tree/master/stable/gocd)
+or any other solution that allows mounting of a file into a container.
+
+#### No support for triggering from webhooks
+
+Custom source control material plugins like the `gocd-git-path-material-plugin` do not have support for 
+[triggering from webhooks](https://api.gocd.org/current/#webhook), as opposed to the convention material polling approach.
+You can see https://github.com/TWChennai/gocd-git-path-material-plugin/issues/27 and https://github.com/gocd/gocd/issues/8170 for
+more detail.
+
+#### Stale data in agent repository clones
+
+This plugin uses Git commands to filter the history and determine the most recent revision that matches the
+monitored paths. This means that changes that are not monitored in your paths may be "stale". The plugin does
+not `rm` un-monitored paths from a clone; meaning your build task could accidentally depend on files in the
+repository that are out-of-date.
+
+Be careful with your repository structure to keep your monitored path expressions simple.
+
+#### Creating new pipelines via UI on pre `19.8.0` GoCD versions
 
 You will *not* be able to see *Git Path* material as a material type when creating a new pipeline. 
 Add a dummy git material, then edit to add a new *Git Path* material and remove the old one. This problem
 has been resolved in newer GoCD versions via the pipeline creation wizard.
-
-*Stale data in agent repository clones*
-
-This plugin uses Git commands to filter the history and determine the most recent revision that matches the
-monitored paths. This means that changes that are not monitored in your paths may be "stale". The plugin does
-not `rm` un-monitored paths from a clone; meaning your build task could accidentally be depending on files in the
-repository that are out-of-date.
-
-Be careful with your repository structure to keep your monitored path expressions simple.
 
 ### Contributing
 
