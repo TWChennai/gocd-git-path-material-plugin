@@ -4,7 +4,8 @@
 
 GoCD plugin to introduce a material that watches on a sub-directory of a Git repository.
  
-This is the missing GoCD support for [mono-repos](https://developer.atlassian.com/blog/2015/10/monorepos-in-git/)
+This is the missing GoCD support for [mono-repos](https://developer.atlassian.com/blog/2015/10/monorepos-in-git/).
+
 
 ## What you can do with this plugin
 ...that you can't do with the built-in Git material:
@@ -24,8 +25,27 @@ This plugin is intended as
 ### Advanced features
 
 *Wildcard whitelists* - When the git command line is available on your agents; you can also use wildcards like `config/*/prod.yaml`. Anything that works with `git log` will work here.
-
 *Shallow clones* - supported in the same way as the GoCD Git Material supports them
+
+## TOC
+
+<!-- toc -->
+
+- [Installation](#installation)
+- [Usage](#usage)
+  * [Via pipelines-as-code](#via-pipelines-as-code)
+  * [Via UI wizards](#via-ui-wizards)
+  * [Via UI advanced configuration](#via-ui-advanced-configuration)
+  * [Visualising changes](#visualising-changes)
+  * [Constructing path expressions](#constructing-path-expressions)
+  * [Migration from v1 to v2](#migration-from-v1-to-v2)
+  * [Known issues](#known-issues)
+- [Contributing](#contributing)
+  * [Build](#build)
+  * [Run](#run)
+  * [Release](#release)
+
+<!-- tocstop -->
 
 ## Installation
 
@@ -172,9 +192,9 @@ You will *not* be able to see *Git Path* material as a material type when creati
 Add a dummy git material, then edit to add a new *Git Path* material and remove the old one. This problem
 has been resolved in newer GoCD versions via the pipeline creation wizard.
 
-### Contributing
+## Contributing
 
-#### Build
+### Build
 
 execute the following command to build the plugin
 
@@ -182,7 +202,7 @@ execute the following command to build the plugin
 ./gradlew clean build
 ```
 
-#### Docker
+### Run
 
 You can quickly test the plugin using Docker, ensure you have installed docker, refer [docker installation guide](https://www.docker.com/products/overview) for installing docker for different environments
 
@@ -193,21 +213,21 @@ Execute the following gradle task to start the go-server
 
 You can now access the [go-server via port 8153](http://localhost:8153)
 
-##### reload
+#### reload
 
 If you like to reload the go-server with new build run,
 ```bash
 ./gradlew clean restartGoCd
 ```
 
-##### stop
+#### stop
 
 You can stop the running docker instance with the following gradle task
 ```bash
 ./gradlew clean stopGoCd
 ```
 
-#### Releasing
+### Release
 
 Released via the [gocd-plugin-gradle-task-helpers](https://github.com/gocd/gocd-plugin-gradle-task-helpers) onto
 GitHub.
