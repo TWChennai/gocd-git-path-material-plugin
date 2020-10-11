@@ -87,6 +87,39 @@ VSM view
 View changes grouped by material
 ![gocd-git-path-material-plugin-view-comparison](docs/view-comparison.png)
 
+### Constructing path expressions
+
+This plugin relies on underlying the underlying Git command line to interpret path expressions. For that reason, you
+can construct almost any expression you could do with a [git pathspec](https://git-scm.com/docs/gitglossary#Documentation/gitglossary.txt-aiddefpathspecapathspec)
+including
+* including certain paths
+* including only certain files deep inside a path structure
+* excluding certain paths or files (using `:(exclude)` or `:!` or `:^`)
+* using glob syntax (using `:(glob)`)
+
+Restrictions
+* cannot contain commas (used for splitting)
+* whitespace before and after splitting commas is ignored
+
+You can normally test your expressions using something like the below to see the last revision that would have triggered a build
+```shell
+EXPR='path1, :(exclude)*README.md'
+git log -1 $(echo "${EXPR}" | tr -d ',' )
+```
+
+For example, these are all valid expressions
+
+```markdown
+# Monitor for changes in path1 and path2/subpath
+path1, path2/subpath
+
+# Monitor for changes in path1, but ignore README changes
+path1, :(exclude)*README.md
+
+# Monitor for changes to all config files for the qa environment, in any folder
+config/*/qa.yaml
+```
+
 ### Migration from v1 to v2
 
 v2 is a major overhaul of the plugin, and prefers the use of the `git` command line to the previously preferred `jgit`.
