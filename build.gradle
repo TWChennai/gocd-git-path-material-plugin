@@ -60,7 +60,7 @@ dependencies {
     implementation "cd.go.plugin:go-plugin-api:${gocdPlugin.goCdVersion}"
 
     implementation 'in.ashwanthkumar:git-cmd:2.0'
-    implementation 'org.codehaus.jackson:jackson-mapper-asl:1.9.13'
+    implementation 'org.codehaus.jackson:jackson-mapper-asl:1.9.13-atlassian-2'
     implementation 'org.apache.commons:commons-lang3:3.11'
 
     testImplementation 'junit:junit:4.13'
