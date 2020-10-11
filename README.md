@@ -55,6 +55,8 @@ materials:
       username: username # optional
       path: path1, path2/subpath
       shallow_clone: false # optional
+    secure_options: # optional
+      password: 'encrypted_value'
     destination: destDir
 ```
 
@@ -103,17 +105,17 @@ configure your pipelines as code; you can update the id per the above example.
 
 ### Known issues
 
-#### No support for GoCD server secrets management
+#### Support for GoCD server secrets management interpolation in pipelines as code
 
-Custom source control material plugins like the `gocd-git-path-material-plugin` do not have password variables interpolated 
-and populated by the GoCD server using its support for [secrets management](https://docs.gocd.org/current/configuration/secrets_management.html). 
-You can see [#28](https://github.com/TWChennai/gocd-git-path-material-plugin/issues/28) and [gocd/gocd#8234](https://github.com/gocd/gocd/issues/8234) for
-more detail.
+Custom source control material plugins like the `gocd-git-path-material-plugin` only have support for GoCD [secrets management](https://docs.gocd.org/current/configuration/secrets_management.html)
+and secret variable interpolation (syntax like `{{SECRET:[file-secrets][test-password]}}`) from **GoCD `20.8.0` onwards**.
 
-If you use pipelines-as-code to source control your material definitions, it is instead possible to use SSH keys within 
-your GoCD server and agent to authenticate with a private repository. If running GoCD on Kubernetes, there is support for 
-doing so based on Kubernetes `Secret`s within the [GoCD Helm chart](https://github.com/helm/charts/tree/master/stable/gocd)
-or any other solution that allows mounting of a file into a container.
+On earlier versions if you use pipelines-as-code to source control your material definitions, you can however 
+* use `secure_options` to source control an encrypted password (see [gocd-yaml-config-plugin#pluggable](https://github.com/tomzo/gocd-yaml-config-plugin#pluggable))
+* use SSH keys within your GoCD server and agent to authenticate with a private repository
+    * If running GoCD on Kubernetes, there is support for doing so based on Kubernetes `Secret`s within 
+      the [GoCD Helm chart](https://github.com/helm/charts/tree/master/stable/gocd) or any other solution that allows 
+      mounting of a file into a container.
 
 #### No support for triggering from webhooks
 
