@@ -1,6 +1,6 @@
 # gocd-git-path-material-plugin
 
-[![Build Status](https://travis-ci.org/TWChennai/gocd-git-path-material-plugin.svg?branch=master)](https://travis-ci.org/TWChennai/gocd-git-path-material-plugin) ![License](https://img.shields.io/github/license/TWChennai/gocd-git-path-material-plugin)
+[![Build Status](https://travis-ci.org/TWChennai/gocd-git-path-material-plugin.svg?branch=master)](https://travis-ci.org/TWChennai/gocd-git-path-material-plugin) ![GitHub All Releases](https://img.shields.io/github/downloads/TWChennai/gocd-git-path-material-plugin/total) ![License](https://img.shields.io/github/license/TWChennai/gocd-git-path-material-plugin)
 
 GoCD plugin to introduce a material that watches on a sub-directory of a Git repository.
  
