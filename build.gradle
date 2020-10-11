@@ -61,7 +61,7 @@ dependencies {
 
     implementation 'in.ashwanthkumar:git-cmd:2.0'
     implementation 'org.codehaus.jackson:jackson-mapper-asl:1.9.13'
-    implementation 'org.apache.commons:commons-lang3:3.10'
+    implementation 'org.apache.commons:commons-lang3:3.11'
 
     testImplementation 'junit:junit:4.13'
     testImplementation 'org.hamcrest:hamcrest-core:2.2'
