@@ -9,7 +9,6 @@ import com.thoughtworks.go.plugin.api.info.PluginContext;
 import com.thoughtworks.go.plugin.api.logging.Logger;
 import com.thoughtworks.go.plugin.api.request.GoPluginApiRequest;
 import com.thoughtworks.go.plugin.api.response.GoPluginApiResponse;
-import com.thoughtworks.go.scm.plugin.model.requestHandlers.RequestHandler;
 import com.thoughtworks.go.scm.plugin.model.requestHandlers.RequestHandlerFactory;
 
 import java.util.Arrays;
@@ -28,13 +27,14 @@ public class GitPathMaterialPlugin implements GoPlugin {
 
     @Override
     public GoPluginApiResponse handle(GoPluginApiRequest apiRequest) {
-        String requestName = apiRequest.requestName();
-        LOGGER.info("Got request: " + requestName);
-        LOGGER.debug("With request body: " + apiRequest.requestBody());
-        RequestHandler requestHandler = RequestHandlerFactory.create(requestName);
-        GoPluginApiResponse response = requestHandler.handle(apiRequest);
-        LOGGER.info("Response code: " + response.responseCode());
-        LOGGER.debug("With response body: " + response.responseBody());
+        LOGGER.debug("Got request [{}] with body: {}",
+                apiRequest.requestName(),
+                apiRequest.requestBody());
+        GoPluginApiResponse response = RequestHandlerFactory.create(apiRequest.requestName()).handle(apiRequest);
+        LOGGER.debug("Responding to [{}] with [{}] and body: {}",
+                apiRequest.requestName(),
+                response.responseCode(),
+                response.responseBody());
         return response;
     }
 
