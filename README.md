@@ -161,7 +161,8 @@ configure your pipelines as code; you can update the id per the above example.
 #### Support for GoCD server secrets management interpolation in pipelines as code
 
 Custom source control material plugins like the `gocd-git-path-material-plugin` only have support for GoCD [secrets management](https://docs.gocd.org/current/configuration/secrets_management.html)
-and secret variable interpolation (syntax like `{{SECRET:[file-secrets][test-password]}}`) from **GoCD `20.8.0` onwards**.
+and secret variable interpolation (syntax like `{{SECRET:[file-secrets][test-password]}}`) from **GoCD `20.8.0` onwards**
+([changelog](https://www.gocd.org/releases/#20-8-0)).
 
 On earlier versions if you use pipelines-as-code to source control your material definitions, you can however 
 * use `secure_options` to source control an encrypted password (see [gocd-yaml-config-plugin#pluggable](https://github.com/tomzo/gocd-yaml-config-plugin#pluggable))
@@ -173,7 +174,7 @@ On earlier versions if you use pipelines-as-code to source control your material
 #### Support for triggering from webhooks
 
 Custom source control material plugins like the `gocd-git-path-material-plugin` have support for 
-[triggering from webhooks](https://api.gocd.org/current/#webhook) from **GoCD `20.9.0` onwards** ([changelog](https://www.gocd.org/releases/#20-8-0)). This contrasts with the convention material polling approach (see [#27](https://github.com/TWChennai/gocd-git-path-material-plugin/issues/27) and [gocd/gocd#8170](https://github.com/gocd/gocd/issues/8170))
+[triggering from webhooks](https://api.gocd.org/current/#webhook) from **GoCD `20.9.0` onwards** ([changelog](https://www.gocd.org/releases/#20-9-0)). This contrasts with the convention material polling approach (see [#27](https://github.com/TWChennai/gocd-git-path-material-plugin/issues/27) and [gocd/gocd#8170](https://github.com/gocd/gocd/issues/8170))
 
 #### Stale data in agent repository clones
 
