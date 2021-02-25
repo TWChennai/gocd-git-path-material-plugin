@@ -1,5 +1,6 @@
 package com.thoughtworks.go.scm.plugin.util;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.thoughtworks.go.plugin.api.logging.Logger;
 import com.thoughtworks.go.plugin.api.request.GoPluginApiRequest;
 import com.thoughtworks.go.plugin.api.response.GoPluginApiResponse;
@@ -8,7 +9,6 @@ import com.tw.go.plugin.model.GitConfig;
 import com.tw.go.plugin.model.ShallowClone;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.codehaus.jackson.map.ObjectMapper;
 
 import java.io.IOException;
 import java.util.Arrays;
