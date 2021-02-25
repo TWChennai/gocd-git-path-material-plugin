@@ -1,2 +1,2 @@
-java adoptopenjdk-11.0.8+10
-docker-compose 1.27.4
+java adoptopenjdk-11.0.10+9
+docker-compose 1.28.4
