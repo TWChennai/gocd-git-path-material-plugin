@@ -39,7 +39,7 @@ This plugin is intended as
   * [Visualising changes](#visualising-changes)
   * [Constructing path expressions](#constructing-path-expressions)
   * [Migration from v1 to v2](#migration-from-v1-to-v2)
-  * [Known issues](#known-issues)
+  * [Frequently asked questions](#frequently-asked-questions)
 - [Contributing](#contributing)
   * [Build](#build)
   * [Run](#run)
@@ -156,7 +156,7 @@ As a result the plugin ID has changed between the two versions.
 configure your pipelines as code; you can update the id per the above example.
 * If you configure your pipelines via the UI, you will need to add new materials and remove the old ones one-by-one.
 
-### Known issues
+### Frequently asked questions
 
 #### Support for GoCD server secrets management interpolation in pipelines as code
 
@@ -170,12 +170,10 @@ On earlier versions if you use pipelines-as-code to source control your material
       the [GoCD Helm chart](https://github.com/helm/charts/tree/master/stable/gocd) or any other solution that allows 
       mounting of a file into a container.
 
-#### No support for triggering from webhooks
+#### Support for triggering from webhooks
 
-Custom source control material plugins like the `gocd-git-path-material-plugin` do not have support for 
-[triggering from webhooks](https://api.gocd.org/current/#webhook), as opposed to the convention material polling approach.
-You can see [#27](https://github.com/TWChennai/gocd-git-path-material-plugin/issues/27) and [gocd/gocd#8170](https://github.com/gocd/gocd/issues/8170) for
-more detail.
+Custom source control material plugins like the `gocd-git-path-material-plugin` have support for 
+[triggering from webhooks](https://api.gocd.org/current/#webhook) from **GoCD `20.9.0` onwards** ([changelog](https://www.gocd.org/releases/#20-8-0)). This contrasts with the convention material polling approach (see [#27](https://github.com/TWChennai/gocd-git-path-material-plugin/issues/27) and [gocd/gocd#8170](https://github.com/gocd/gocd/issues/8170))
 
 #### Stale data in agent repository clones
 
@@ -184,7 +182,8 @@ monitored paths. This means that changes that are not monitored in your paths ma
 not `rm` un-monitored paths from a clone; meaning your build task could accidentally depend on files in the
 repository that are out-of-date.
 
-Be careful with your repository structure to keep your monitored path expressions simple.
+Be careful with your repository structure to keep your monitored path expressions simple, so you can easily reason about
+whether a given pipeline should have been triggered for a given commit.
 
 #### Creating new pipelines via UI on pre `19.8.0` GoCD versions
 
