@@ -109,7 +109,7 @@ View changes grouped by material
 
 ### Constructing path expressions
 
-This plugin relies on underlying the underlying Git command line to interpret path expressions. For that reason, you
+This plugin relies on the underlying Git CLI to interpret path expressions. For that reason, you
 can construct almost any expression you could do with a [git pathspec](https://git-scm.com/docs/gitglossary#Documentation/gitglossary.txt-aiddefpathspecapathspec)
 including
 * including certain paths
