@@ -2,7 +2,7 @@ version: '3.7'
 
 services:
   agent:
-    image: gocd/gocd-agent-alpine-3.12:v21.1.0
+    image: gocd/gocd-agent-alpine-3.13:v21.2.0
     depends_on:
       - server
     environment:
@@ -12,7 +12,7 @@ services:
     restart: on-failure
 
   server:
-    image: gocd/gocd-server:v21.1.0
+    image: gocd/gocd-server:v21.2.0
     environment:
       GOCD_PLUGIN_INSTALL_script-executor-task:
         https://github.com/gocd-contrib/script-executor-task/releases/download/0.3/script-executor-0.3.0.jar
