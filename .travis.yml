@@ -1,9 +1,0 @@
-dist: focal
-language: java
-env:
-  global:
-    - JAVA_TOOL_OPTIONS=-Dhttps.protocols=TLSv1.2
-jdk:
-  - openjdk9
-  - openjdk10
-  - openjdk11
