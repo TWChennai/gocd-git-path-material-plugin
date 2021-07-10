@@ -15,8 +15,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static org.apache.commons.lang3.exception.ExceptionUtils.getRootCauseMessage;
-
 public class CheckoutRequestHandler implements RequestHandler {
     private static Logger LOGGER = Logger.getLoggerFor(CheckoutRequestHandler.class);
 

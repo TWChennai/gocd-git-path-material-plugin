@@ -16,7 +16,6 @@ import java.util.List;
 import java.util.Map;
 
 import static java.util.stream.Collectors.toList;
-import static org.apache.commons.lang3.exception.ExceptionUtils.getRootCauseMessage;
 
 public class LatestRevisionSinceRequestHandler implements RequestHandler {
     private static Logger LOGGER = Logger.getLoggerFor(LatestRevisionSinceRequestHandler.class);
