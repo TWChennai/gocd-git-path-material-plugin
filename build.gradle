@@ -4,7 +4,7 @@ plugins {
     id 'com.github.ben-manes.versions' version '0.39.0'
 }
 
-apply from: "https://raw.githubusercontent.com/gocd/gocd-plugin-gradle-task-helpers/master/helper.gradle?_=${(int) (new Date().toInstant().epochSecond / 60)}"
+apply from: "https://raw.githubusercontent.com/gocd/gocd-plugin-gradle-task-helpers/master/helper.gradle?_=${(int) (new Date().toInstant().epochSecond / 86400)}"
 
 group 'com.thoughtworks.go'
 
