@@ -1,37 +1,31 @@
 package com.thoughtworks.go.scm.plugin.model.requestHandlers;
 
-import com.thoughtworks.go.scm.plugin.helpers.JsonHelper;
 import com.thoughtworks.go.plugin.api.request.GoPluginApiRequest;
 import com.thoughtworks.go.plugin.api.response.GoPluginApiResponse;
-import org.junit.Before;
-import org.junit.Test;
+import com.thoughtworks.go.scm.plugin.helpers.JsonHelper;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.io.IOException;
 import java.util.Map;
 
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.collection.IsMapContaining.hasEntry;
-import static org.mockito.Mockito.mock;
+import static org.assertj.core.api.Assertions.assertThat;
 
-
+@ExtendWith(MockitoExtension.class)
 public class SCMConfigurationRequestHandlerTests {
 
-    private RequestHandler requestHandler;
+    @Mock
     private GoPluginApiRequest apiRequest;
 
-    @Before
-    public void setUp() {
-        requestHandler = new SCMConfigurationRequestHandler();
-        apiRequest = mock(GoPluginApiRequest.class);
-    }
+    private RequestHandler requestHandler = new SCMConfigurationRequestHandler();
 
     @Test
     public void shouldReturnSuccessJsonResponseForScmConfigurationRequest() {
         GoPluginApiResponse apiResponse = requestHandler.handle(apiRequest);
 
-        assertThat(apiResponse.responseCode(), is(equalTo(200)));
+        assertThat(apiResponse.responseCode()).isEqualTo(200);
     }
 
     @Test
@@ -40,13 +34,13 @@ public class SCMConfigurationRequestHandlerTests {
         GoPluginApiResponse apiResponse = requestHandler.handle(apiRequest);
 
         Map<String, Object> response = JsonHelper.getResponse(apiResponse);
-        Map<String, String> urlField = (Map<String, String>) response.get("url");
+        Map<String, Object> urlField = (Map<String, Object>) response.get("url");
 
-        assertThat(urlField, hasEntry("display-name", "URL"));
-        assertThat(urlField, hasEntry("part-of-identity", (Object) true));
-        assertThat(urlField, hasEntry("required", (Object) true));
-        assertThat(urlField, hasEntry("secure", (Object) false));
-        assertThat(urlField, hasEntry("display-order", "0"));
+        assertThat(urlField).containsEntry("display-name", "URL");
+        assertThat(urlField).containsEntry("part-of-identity", true);
+        assertThat(urlField).containsEntry("required", true);
+        assertThat(urlField).containsEntry("secure", false);
+        assertThat(urlField).containsEntry("display-order", "0");
     }
 
     @Test
@@ -55,14 +49,14 @@ public class SCMConfigurationRequestHandlerTests {
         GoPluginApiResponse apiResponse = requestHandler.handle(apiRequest);
 
         Map<String, Object> response = JsonHelper.getResponse(apiResponse);
-        Map<String, String> urlField = (Map<String, String>) response.get("branch");
+        Map<String, Object> urlField = (Map<String, Object>) response.get("branch");
 
-        assertThat(urlField, hasEntry("display-name", "Branch"));
-        assertThat(urlField, hasEntry("default-value", "master"));
-        assertThat(urlField, hasEntry("part-of-identity", (Object) true));
-        assertThat(urlField, hasEntry("required", (Object) false));
-        assertThat(urlField, hasEntry("secure", (Object) false));
-        assertThat(urlField, hasEntry("display-order", "4"));
+        assertThat(urlField).containsEntry("display-name", "Branch");
+        assertThat(urlField).containsEntry("default-value", "master");
+        assertThat(urlField).containsEntry("part-of-identity", true);
+        assertThat(urlField).containsEntry("required", false);
+        assertThat(urlField).containsEntry("secure", false);
+        assertThat(urlField).containsEntry("display-order", "4");
     }
 
     @Test
@@ -71,13 +65,13 @@ public class SCMConfigurationRequestHandlerTests {
         GoPluginApiResponse apiResponse = requestHandler.handle(apiRequest);
 
         Map<String, Object> response = JsonHelper.getResponse(apiResponse);
-        Map<String, String> urlField = (Map<String, String>) response.get("path");
+        Map<String, Object> urlField = (Map<String, Object>) response.get("path");
 
-        assertThat(urlField, hasEntry("display-name", "Monitored Paths"));
-        assertThat(urlField, hasEntry("part-of-identity", (Object) true));
-        assertThat(urlField, hasEntry("required", (Object) true));
-        assertThat(urlField, hasEntry("secure", (Object) false));
-        assertThat(urlField, hasEntry("display-order", "3"));
+        assertThat(urlField).containsEntry("display-name", "Monitored Paths");
+        assertThat(urlField).containsEntry("part-of-identity", true);
+        assertThat(urlField).containsEntry("required", true);
+        assertThat(urlField).containsEntry("secure", false);
+        assertThat(urlField).containsEntry("display-order", "3");
     }
 
     @Test
@@ -86,12 +80,12 @@ public class SCMConfigurationRequestHandlerTests {
         GoPluginApiResponse apiResponse = requestHandler.handle(apiRequest);
 
         Map<String, Object> response = JsonHelper.getResponse(apiResponse);
-        Map<String, String> urlField = (Map<String, String>) response.get("shallow_clone");
+        Map<String, Object> urlField = (Map<String, Object>) response.get("shallow_clone");
 
-        assertThat(urlField, hasEntry("display-name", "Shallow Clone"));
-        assertThat(urlField, hasEntry("part-of-identity", (Object) false));
-        assertThat(urlField, hasEntry("required", (Object) false));
-        assertThat(urlField, hasEntry("secure", (Object) false));
-        assertThat(urlField, hasEntry("display-order", "5"));
+        assertThat(urlField).containsEntry("display-name", "Shallow Clone");
+        assertThat(urlField).containsEntry("part-of-identity", false);
+        assertThat(urlField).containsEntry("required", false);
+        assertThat(urlField).containsEntry("secure", false);
+        assertThat(urlField).containsEntry("display-order", "5");
     }
 }

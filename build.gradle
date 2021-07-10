@@ -45,6 +45,8 @@ repositories {
 
 ext {
     powermockVersion = '2.0.9'
+    junitVersion = '5.7.2'
+    mockitoVersion = '3.11.2'
 }
 
 dependencies {
@@ -55,15 +57,15 @@ dependencies {
     implementation 'com.fasterxml.jackson.core:jackson-annotations:2.12.4'
     implementation 'org.apache.commons:commons-lang3:3.12.0'
 
-    testImplementation 'junit:junit:4.13.2'
-    testImplementation 'org.hamcrest:hamcrest-core:2.2'
-    testImplementation 'org.mockito:mockito-core:3.11.2'
-    testImplementation "org.powermock:powermock-core:${powermockVersion}"
-    testImplementation "org.powermock:powermock-module-junit4:${powermockVersion}"
-    testImplementation "org.powermock:powermock-api-mockito2:${powermockVersion}"
+    testImplementation "org.junit.jupiter:junit-jupiter-api:${junitVersion}"
+    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:${junitVersion}"
+    testImplementation 'org.assertj:assertj-core:3.20.2'
+    testImplementation "org.mockito:mockito-inline:${mockitoVersion}"
+    testImplementation "org.mockito:mockito-junit-jupiter:${mockitoVersion}"
 }
 
 test {
+    useJUnitPlatform()
     finalizedBy jacocoTestReport
 }
 

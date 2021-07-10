@@ -4,15 +4,14 @@ import com.thoughtworks.go.plugin.api.request.GoPluginApiRequest;
 import com.thoughtworks.go.plugin.api.response.GoPluginApiResponse;
 import com.thoughtworks.go.scm.plugin.helpers.JsonHelper;
 import com.tw.go.plugin.model.GitConfig;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -47,9 +46,9 @@ public class JsonUtilsTests {
         Response response = new Response("Hello");
         GoPluginApiResponse apiResponse = JsonUtils.renderSuccessApiResponse(response);
 
-        assertThat(apiResponse.responseCode(), is(equalTo(200)));
-        assertThat(apiResponse.responseHeaders(), is(nullValue()));
-        assertThat(apiResponse.responseBody(), is(equalTo(JsonHelper.toJson(response))));
+        assertThat(apiResponse.responseCode()).isEqualTo(200);
+        assertThat(apiResponse.responseHeaders()).isNull();
+        assertThat(apiResponse.responseBody()).isEqualTo(JsonHelper.toJson(response));
     }
 
     @Test
@@ -57,9 +56,9 @@ public class JsonUtilsTests {
         Response response = new Response("Hello");
         GoPluginApiResponse apiResponse = JsonUtils.renderErrorApiResponse(response);
 
-        assertThat(apiResponse.responseCode(), is(equalTo(500)));
-        assertThat(apiResponse.responseHeaders(), is(nullValue()));
-        assertThat(apiResponse.responseBody(), is(equalTo(JsonHelper.toJson(response))));
+        assertThat(apiResponse.responseCode()).isEqualTo(500);
+        assertThat(apiResponse.responseHeaders()).isNull();
+        assertThat(apiResponse.responseBody()).isEqualTo(JsonHelper.toJson(response));
     }
 
     @Test
@@ -71,9 +70,9 @@ public class JsonUtilsTests {
 
         GoPluginApiResponse apiResponse = JsonUtils.renderErrorApiResponse(request, throwable);
 
-        assertThat(apiResponse.responseCode(), is(equalTo(500)));
-        assertThat(apiResponse.responseHeaders(), is(nullValue()));
-        assertThat(apiResponse.responseBody(), is(equalTo(JsonHelper.toJson("test-request failed due to [IllegalArgumentException: bad args], rootCause [IOException: connection failure]"))));
+        assertThat(apiResponse.responseCode()).isEqualTo(500);
+        assertThat(apiResponse.responseHeaders()).isNull();
+        assertThat(apiResponse.responseBody()).isEqualTo(JsonHelper.toJson("test-request failed due to [IllegalArgumentException: bad args], rootCause [IOException: connection failure]"));
     }
 
     @Test
@@ -86,12 +85,12 @@ public class JsonUtilsTests {
 
         GitConfig config = JsonUtils.toAgentGitConfig(mockApiRequestFor(configurationMap));
 
-        assertThat(config.getUrl(), is("http://localhost.com"));
-        assertThat(config.getUsername(), is("user"));
-        assertThat(config.getPassword(), is("pass"));
-        assertThat(config.getEffectiveBranch(), is("master"));
-        assertThat(config.isRecursiveSubModuleUpdate(), is(true));
-        assertThat(config.isShallowClone(), is(false));
+        assertThat(config.getUrl()).isEqualTo("http://localhost.com");
+        assertThat(config.getUsername()).isEqualTo("user");
+        assertThat(config.getPassword()).isEqualTo("pass");
+        assertThat(config.getEffectiveBranch()).isEqualTo("master");
+        assertThat(config.isRecursiveSubModuleUpdate()).isTrue();
+        assertThat(config.isShallowClone()).isFalse();
     }
 
     @Test
@@ -105,12 +104,12 @@ public class JsonUtilsTests {
 
         GitConfig config = JsonUtils.toAgentGitConfig(mockApiRequestFor(configurationMap));
 
-        assertThat(config.getUrl(), is("http://localhost.com"));
-        assertThat(config.getUsername(), is("user"));
-        assertThat(config.getPassword(), is("pass"));
-        assertThat(config.getEffectiveBranch(), is("master"));
-        assertThat(config.isRecursiveSubModuleUpdate(), is(true));
-        assertThat(config.isShallowClone(), is(true));
+        assertThat(config.getUrl()).isEqualTo("http://localhost.com");
+        assertThat(config.getUsername()).isEqualTo("user");
+        assertThat(config.getPassword()).isEqualTo("pass");
+        assertThat(config.getEffectiveBranch()).isEqualTo("master");
+        assertThat(config.isRecursiveSubModuleUpdate()).isTrue();
+        assertThat(config.isShallowClone()).isTrue();
     }
 
     private GoPluginApiRequest mockApiRequestFor(Map<String, Object> configurationMap) throws IOException {
@@ -124,11 +123,11 @@ public class JsonUtilsTests {
 
     @Test
     public void shouldSplitPath() {
-        assertThat(JsonUtils.splitPaths(null), empty());
-        assertThat(JsonUtils.splitPaths(""), empty());
-        assertThat(JsonUtils.splitPaths("a"), is(List.of("a")));
-        assertThat(JsonUtils.splitPaths(" a   "), is(List.of("a")));
-        assertThat(JsonUtils.splitPaths("a/b, c/d"), is(List.of("a/b", "c/d")));
+        assertThat(JsonUtils.splitPaths(null)).isEmpty();
+        assertThat(JsonUtils.splitPaths("")).isEmpty();
+        assertThat(JsonUtils.splitPaths("a")).isEqualTo(List.of("a"));
+        assertThat(JsonUtils.splitPaths(" a   ")).isEqualTo(List.of("a"));
+        assertThat(JsonUtils.splitPaths("a/b, c/d")).isEqualTo(List.of("a/b", "c/d"));
     }
 
 }

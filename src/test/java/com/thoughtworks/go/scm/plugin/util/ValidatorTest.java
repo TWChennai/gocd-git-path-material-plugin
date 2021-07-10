@@ -1,12 +1,11 @@
 package com.thoughtworks.go.scm.plugin.util;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
 import static com.thoughtworks.go.scm.plugin.util.Validator.isValidURL;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 
 public class ValidatorTest {
@@ -47,7 +46,7 @@ public class ValidatorTest {
                 "git@github.com:user/some_project.git",
                 "git@git.my-org.com:user/some_project.git",
                 "git@git.my01-org.com:user/some_project.git"
-        ).forEach(url -> assertTrue("Expected to be valid: " + url, isValidURL(url)));
+        ).forEach(url -> assertThat(url).matches(Validator::isValidURL, "is valid URL"));
 
         List.of(
                 "git@git.my01-.com:user/some_project.git",
@@ -63,6 +62,6 @@ public class ValidatorTest {
                 "user@host.xz:path/to/repo.git",
                 "host.xz:path/to/repo.git",
                 "rsync://host.xz/path/to/repo.git/"
-        ).forEach(url -> assertFalse("Expected to be invalid: " + url, isValidURL(url)));
+        ).forEach(url ->  assertThat(url).matches(u -> !isValidURL(u), "is not valid URL"));
     }
 }
