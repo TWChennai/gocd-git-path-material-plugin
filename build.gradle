@@ -43,16 +43,6 @@ repositories {
     mavenLocal()
 }
 
-jacocoTestReport {
-    reports {
-        xml.enabled = false
-        csv.enabled = false
-        html.destination file("${buildDir}/jacocoHtml")
-    }
-}
-
-check.dependsOn jacocoTestReport
-
 ext {
     powermockVersion = '2.0.9'
 }
@@ -71,6 +61,19 @@ dependencies {
     testImplementation "org.powermock:powermock-core:${powermockVersion}"
     testImplementation "org.powermock:powermock-module-junit4:${powermockVersion}"
     testImplementation "org.powermock:powermock-api-mockito2:${powermockVersion}"
+}
+
+test {
+    finalizedBy jacocoTestReport
+}
+
+jacocoTestReport {
+    dependsOn test
+    reports {
+        xml.required = false
+        csv.required = false
+        html.outputLocation = layout.buildDirectory.dir('jacocoHtml')
+    }
 }
 
 jar {
