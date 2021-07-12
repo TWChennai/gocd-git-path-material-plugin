@@ -32,6 +32,7 @@ This plugin is intended as
 <!-- toc -->
 
 - [Installation](#installation)
+- [Requirements](#requirements)
 - [Usage](#usage)
   * [Via pipelines-as-code](#via-pipelines-as-code)
   * [Via UI wizards](#via-ui-wizards)
@@ -59,6 +60,14 @@ This plugin is intended as
     ```
     GOCD_PLUGIN_INSTALL_gocd-git-path-material-plugin=https://github.com/TWChennai/gocd-git-path-material-plugin/releases/download/v${VERSION}/gocd-git-path-material-plugin-${VERSION}.jar
     ```
+
+## Requirements
+
+| Plugin Version    | Requirements  | Recommended |
+| ----------------- | ------------- | ----------- |
+| `2.2` | GoCD >= `19.9` <br/> Server and agent running Java 11+  | GoCD `20.9` for full functionality  <br/> `git` binary available on path  |
+| `2.1` | GoCD >= `18.10` <br/> Server and agent running Java 9+  | At least GoCD `19.2`, but >= `20.9` for full functionality <br/> `git` binary available on path  | 
+| `1.x` | GoCD >= `15.1` <br> Server and agent running Java 7+  | |
 
 ## Usage
 
