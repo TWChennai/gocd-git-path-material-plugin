@@ -8,10 +8,8 @@ apply from: "https://raw.githubusercontent.com/gocd/gocd-plugin-gradle-task-help
 
 group 'com.thoughtworks.go'
 
-java {
-    sourceCompatibility = 1.11
-    targetCompatibility = 1.11
-}
+sourceCompatibility = 11
+targetCompatibility = 11
 
 gocdPlugin {
     id = 'git-path'
