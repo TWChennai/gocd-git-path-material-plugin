@@ -44,7 +44,7 @@ repositories {
 ext {
     jacksonVersion = '2.12.4'
     junitVersion = '5.7.2'
-    mockitoVersion = '3.12.1'
+    mockitoVersion = '3.12.4'
 }
 
 dependencies {
