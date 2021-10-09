@@ -30,10 +30,6 @@ gocdPlugin {
 
     prerelease = !"No".equalsIgnoreCase(System.getenv('PRERELEASE'))
     assetsToRelease = [project.tasks.jar]
-
-    licenseReport {
-        excludes = ['com.fasterxml.jackson:jackson-bom']
-    }
 }
 
 allprojects {
