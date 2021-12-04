@@ -9,17 +9,22 @@ services:
       GO_SERVER_URL: http://server:8153/go
       AGENT_AUTO_REGISTER_KEY: 079e578b-87cc-46c9-9ab5-88997fc7ac59
       GIT_TRACE: 1
+      GIT_SSH_COMMAND: ssh -o StrictHostKeyChecking=no
     restart: on-failure
+    volumes:
+      - ~/.ssh:/home/go/.ssh
 
   server:
     image: gocd/gocd-server:v21.3.0
     environment:
       GOCD_PLUGIN_INSTALL_script-executor-task:
         https://github.com/gocd-contrib/script-executor-task/releases/download/0.3/script-executor-0.3.0.jar
+      GIT_SSH_COMMAND: ssh -o StrictHostKeyChecking=no
     ports:
       - 8153:8153
       - 8154:8154
     volumes:
+      - ~/.ssh:/home/go/.ssh
       - ./build/libs/gocd-git-path-material-plugin-${PLUGIN_VERSION}.jar:/gocd-git-path-material-plugin-${PLUGIN_VERSION}.jar
       - ./extras/config.xml:/config.xml
       - ./extras/server-extra-entrypoint.sh:/docker-entrypoint.d/server-extra-entrypoint.sh
