@@ -18,7 +18,7 @@ services:
     image: gocd/gocd-server:v21.3.0
     environment:
       GOCD_PLUGIN_INSTALL_script-executor-task:
-        https://github.com/gocd-contrib/script-executor-task/releases/download/0.3/script-executor-0.3.0.jar
+        https://github.com/gocd-contrib/script-executor-task/releases/download/1.0.1/script-executor-1.0.1.jar
       GIT_SSH_COMMAND: ssh -o StrictHostKeyChecking=no
     ports:
       - 8153:8153
