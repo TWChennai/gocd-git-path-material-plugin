@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        java: [ '11', '15' ]
+        java: [ '11', '15', '17' ]
     name: Build on Java ${{ matrix.Java }}
     steps:
     - uses: actions/checkout@v2
@@ -21,4 +21,6 @@ jobs:
         java-version: ${{ matrix.Java }}
         distribution: 'adopt'
     - name: Build with Gradle
-      run: ./gradlew build
+      uses: gradle/gradle-build-action@v2
+      with:
+        arguments: build
