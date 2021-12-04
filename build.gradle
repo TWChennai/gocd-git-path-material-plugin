@@ -48,7 +48,7 @@ ext {
 }
 
 dependencies {
-    implementation "cd.go.plugin:go-plugin-api:${gocdPlugin.goCdVersion}"
+    compileOnly 'cd.go.plugin:go-plugin-api:21.3.0'
 
     implementation 'in.ashwanthkumar:git-cmd:2.0'
 
