@@ -13,11 +13,11 @@ targetCompatibility = 11
 
 gocdPlugin {
     id = 'git-path'
-    pluginVersion = '2.2.0'
+    pluginVersion = '2.2.1'
     goCdVersion = '19.9.0'
     name = 'Git Path Material Plugin'
     description = 'Plugin that polls a Git repository and triggers pipelines based on sub-directory path matches'
-    vendorName = 'ThoughtWorks, Inc / GoCD contributors'
+    vendorName = 'Thoughtworks, Inc / GoCD contributors'
     vendorUrl = 'https://github.com/' + (System.getenv('GITHUB_USER') ?: 'TWChennai') + '/gocd-git-path-material-plugin'
 
     githubRepo {
@@ -45,10 +45,11 @@ ext {
     jacksonVersion = '2.13.0'
     junitVersion = '5.8.2'
     mockitoVersion = '4.1.0'
+    gocdPluginVersion = '21.3.0'
 }
 
 dependencies {
-    compileOnly 'cd.go.plugin:go-plugin-api:21.3.0'
+    compileOnly "cd.go.plugin:go-plugin-api:${gocdPluginVersion}"
 
     implementation 'in.ashwanthkumar:git-cmd:2.0'
 
@@ -56,6 +57,7 @@ dependencies {
     implementation "com.fasterxml.jackson.core:jackson-annotations:${jacksonVersion}"
     implementation 'org.apache.commons:commons-lang3:3.12.0'
 
+    testCompileOnly "cd.go.plugin:go-plugin-api:${gocdPluginVersion}"
     testImplementation "org.junit.jupiter:junit-jupiter-api:${junitVersion}"
     testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:${junitVersion}"
     testImplementation 'org.assertj:assertj-core:3.21.0'
