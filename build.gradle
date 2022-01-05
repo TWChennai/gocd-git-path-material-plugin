@@ -1,7 +1,7 @@
 plugins {
     id 'java'
     id 'jacoco'
-    id 'com.github.ben-manes.versions' version '0.40.0'
+    id 'com.github.ben-manes.versions' version '0.41.0'
 }
 
 apply from: "https://raw.githubusercontent.com/gocd/gocd-plugin-gradle-task-helpers/master/helper.gradle?_=${(int) (new Date().toInstant().epochSecond / 86400)}"
