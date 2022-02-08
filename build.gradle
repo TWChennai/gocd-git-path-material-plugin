@@ -88,16 +88,16 @@ jar {
 task startGoCd(dependsOn: build, type: Exec) {
     dependsOn build
     environment("PLUGIN_VERSION", "$version")
-    commandLine "docker", "compose", "up", "-d"
+    commandLine "docker-compose", "up", "-d"
 }
 
 task restartGoCd(dependsOn: build, type: Exec) {
     dependsOn build
     environment("PLUGIN_VERSION", "$version")
-    commandLine "docker", "compose", "restart"
+    commandLine "docker-compose", "restart"
 }
 
 task stopGoCd(type: Exec) {
     environment("PLUGIN_VERSION", "$version")
-    commandLine "docker", "compose", "stop"
+    commandLine "docker-compose", "stop"
 }
