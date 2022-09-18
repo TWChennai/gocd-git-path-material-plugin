@@ -52,6 +52,12 @@ dependencies {
     compileOnly "cd.go.plugin:go-plugin-api:${gocdPluginVersion}"
 
     implementation 'in.ashwanthkumar:git-cmd:2.0'
+    constraints {
+        // Control transitive dependency versions from git-cmd
+        implementation 'org.eclipse.jgit:org.eclipse.jgit:6.3.0.202209071007-r'
+        implementation 'joda-time:joda-time:2.11.1'
+        implementation 'commons-io:commons-io:2.6'
+    }
 
     implementation "com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}"
     implementation "com.fasterxml.jackson.core:jackson-annotations:${jacksonVersion}"
