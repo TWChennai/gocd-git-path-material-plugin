@@ -22,7 +22,6 @@ services:
       GIT_SSH_COMMAND: ssh -o StrictHostKeyChecking=no
     ports:
       - 8153:8153
-      - 8154:8154
     volumes:
       - ~/.ssh:/home/go/.ssh
       - ./build/libs/gocd-git-path-material-plugin-${PLUGIN_VERSION}.jar:/gocd-git-path-material-plugin-${PLUGIN_VERSION}.jar
