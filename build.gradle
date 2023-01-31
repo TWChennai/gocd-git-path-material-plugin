@@ -44,7 +44,7 @@ repositories {
 ext {
     jacksonVersion = '2.14.2'
     junitVersion = '5.9.2'
-    mockitoVersion = '5.1.0'
+    mockitoVersion = '5.1.1'
     gocdPluginVersion = '22.3.0'
 }
 
