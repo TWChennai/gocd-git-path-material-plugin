@@ -53,7 +53,7 @@ dependencies {
     implementation 'in.ashwanthkumar:git-cmd:2.0'
     constraints {
         // Control transitive dependency versions from git-cmd
-        implementation 'org.eclipse.jgit:org.eclipse.jgit:6.4.0.202211300538-r'
+        implementation 'org.eclipse.jgit:org.eclipse.jgit:6.5.0.202303070854-r'
         implementation 'joda-time:joda-time:2.12.2'
         implementation 'commons-io:commons-io:2.6'
     }
