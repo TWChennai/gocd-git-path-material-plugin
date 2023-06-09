@@ -197,7 +197,7 @@ whether a given pipeline should have been triggered for a given commit.
 
 #### Creating new pipelines via UI on pre `19.8.0` GoCD versions
 
-You will *not* be able to see *Git Path* material as a material type when creating a new pipeline. 
+You will *not* be able to see the *Git Path* material as a material type when creating a new pipeline. 
 Add a dummy git material, then edit to add a new *Git Path* material and remove the old one. This problem
 has been resolved in newer GoCD versions via the pipeline creation wizard.
 
