@@ -162,7 +162,7 @@ As a result the plugin ID has changed between the two versions.
 | `GitPathMaterial` | `git-path`    |
 
 * If you use the [gocd-yaml-config-plugin](https://github.com/tomzo/gocd-yaml-config-plugin#pluggable) to 
-configure your pipelines as code; you can update the id per the above example.
+configure your pipelines as code; you can update the ID per the above example.
 * If you configure your pipelines via the UI, you will need to add new materials and remove the old ones one-by-one.
 
 ### Frequently asked questions
