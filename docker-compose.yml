@@ -18,7 +18,7 @@ services:
     image: gocd/gocd-server-centos-9:v23.1.0
     environment:
       GOCD_PLUGIN_INSTALL_script-executor-task:
-        https://github.com/gocd-contrib/script-executor-task/releases/download/v1.0.2-123/script-executor-1.0.2-123.jar
+        https://github.com/gocd-contrib/script-executor-task/releases/download/v1.0.3-148/script-executor-1.0.3-148.jar
       GIT_SSH_COMMAND: ssh -o StrictHostKeyChecking=no
     ports:
       - 8153:8153
