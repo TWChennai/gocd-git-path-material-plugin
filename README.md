@@ -213,7 +213,7 @@ execute the following command to build the plugin
 
 ### Run
 
-You can quickly test the plugin using Docker, ensure you have installed docker, refer [docker installation guide](https://www.docker.com/products/overview) for installing docker for different environments
+You can quickly test the plugin using Docker Compose, via Docker Desktop, Colima or equivalent.
 
 Execute the following gradle task to start the go-server
 ```bash
