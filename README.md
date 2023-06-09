@@ -24,7 +24,7 @@ This plugin is intended as
 
 ### Advanced features
 
-*Wildcard whitelists* - When the git command line is available on your agents; you can also use wildcards like `config/*/prod.yaml`. Anything that works with `git log` will work here.
+*Wildcard whitelists* - When the Git command line is available on your agents; you can also use wildcards like `config/*/prod.yaml`. Anything that works with `git log` will work here.
 *Shallow clones* - supported in the same way as the GoCD Git Material supports them
 
 ## TOC
