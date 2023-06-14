@@ -68,11 +68,11 @@ public class JsonUtilsTest {
 
         Throwable throwable = new IllegalArgumentException("bad args", new IOException("connection failure"));
 
-        GoPluginApiResponse apiResponse = JsonUtils.renderErrorApiResponse(request, throwable);
+        GoPluginApiResponse apiResponse = JsonUtils.renderErrorApiResponse(request, throwable, null);
 
         assertThat(apiResponse.responseCode()).isEqualTo(500);
         assertThat(apiResponse.responseHeaders()).isNull();
-        assertThat(apiResponse.responseBody()).isEqualTo(JsonHelper.toJson("test-request failed due to [IllegalArgumentException: bad args], rootCause [IOException: connection failure]"));
+        assertThat(apiResponse.responseBody()).isEqualTo(JsonHelper.toJson("test-request failed due to [bad args], root cause [IOException: connection failure]"));
     }
 
     @Test
@@ -130,4 +130,10 @@ public class JsonUtilsTest {
         assertThat(JsonUtils.splitPaths("a/b, c/d")).isEqualTo(List.of("a/b", "c/d"));
     }
 
+    @Test
+    public void shouldRedactExceptions() {
+        Throwable throwable = new RuntimeException("hello supersecret world", new RuntimeException("root supersecret"));
+        assertThat(JsonUtils.renderErrorApiResponse(mock(GoPluginApiRequest.class), throwable, List.of("supersecret")).responseBody())
+                .isEqualTo("\"null failed due to [hello ****** world], root cause [RuntimeException: root ******]\"");
+    }
 }

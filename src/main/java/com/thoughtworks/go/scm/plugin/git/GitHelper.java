@@ -4,9 +4,9 @@ import com.thoughtworks.go.scm.plugin.git.cmd.Console;
 import com.thoughtworks.go.scm.plugin.git.cmd.ConsoleResult;
 import com.thoughtworks.go.scm.plugin.git.cmd.InMemoryConsumer;
 import com.thoughtworks.go.scm.plugin.git.cmd.ProcessOutputStreamConsumer;
-import com.thoughtworks.go.scm.plugin.util.StringUtil;
 import org.apache.commons.exec.CommandLine;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -218,7 +218,7 @@ public class GitHelper {
     public void fetch(String refSpec) {
         stdOut.consumeLine("[GIT] Fetching changes");
         List<String> args = new ArrayList<>(Arrays.asList("fetch", "origin", "--prune", "--recurse-submodules=no"));
-        if (!StringUtil.isBlank(refSpec)) {
+        if (!StringUtils.isBlank(refSpec)) {
             args.add(refSpec);
         }
         runOrBomb(Console.createCommand(args.toArray(new String[0])));
@@ -438,7 +438,7 @@ public class GitHelper {
     }
 
     private ConsoleResult runAndGetOutput(CommandLine gitCmd, File workingDir, ProcessOutputStreamConsumer stdOut, ProcessOutputStreamConsumer stdErr) {
-        return Console.runOrBomb(gitCmd, workingDir, stdOut, stdErr);
+        return Console.runOrBomb(gitCmd, workingDir, stdOut, stdErr, gitConfig == null ? List.of() : gitConfig.redactables());
     }
 
     public void cloneOrFetch() {

@@ -8,6 +8,6 @@ public class UnknownRequestHandler implements RequestHandler {
 
     @Override
     public GoPluginApiResponse handle(GoPluginApiRequest apiRequest) {
-        return JsonUtils.renderErrorApiResponse(apiRequest, null);
+        return JsonUtils.renderErrorApiResponse(apiRequest, null, null);
     }
 }

@@ -60,7 +60,7 @@ public class LatestRevisionSinceRequestHandler implements RequestHandler {
                                         .collect(toList())));
             }
         } catch (Throwable t) {
-            return JsonUtils.renderErrorApiResponse(apiRequest, t);
+            return JsonUtils.renderErrorApiResponse(apiRequest, t, gitConfig.redactables());
         }
     }
 }

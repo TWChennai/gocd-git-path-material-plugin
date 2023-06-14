@@ -45,7 +45,7 @@ public class CheckoutRequestHandler implements RequestHandler {
                     "messages", messages)
             );
         } catch (Throwable t) {
-            return JsonUtils.renderErrorApiResponse(apiRequest, t);
+            return JsonUtils.renderErrorApiResponse(apiRequest, t, gitConfig.redactables());
         }
     }
 }

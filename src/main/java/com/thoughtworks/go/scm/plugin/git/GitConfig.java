@@ -1,9 +1,12 @@
 package com.thoughtworks.go.scm.plugin.git;
 
-import com.thoughtworks.go.scm.plugin.util.StringUtil;
+import org.apache.commons.lang3.StringUtils;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class GitConfig {
     private String url;
@@ -37,7 +40,7 @@ public class GitConfig {
     }
 
     public boolean hasCredentials() {
-        return !StringUtil.isBlank(url) && !StringUtil.isBlank(password);
+        return StringUtils.isNotBlank(url) && StringUtils.isNotBlank(password);
     }
 
     public String getEffectiveUrl() {
@@ -81,7 +84,7 @@ public class GitConfig {
     }
 
     public String getEffectiveBranch() {
-        return StringUtil.isBlank(branch) ? "master" : branch;
+        return StringUtils.isBlank(branch) ? "master" : branch;
     }
 
     public String getBranch() {
@@ -146,5 +149,9 @@ public class GitConfig {
     @Override
     public int hashCode() {
         return Objects.hash(url, username, password, branch, subModule, recursiveSubModuleUpdate, noCheckout, shallowClone);
+    }
+
+    public List<String> redactables() {
+        return Stream.of(password, username).filter(StringUtils::isNotBlank).collect(Collectors.toUnmodifiableList());
     }
 }
