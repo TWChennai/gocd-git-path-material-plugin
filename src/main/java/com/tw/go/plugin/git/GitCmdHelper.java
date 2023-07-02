@@ -17,10 +17,15 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
+import static java.util.stream.Stream.concat;
+import static java.util.stream.Stream.of;
+
 public class GitCmdHelper extends GitHelper {
+    public static final String GIT_SUBMODULE_ALLOW_FILE_PROTOCOL = "toggle.git.submodule.allow.file.protocol";
     private static final Pattern GIT_SUBMODULE_STATUS_PATTERN = Pattern.compile("^.[0-9a-fA-F]{40} (.+?)( \\(.+\\))?$");
     private static final Pattern GIT_SUBMODULE_URL_PATTERN = Pattern.compile("^submodule\\.(.+)\\.url (.+)$");
     private static final Pattern GIT_DIFF_TREE_PATTERN = Pattern.compile("^(.{1,3})\\s+(.+)$");
+
 
     public GitCmdHelper(GitConfig gitConfig, File workingDir) {
         this(gitConfig, workingDir, new ProcessOutputStreamConsumer(new InMemoryConsumer()), new ProcessOutputStreamConsumer(new InMemoryConsumer()));
@@ -121,10 +126,10 @@ public class GitCmdHelper extends GitHelper {
     }
 
     private String[] logArgs(List<String> subPaths, String... revisionLimits) {
-        String[] logs = Stream.of(
-                Stream.of("log", "--date=iso", "--pretty=medium", "--no-decorate", "--no-color"),
-                Stream.of(revisionLimits),
-                Stream.ofNullable(subPaths).flatMap(paths -> Stream.of("--")),
+        String[] logs = of(
+                of("log", "--date=iso", "--pretty=medium", "--no-decorate", "--no-color"),
+                of(revisionLimits),
+                Stream.ofNullable(subPaths).flatMap(paths -> of("--")),
                 Stream.ofNullable(subPaths).flatMap(paths -> subPaths.stream().map(String::trim))
         )
                 .flatMap(s -> s)
@@ -370,7 +375,7 @@ public class GitCmdHelper extends GitHelper {
 
     @Override
     public void submoduleUpdate() {
-        CommandLine gitSubModuleUpdate = Console.createCommand("submodule", "update");
+        CommandLine gitSubModuleUpdate = Console.createCommand(concat(gitSubmoduleConfigArgs().stream(), of("submodule", "update")).toArray(String[]::new));
         runOrBomb(gitSubModuleUpdate);
     }
 
@@ -394,7 +399,8 @@ public class GitCmdHelper extends GitHelper {
 
     @Override
     public void submoduleAdd(String repoUrl, String submoduleNameToPutInGitSubmodules, String folder) {
-        String[] addSubmoduleWithSameNameArgs = new String[]{"submodule", "add", repoUrl, folder};
+
+        String[] addSubmoduleWithSameNameArgs = concat(gitSubmoduleConfigArgs().stream(), of("submodule", "add", repoUrl, folder)).toArray(String[]::new);
         runOrBomb(Console.createCommand(addSubmoduleWithSameNameArgs));
 
         String[] changeSubmoduleNameInGitModules = new String[]{"config", "--file", ".gitmodules", "--rename-section", "submodule." + folder, "submodule." + submoduleNameToPutInGitSubmodules};
@@ -402,6 +408,14 @@ public class GitCmdHelper extends GitHelper {
 
         String[] addGitModules = new String[]{"add", ".gitmodules"};
         runOrBomb(Console.createCommand(addGitModules));
+    }
+
+    private List<String> gitSubmoduleConfigArgs() {
+        if ("Y".equalsIgnoreCase(System.getProperty(GIT_SUBMODULE_ALLOW_FILE_PROTOCOL))) {
+            return List.of("-c", "protocol.file.allow=always");
+        } else {
+            return Collections.emptyList();
+        }
     }
 
     @Override

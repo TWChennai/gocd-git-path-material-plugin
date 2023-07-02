@@ -1,5 +1,6 @@
 package com.tw.go.plugin;
 
+import com.tw.go.plugin.git.GitCmdHelper;
 import com.tw.go.plugin.model.GitConfig;
 import com.tw.go.plugin.model.Revision;
 import org.apache.commons.io.FileUtils;
@@ -20,6 +21,7 @@ import java.util.zip.ZipInputStream;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
+import static uk.org.webcompere.systemstubs.SystemStubs.restoreSystemProperties;
 
 public abstract class AbstractGitHelperTest {
     private static final int BUFFER_SIZE = 4096;
@@ -192,43 +194,49 @@ public abstract class AbstractGitHelperTest {
 
     @Test
     public void shouldRecursiveSubModuleUpdate() throws Exception {
-        extractToTmp("/sample-repository/simple-git-repository-1.zip");
-        extractToTmp("/sample-repository/sub-module-git-repository.zip");
+        restoreSystemProperties(() -> {
+            System.setProperty(GitCmdHelper.GIT_SUBMODULE_ALLOW_FILE_PROTOCOL, "Y");
+            extractToTmp("/sample-repository/simple-git-repository-1.zip");
+            extractToTmp("/sample-repository/sub-module-git-repository.zip");
 
-        GitHelper gitRemote = getHelper(new GitConfig(simpleGitRepository.getAbsolutePath()), simpleGitRepository);
-        gitRemote.submoduleAdd(subModuleGitRepository.getAbsolutePath(), "sub-module", "sub-module");
-        gitRemote.commit("add sub-module");
+            GitHelper gitRemote = getHelper(new GitConfig(simpleGitRepository.getAbsolutePath()), simpleGitRepository);
+            gitRemote.submoduleAdd(subModuleGitRepository.getAbsolutePath(), "sub-module", "sub-module");
+            gitRemote.commit("add sub-module");
 
-        GitConfig gitConfig = new GitConfig(simpleGitRepository.getAbsolutePath(), null, null, "master", true, false);
-        GitHelper gitMain = getHelper(gitConfig, testRepository);
-        gitMain.cloneOrFetch();
+            GitConfig gitConfig = new GitConfig(simpleGitRepository.getAbsolutePath(), null, null, "master", true, false);
+            GitHelper gitMain = getHelper(gitConfig, testRepository);
+            gitMain.cloneOrFetch();
 
-        assertThat(gitMain.getCommitCount()).isEqualTo(2);
+            assertThat(gitMain.getCommitCount()).isEqualTo(2);
 
-        assertThat(gitMain.getSubModuleCommitCount("sub-module")).isEqualTo(2);
+            assertThat(gitMain.getSubModuleCommitCount("sub-module")).isEqualTo(2);
 
-        // TODO: add commit to sub-module & main-repo
+            // TODO: add commit to sub-module & main-repo
 
-        // poll again
-        gitMain.cloneOrFetch();
+            // poll again
+            gitMain.cloneOrFetch();
 
-        assertThat(gitMain.getCommitCount()).isEqualTo(2);
+            assertThat(gitMain.getCommitCount()).isEqualTo(2);
 
-        assertThat(gitMain.getSubModuleCommitCount("sub-module")).isEqualTo(2);
+            assertThat(gitMain.getSubModuleCommitCount("sub-module")).isEqualTo(2);
+        });
     }
 
     @Test
     public void shouldWorkWithRepositoriesWithSubModules() throws Exception {
-        extractToTmp("/sample-repository/simple-git-repository-1.zip");
-        extractToTmp("/sample-repository/sub-module-git-repository.zip");
+        restoreSystemProperties(() -> {
+            System.setProperty(GitCmdHelper.GIT_SUBMODULE_ALLOW_FILE_PROTOCOL, "Y");
+            extractToTmp("/sample-repository/simple-git-repository-1.zip");
+            extractToTmp("/sample-repository/sub-module-git-repository.zip");
 
-        GitHelper gitRemote = getHelper(new GitConfig(simpleGitRepository.getAbsolutePath()), simpleGitRepository);
-        gitRemote.submoduleAdd(subModuleGitRepository.getAbsolutePath(), "sub-module", "sub-module");
-        gitRemote.commit("add sub-module");
+            GitHelper gitRemote = getHelper(new GitConfig(simpleGitRepository.getAbsolutePath()), simpleGitRepository);
+            gitRemote.submoduleAdd(subModuleGitRepository.getAbsolutePath(), "sub-module", "sub-module");
+            gitRemote.commit("add sub-module");
 
-        List<String> submoduleFolders = gitRemote.submoduleFolders();
-        assertThat(submoduleFolders.size()).isEqualTo(1);
-        assertThat(submoduleFolders.get(0)).isEqualTo("sub-module");
+            List<String> submoduleFolders = gitRemote.submoduleFolders();
+            assertThat(submoduleFolders.size()).isEqualTo(1);
+            assertThat(submoduleFolders.get(0)).isEqualTo("sub-module");
+        });
     }
 
 
