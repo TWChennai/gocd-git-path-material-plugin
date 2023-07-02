@@ -41,9 +41,6 @@ repositories {
 }
 
 ext {
-    jacksonVersion = '2.15.2'
-    junitVersion = '5.9.3'
-    mockitoVersion = '5.2.0'
     gocdPluginVersion = '23.1.0'
 }
 
@@ -58,16 +55,17 @@ dependencies {
         implementation 'commons-io:commons-io:2.13.0'
     }
 
-    implementation "com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}"
-    implementation "com.fasterxml.jackson.core:jackson-annotations:${jacksonVersion}"
+    implementation platform('com.fasterxml.jackson:jackson-bom:2.15.2')
+    implementation 'com.fasterxml.jackson.core:jackson-databind'
+    implementation 'com.fasterxml.jackson.core:jackson-annotations'
     implementation 'org.apache.commons:commons-lang3:3.12.0'
 
+    testImplementation platform('org.junit:junit-bom:5.9.3')
+    testImplementation 'org.junit.jupiter:junit-jupiter-api'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
     testCompileOnly "cd.go.plugin:go-plugin-api:${gocdPluginVersion}"
-    testImplementation "org.junit.jupiter:junit-jupiter-api:${junitVersion}"
-    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:${junitVersion}"
+    testImplementation 'org.mockito:mockito-junit-jupiter:5.4.0'
     testImplementation 'org.assertj:assertj-core:3.24.2'
-    testImplementation "org.mockito:mockito-inline:${mockitoVersion}"
-    testImplementation "org.mockito:mockito-junit-jupiter:${mockitoVersion}"
 }
 
 test {
