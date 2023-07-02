@@ -4,8 +4,6 @@ import com.thoughtworks.go.plugin.api.GoApplicationAccessor;
 import com.thoughtworks.go.plugin.api.GoPlugin;
 import com.thoughtworks.go.plugin.api.GoPluginIdentifier;
 import com.thoughtworks.go.plugin.api.annotation.Extension;
-import com.thoughtworks.go.plugin.api.annotation.Load;
-import com.thoughtworks.go.plugin.api.info.PluginContext;
 import com.thoughtworks.go.plugin.api.logging.Logger;
 import com.thoughtworks.go.plugin.api.request.GoPluginApiRequest;
 import com.thoughtworks.go.plugin.api.response.GoPluginApiResponse;
@@ -41,11 +39,5 @@ public class GitPathMaterialPlugin implements GoPlugin {
     @Override
     public GoPluginIdentifier pluginIdentifier() {
         return new GoPluginIdentifier(EXTENSION_NAME, goSupportedVersions);
-    }
-
-    @Load
-    public void onLoad(PluginContext context) {
-        LOGGER.info("Loading GitPathMaterialPlugin...");
-        LOGGER.info("Type is {}", HelperFactory.determineType());
     }
 }

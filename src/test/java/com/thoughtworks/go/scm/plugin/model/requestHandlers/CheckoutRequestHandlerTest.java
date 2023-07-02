@@ -7,7 +7,6 @@ import com.thoughtworks.go.scm.plugin.util.JsonUtils;
 import com.tw.go.plugin.GitHelper;
 import com.tw.go.plugin.cmd.ProcessOutputStreamConsumer;
 import com.tw.go.plugin.model.GitConfig;
-import org.eclipse.jgit.errors.TransportException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -71,7 +70,7 @@ public class CheckoutRequestHandlerTest {
 
             RequestHandler checkoutRequestHandler = new CheckoutRequestHandler();
             ArgumentCaptor<Throwable> errorCaptor = ArgumentCaptor.forClass(Throwable.class);
-            TransportException cause = new TransportException("git@github.com:lifealike/gocd-config.git: UnknownHostKey: github.com. RSA key fingerprint is 16:27:ac:a5:76:28:2d:36:63:1b:56:4d:eb:df:a6:48");
+            Exception cause = new IllegalArgumentException("git@github.com:lifealike/gocd-config.git: UnknownHostKey: github.com. RSA key fingerprint is 16:27:ac:a5:76:28:2d:36:63:1b:56:4d:eb:df:a6:48");
             RuntimeException runtimeException = new RuntimeException("clone failed", cause);
             doThrow(runtimeException).when(gitHelperMock).cloneOrFetch();
             when(JsonUtils.renderErrorApiResponse(eq(pluginApiRequestMock), errorCaptor.capture())).thenReturn(mock(GoPluginApiResponse.class));

@@ -249,3 +249,10 @@ GitHub.
     PRERELEASE=no ./gradlew clean build githubRelease
     ```
 * Edit the release description on `GitHub` if necessary.
+
+## Acknowledgements
+
+This plugin contains Git sub-process handling code originally written and released under Apache 2 licenses by
+* the GoCD core team
+* [Srinivas Upadhya](https://github.com/srinivasupadhya) via https://github.com/srinivasupadhya/git-cmd/
+* [Ashwanth Kumar](https://github.com/ashwanthkumar) and [Chad Wilson](https://github.com/chadlwilson) via https://github.com/ashwanthkumar/git-cmd
