@@ -16,7 +16,7 @@ import java.util.List;
 public class GitPathMaterialPlugin implements GoPlugin {
     private static final String EXTENSION_NAME = "scm";
     private static final List<String> goSupportedVersions = Arrays.asList("1.0");
-    private static Logger LOGGER = Logger.getLoggerFor(GitPathMaterialPlugin.class);
+    private static final Logger LOGGER = Logger.getLoggerFor(GitPathMaterialPlugin.class);
 
     @Override
     public void initializeGoApplicationAccessor(GoApplicationAccessor goApplicationAccessor) {

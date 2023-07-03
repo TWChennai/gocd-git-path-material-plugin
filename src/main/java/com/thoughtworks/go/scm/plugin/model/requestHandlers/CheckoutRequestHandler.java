@@ -5,9 +5,9 @@ import com.thoughtworks.go.plugin.api.request.GoPluginApiRequest;
 import com.thoughtworks.go.plugin.api.response.GoPluginApiResponse;
 import com.thoughtworks.go.scm.plugin.HelperFactory;
 import com.thoughtworks.go.scm.plugin.util.JsonUtils;
-import com.tw.go.plugin.GitHelper;
 import com.tw.go.plugin.cmd.InMemoryConsumer;
 import com.tw.go.plugin.cmd.ProcessOutputStreamConsumer;
+import com.tw.go.plugin.git.GitHelper;
 import com.tw.go.plugin.model.GitConfig;
 
 import java.io.File;
@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 public class CheckoutRequestHandler implements RequestHandler {
-    private static Logger LOGGER = Logger.getLoggerFor(CheckoutRequestHandler.class);
+    private static final Logger LOGGER = Logger.getLoggerFor(CheckoutRequestHandler.class);
 
     @Override
     @SuppressWarnings("unchecked")

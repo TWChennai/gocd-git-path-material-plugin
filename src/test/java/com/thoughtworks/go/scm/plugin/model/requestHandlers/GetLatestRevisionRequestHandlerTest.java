@@ -4,7 +4,7 @@ import com.thoughtworks.go.plugin.api.request.GoPluginApiRequest;
 import com.thoughtworks.go.plugin.api.response.GoPluginApiResponse;
 import com.thoughtworks.go.scm.plugin.HelperFactory;
 import com.thoughtworks.go.scm.plugin.util.JsonUtils;
-import com.tw.go.plugin.GitHelper;
+import com.tw.go.plugin.git.GitHelper;
 import com.tw.go.plugin.model.GitConfig;
 import com.tw.go.plugin.model.Revision;
 import org.junit.jupiter.api.Test;

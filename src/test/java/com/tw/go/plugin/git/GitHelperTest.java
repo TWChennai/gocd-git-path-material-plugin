@@ -1,8 +1,11 @@
-package com.tw.go.plugin;
+package com.tw.go.plugin.git;
 
-import com.tw.go.plugin.git.GitCmdHelper;
+import com.tw.go.plugin.Pair;
+import com.tw.go.plugin.cmd.InMemoryConsumer;
+import com.tw.go.plugin.cmd.ProcessOutputStreamConsumer;
 import com.tw.go.plugin.model.GitConfig;
 import com.tw.go.plugin.model.Revision;
+import com.tw.go.plugin.model.ShallowClone;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.junit.jupiter.api.AfterEach;
@@ -23,14 +26,28 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 import static uk.org.webcompere.systemstubs.SystemStubs.restoreSystemProperties;
 
-public abstract class AbstractGitHelperTest {
+public class GitHelperTest {
     private static final int BUFFER_SIZE = 4096;
-
     protected final File testRepository = new File(System.getProperty("java.io.tmpdir"), UUID.randomUUID().toString());
     protected final File simpleGitRepository = new File(System.getProperty("java.io.tmpdir"), "simple-git-repository");
     private final File subModuleGitRepository = new File(System.getProperty("java.io.tmpdir"), "sub-module-git-repository");
     private final File branchGitRepository = new File(System.getProperty("java.io.tmpdir"), "branch-git-repository");
     private final File mergeCommitGitRepository = new File(System.getProperty("java.io.tmpdir"), "merge-commit-git-repository");
+
+    protected GitHelper getHelper(GitConfig gitConfig, File workingDir) {
+        ProcessOutputStreamConsumer stdOut = new ProcessOutputStreamConsumer(new InMemoryConsumer() {
+            @Override
+            public void consumeLine(String line) {
+                System.out.println(line);
+            }
+        });
+        return new GitHelper(gitConfig, workingDir, stdOut, new ProcessOutputStreamConsumer(new InMemoryConsumer() {
+                    @Override
+                    public void consumeLine(String line) {
+                       System.err.println(line);
+                    }
+                }));
+    }
 
     @BeforeEach
     public void setUp() {
@@ -49,8 +66,6 @@ public abstract class AbstractGitHelperTest {
         FileUtils.deleteQuietly(branchGitRepository);
         FileUtils.deleteQuietly(mergeCommitGitRepository);
     }
-
-    protected abstract GitHelper getHelper(GitConfig gitConfig, File workingDir);
 
     @Test
     public void shouldGetVersion() {
@@ -195,7 +210,7 @@ public abstract class AbstractGitHelperTest {
     @Test
     public void shouldRecursiveSubModuleUpdate() throws Exception {
         restoreSystemProperties(() -> {
-            System.setProperty(GitCmdHelper.GIT_SUBMODULE_ALLOW_FILE_PROTOCOL, "Y");
+            System.setProperty(GitHelper.GIT_SUBMODULE_ALLOW_FILE_PROTOCOL, "Y");
             extractToTmp("/sample-repository/simple-git-repository-1.zip");
             extractToTmp("/sample-repository/sub-module-git-repository.zip");
 
@@ -225,7 +240,7 @@ public abstract class AbstractGitHelperTest {
     @Test
     public void shouldWorkWithRepositoriesWithSubModules() throws Exception {
         restoreSystemProperties(() -> {
-            System.setProperty(GitCmdHelper.GIT_SUBMODULE_ALLOW_FILE_PROTOCOL, "Y");
+            System.setProperty(GitHelper.GIT_SUBMODULE_ALLOW_FILE_PROTOCOL, "Y");
             extractToTmp("/sample-repository/simple-git-repository-1.zip");
             extractToTmp("/sample-repository/sub-module-git-repository.zip");
 
@@ -238,8 +253,6 @@ public abstract class AbstractGitHelperTest {
             assertThat(submoduleFolders.get(0)).isEqualTo("sub-module");
         });
     }
-
-
 
     @Test
     public void shouldCheckoutToRevision() throws Exception {
@@ -300,6 +313,78 @@ public abstract class AbstractGitHelperTest {
 
         verifyRevision(revision, "66a1b17514622a8e4a620a033cca3715ef870e71", "Merge branch 'master' into test-branch", 1477248891000L, List.of(new Pair("file.txt", "modified")));
         assertTrue(revision.isMergeCommit(), "Revision should be a merge commit");
+    }
+
+
+    @Test
+    public void shouldShallowClone() throws Exception {
+        extractToTmp("/sample-repository/simple-git-repository-2.zip");
+        GitConfig config = new GitConfig("file://" + simpleGitRepository.getAbsolutePath());
+        config.setShallowClone(new ShallowClone(1, 2));
+        GitHelper git = getHelper(config, testRepository);
+
+        git.cloneOrFetch();
+
+        assertThat(git.getCommitCount()).isEqualTo(1);
+
+        Revision revision = git.getLatestRevision();
+        verifyRevision(revision, "24ce45d1a1427b643ae859777417bbc9f0d7cec8", "3\ntest multiline\ncomment", 1422189618000L, List.of(new Pair("a.txt", "added"), new Pair("b.txt", "added")));
+        List<Revision> newerRevisions = git.getRevisionsSince("24ce45d1a1427b643ae859777417bbc9f0d7cec8");
+        assertThat(newerRevisions.isEmpty()).isEqualTo(true);
+
+        FileUtils.deleteQuietly(testRepository);
+
+        // Increase default depth
+        config.setShallowClone(new ShallowClone(2, 3));
+        // poll again
+        git.cloneOrFetch();
+
+        assertThat(git.getCommitCount()).isEqualTo(2);
+        verifyRevision(revision, "24ce45d1a1427b643ae859777417bbc9f0d7cec8", "3\ntest multiline\ncomment", 1422189618000L, List.of(new Pair("a.txt", "added"), new Pair("b.txt", "added")));
+    }
+
+    @Test
+    public void shallowCloneShouldFetchMoreCommitsOnResetIfNecessary() throws Exception {
+        extractToTmp("/sample-repository/simple-git-repository-2.zip");
+        GitConfig config = new GitConfig("file://" + simpleGitRepository.getAbsolutePath());
+        config.setShallowClone(new ShallowClone(1, 2));
+        GitHelper git = getHelper(config, testRepository);
+
+        git.cloneOrFetch();
+
+        assertThat(git.getCommitCount()).isEqualTo(1);
+
+        Revision revision = git.getLatestRevision();
+        assertThat(revision.getRevision()).isEqualTo("24ce45d1a1427b643ae859777417bbc9f0d7cec8");
+
+        git.resetHard("012e893acea10b140688d11beaa728e8c60bd9f6");
+
+        assertThat(git.getCommitCount()).isEqualTo(1);
+    }
+
+    @Test
+    public void shouldCloneWithNoCheckout() throws Exception {
+        extractToTmp("/sample-repository/simple-git-repository-2.zip");
+
+        GitConfig config = new GitConfig("file://" + simpleGitRepository.getAbsolutePath());
+        config.setNoCheckout(true);
+        GitHelper git = getHelper(config, testRepository);
+
+        git.cloneOrFetch();
+        assertThat(List.of(testRepository.list())).contains(".git");
+
+        assertThat(git.getCommitCount()).isEqualTo(3);
+
+        Revision revision = git.getLatestRevision();
+        verifyRevision(revision, "24ce45d1a1427b643ae859777417bbc9f0d7cec8", "3\ntest multiline\ncomment", 1422189618000L, List.of(new Pair("a.txt", "modified"), new Pair("b.txt", "added")));
+
+        // poll again
+        git.cloneOrFetch();
+        assertThat(List.of(testRepository.list())).contains(".git");
+
+        List<Revision> newerRevisions = git.getRevisionsSince("24ce45d1a1427b643ae859777417bbc9f0d7cec8");
+
+        assertThat(newerRevisions.isEmpty()).isEqualTo(true);
     }
 
     protected void extractToTmp(String zipResourcePath) throws IOException {

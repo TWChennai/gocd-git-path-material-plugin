@@ -17,8 +17,8 @@ import static org.mockito.Mockito.when;
 
 public class JsonUtilsTests {
 
-    private class Response {
-        private String message;
+    private static class Response {
+        private final String message;
 
         Response(String message) {
             this.message = message;

@@ -6,7 +6,7 @@ import com.thoughtworks.go.plugin.api.response.GoPluginApiResponse;
 import com.thoughtworks.go.scm.plugin.HelperFactory;
 import com.thoughtworks.go.scm.plugin.util.JsonUtils;
 import com.thoughtworks.go.scm.plugin.util.Validator;
-import com.tw.go.plugin.GitHelper;
+import com.tw.go.plugin.git.GitHelper;
 import com.tw.go.plugin.model.GitConfig;
 import com.tw.go.plugin.util.StringUtil;
 
@@ -18,7 +18,7 @@ import java.util.Map;
 import static com.thoughtworks.go.scm.plugin.util.Validator.isValidURL;
 
 public class SCMCheckConnectionRequestHandler implements RequestHandler {
-    private static Logger LOGGER = Logger.getLoggerFor(SCMCheckConnectionRequestHandler.class);
+    private static final Logger LOGGER = Logger.getLoggerFor(SCMCheckConnectionRequestHandler.class);
 
     @Override
     public GoPluginApiResponse handle(GoPluginApiRequest goPluginApiRequest) {
@@ -48,7 +48,7 @@ public class SCMCheckConnectionRequestHandler implements RequestHandler {
                     response.put("status", "failure");
                     messages.add("Could not find Git repository");
                 } else {
-                    GitHelper gitHelper = HelperFactory.git(gitConfig, null);
+                    GitHelper gitHelper = new GitHelper(gitConfig, null);
                     gitHelper.checkConnection();
                 }
             } else {

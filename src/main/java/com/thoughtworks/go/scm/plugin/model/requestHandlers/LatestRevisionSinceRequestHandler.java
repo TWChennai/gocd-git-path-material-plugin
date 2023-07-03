@@ -6,7 +6,7 @@ import com.thoughtworks.go.plugin.api.response.GoPluginApiResponse;
 import com.thoughtworks.go.scm.plugin.HelperFactory;
 import com.thoughtworks.go.scm.plugin.util.JsonUtils;
 import com.thoughtworks.go.scm.plugin.util.Validator;
-import com.tw.go.plugin.GitHelper;
+import com.tw.go.plugin.git.GitHelper;
 import com.tw.go.plugin.model.GitConfig;
 import com.tw.go.plugin.model.Revision;
 
@@ -18,7 +18,7 @@ import java.util.Map;
 import static java.util.stream.Collectors.toList;
 
 public class LatestRevisionSinceRequestHandler implements RequestHandler {
-    private static Logger LOGGER = Logger.getLoggerFor(LatestRevisionSinceRequestHandler.class);
+    private static final Logger LOGGER = Logger.getLoggerFor(LatestRevisionSinceRequestHandler.class);
 
     @Override
     @SuppressWarnings("unchecked")
