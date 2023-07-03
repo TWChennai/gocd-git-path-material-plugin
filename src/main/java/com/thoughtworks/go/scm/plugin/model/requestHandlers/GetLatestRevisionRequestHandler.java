@@ -3,12 +3,12 @@ package com.thoughtworks.go.scm.plugin.model.requestHandlers;
 import com.thoughtworks.go.plugin.api.logging.Logger;
 import com.thoughtworks.go.plugin.api.request.GoPluginApiRequest;
 import com.thoughtworks.go.plugin.api.response.GoPluginApiResponse;
-import com.thoughtworks.go.scm.plugin.HelperFactory;
+import com.thoughtworks.go.scm.plugin.git.GitConfig;
+import com.thoughtworks.go.scm.plugin.git.GitHelper;
+import com.thoughtworks.go.scm.plugin.git.HelperFactory;
+import com.thoughtworks.go.scm.plugin.git.Revision;
 import com.thoughtworks.go.scm.plugin.util.JsonUtils;
 import com.thoughtworks.go.scm.plugin.util.Validator;
-import com.tw.go.plugin.git.GitHelper;
-import com.tw.go.plugin.model.GitConfig;
-import com.tw.go.plugin.model.Revision;
 
 import java.io.File;
 import java.util.HashMap;

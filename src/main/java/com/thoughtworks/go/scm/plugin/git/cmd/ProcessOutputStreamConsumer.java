@@ -1,4 +1,4 @@
-package com.tw.go.plugin.cmd;
+package com.thoughtworks.go.scm.plugin.git.cmd;
 
 import org.apache.commons.exec.LogOutputStream;
 

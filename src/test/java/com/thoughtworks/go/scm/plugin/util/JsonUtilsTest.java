@@ -2,8 +2,8 @@ package com.thoughtworks.go.scm.plugin.util;
 
 import com.thoughtworks.go.plugin.api.request.GoPluginApiRequest;
 import com.thoughtworks.go.plugin.api.response.GoPluginApiResponse;
+import com.thoughtworks.go.scm.plugin.git.GitConfig;
 import com.thoughtworks.go.scm.plugin.helpers.JsonHelper;
-import com.tw.go.plugin.model.GitConfig;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -15,7 +15,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class JsonUtilsTests {
+public class JsonUtilsTest {
 
     private static class Response {
         private final String message;

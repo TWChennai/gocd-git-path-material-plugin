@@ -2,11 +2,11 @@ package com.thoughtworks.go.scm.plugin.model.requestHandlers;
 
 import com.thoughtworks.go.plugin.api.request.GoPluginApiRequest;
 import com.thoughtworks.go.plugin.api.response.GoPluginApiResponse;
-import com.thoughtworks.go.scm.plugin.HelperFactory;
+import com.thoughtworks.go.scm.plugin.git.GitConfig;
+import com.thoughtworks.go.scm.plugin.git.GitHelper;
+import com.thoughtworks.go.scm.plugin.git.HelperFactory;
+import com.thoughtworks.go.scm.plugin.git.cmd.ProcessOutputStreamConsumer;
 import com.thoughtworks.go.scm.plugin.util.JsonUtils;
-import com.tw.go.plugin.cmd.ProcessOutputStreamConsumer;
-import com.tw.go.plugin.git.GitHelper;
-import com.tw.go.plugin.model.GitConfig;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;

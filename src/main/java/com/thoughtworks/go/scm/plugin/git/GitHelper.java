@@ -1,12 +1,10 @@
-package com.tw.go.plugin.git;
+package com.thoughtworks.go.scm.plugin.git;
 
-import com.tw.go.plugin.cmd.Console;
-import com.tw.go.plugin.cmd.ConsoleResult;
-import com.tw.go.plugin.cmd.InMemoryConsumer;
-import com.tw.go.plugin.cmd.ProcessOutputStreamConsumer;
-import com.tw.go.plugin.model.GitConfig;
-import com.tw.go.plugin.model.Revision;
-import com.tw.go.plugin.util.StringUtil;
+import com.thoughtworks.go.scm.plugin.git.cmd.Console;
+import com.thoughtworks.go.scm.plugin.git.cmd.ConsoleResult;
+import com.thoughtworks.go.scm.plugin.git.cmd.InMemoryConsumer;
+import com.thoughtworks.go.scm.plugin.git.cmd.ProcessOutputStreamConsumer;
+import com.thoughtworks.go.scm.plugin.util.StringUtil;
 import org.apache.commons.exec.CommandLine;
 import org.apache.commons.io.FileUtils;
 
@@ -220,7 +218,7 @@ public class GitHelper {
     public void fetch(String refSpec) {
         stdOut.consumeLine("[GIT] Fetching changes");
         List<String> args = new ArrayList<>(Arrays.asList("fetch", "origin", "--prune", "--recurse-submodules=no"));
-        if (!StringUtil.isEmpty(refSpec)) {
+        if (!StringUtil.isBlank(refSpec)) {
             args.add(refSpec);
         }
         runOrBomb(Console.createCommand(args.toArray(new String[0])));

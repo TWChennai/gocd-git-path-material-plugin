@@ -1,13 +1,10 @@
-package com.tw.go.plugin.git;
+package com.thoughtworks.go.scm.plugin.git;
 
-import com.tw.go.plugin.Pair;
-import com.tw.go.plugin.cmd.InMemoryConsumer;
-import com.tw.go.plugin.cmd.ProcessOutputStreamConsumer;
-import com.tw.go.plugin.model.GitConfig;
-import com.tw.go.plugin.model.Revision;
-import com.tw.go.plugin.model.ShallowClone;
+import com.thoughtworks.go.scm.plugin.git.cmd.InMemoryConsumer;
+import com.thoughtworks.go.scm.plugin.git.cmd.ProcessOutputStreamConsumer;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.tuple.Pair;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
@@ -105,7 +102,7 @@ public class GitHelperTest {
         assertThat(git.currentRevision()).isEqualTo("012e893acea10b140688d11beaa728e8c60bd9f6");
 
         Revision revision = git.getDetailsForRevision("012e893acea10b140688d11beaa728e8c60bd9f6");
-        verifyRevision(revision, "012e893acea10b140688d11beaa728e8c60bd9f6", "1", 1422184635000L, List.of(new Pair("a.txt", "added")));
+        verifyRevision(revision, "012e893acea10b140688d11beaa728e8c60bd9f6", "1", 1422184635000L, List.of(Pair.of("a.txt", "added")));
     }
 
     @Test
@@ -121,7 +118,7 @@ public class GitHelperTest {
 
         Revision revision = git.getLatestRevision();
 
-        verifyRevision(revision, "012e893acea10b140688d11beaa728e8c60bd9f6", "1", 1422184635000L, List.of(new Pair("a.txt", "added")));
+        verifyRevision(revision, "012e893acea10b140688d11beaa728e8c60bd9f6", "1", 1422184635000L, List.of(Pair.of("a.txt", "added")));
 
         // Fetch & Get LatestRevisionsSince
         FileUtils.deleteQuietly(simpleGitRepository.getAbsoluteFile());
@@ -135,8 +132,8 @@ public class GitHelperTest {
         List<Revision> newerRevisions = git.getRevisionsSince("012e893acea10b140688d11beaa728e8c60bd9f6");
 
         assertThat(newerRevisions.size()).isEqualTo(2);
-        verifyRevision(newerRevisions.get(0), "24ce45d1a1427b643ae859777417bbc9f0d7cec8", "3\ntest multiline\ncomment", 1422189618000L, List.of(new Pair("a.txt", "modified"), new Pair("b.txt", "added")));
-        verifyRevision(newerRevisions.get(1), "1320a78055558603a2c29d803bbaa50d3542ff50", "2", 1422189545000L, List.of(new Pair("a.txt", "modified")));
+        verifyRevision(newerRevisions.get(0), "24ce45d1a1427b643ae859777417bbc9f0d7cec8", "3\ntest multiline\ncomment", 1422189618000L, List.of(Pair.of("a.txt", "modified"), Pair.of("b.txt", "added")));
+        verifyRevision(newerRevisions.get(1), "1320a78055558603a2c29d803bbaa50d3542ff50", "2", 1422189545000L, List.of(Pair.of("a.txt", "modified")));
 
         // poll again
         git.cloneOrFetch();
@@ -160,7 +157,7 @@ public class GitHelperTest {
 
         assertThat(aRevision.getRevision()).isEqualTo("7d14db6ec07f2cfac82195e401780bf127349ddb");
         assertThat(aRevision.getModifiedFiles()).hasSize(1);
-        verifyRevision(aRevision, "7d14db6ec07f2cfac82195e401780bf127349ddb", "Change to a.txt", 1567878351000L, List.of(new Pair("a.txt", "modified")));
+        verifyRevision(aRevision, "7d14db6ec07f2cfac82195e401780bf127349ddb", "Change to a.txt", 1567878351000L, List.of(Pair.of("a.txt", "modified")));
 
         assertThat(bRevision.getRevision()).isEqualTo("24ce45d1a1427b643ae859777417bbc9f0d7cec8");
         assertThat(bRevision.getModifiedFiles()).hasSize(2);
@@ -170,7 +167,7 @@ public class GitHelperTest {
 
         List<Revision> aRevisions = git.getRevisionsSince("24ce45d1a1427b643ae859777417bbc9f0d7cec8", List.of("a.txt"));
         assertThat(aRevisions).hasSize(1);
-        verifyRevision(aRevisions.get(0), "7d14db6ec07f2cfac82195e401780bf127349ddb", "Change to a.txt", 1567878351000L, List.of(new Pair("a.txt", "modified")));
+        verifyRevision(aRevisions.get(0), "7d14db6ec07f2cfac82195e401780bf127349ddb", "Change to a.txt", 1567878351000L, List.of(Pair.of("a.txt", "modified")));
 
         List<Revision> bRevisions = git.getRevisionsSince("24ce45d1a1427b643ae859777417bbc9f0d7cec8", List.of("b.txt"));
         assertThat(bRevisions).hasSize(0);
@@ -311,7 +308,7 @@ public class GitHelperTest {
         GitHelper git = getHelper(new GitConfig(mergeCommitGitRepository.getAbsolutePath()), mergeCommitGitRepository);
         Revision revision = git.getDetailsForRevision("66a1b17514622a8e4a620a033cca3715ef870e71");
 
-        verifyRevision(revision, "66a1b17514622a8e4a620a033cca3715ef870e71", "Merge branch 'master' into test-branch", 1477248891000L, List.of(new Pair("file.txt", "modified")));
+        verifyRevision(revision, "66a1b17514622a8e4a620a033cca3715ef870e71", "Merge branch 'master' into test-branch", 1477248891000L, List.of(Pair.of("file.txt", "modified")));
         assertTrue(revision.isMergeCommit(), "Revision should be a merge commit");
     }
 
@@ -328,7 +325,7 @@ public class GitHelperTest {
         assertThat(git.getCommitCount()).isEqualTo(1);
 
         Revision revision = git.getLatestRevision();
-        verifyRevision(revision, "24ce45d1a1427b643ae859777417bbc9f0d7cec8", "3\ntest multiline\ncomment", 1422189618000L, List.of(new Pair("a.txt", "added"), new Pair("b.txt", "added")));
+        verifyRevision(revision, "24ce45d1a1427b643ae859777417bbc9f0d7cec8", "3\ntest multiline\ncomment", 1422189618000L, List.of(Pair.of("a.txt", "added"), Pair.of("b.txt", "added")));
         List<Revision> newerRevisions = git.getRevisionsSince("24ce45d1a1427b643ae859777417bbc9f0d7cec8");
         assertThat(newerRevisions.isEmpty()).isEqualTo(true);
 
@@ -340,7 +337,7 @@ public class GitHelperTest {
         git.cloneOrFetch();
 
         assertThat(git.getCommitCount()).isEqualTo(2);
-        verifyRevision(revision, "24ce45d1a1427b643ae859777417bbc9f0d7cec8", "3\ntest multiline\ncomment", 1422189618000L, List.of(new Pair("a.txt", "added"), new Pair("b.txt", "added")));
+        verifyRevision(revision, "24ce45d1a1427b643ae859777417bbc9f0d7cec8", "3\ntest multiline\ncomment", 1422189618000L, List.of(Pair.of("a.txt", "added"), Pair.of("b.txt", "added")));
     }
 
     @Test
@@ -376,7 +373,7 @@ public class GitHelperTest {
         assertThat(git.getCommitCount()).isEqualTo(3);
 
         Revision revision = git.getLatestRevision();
-        verifyRevision(revision, "24ce45d1a1427b643ae859777417bbc9f0d7cec8", "3\ntest multiline\ncomment", 1422189618000L, List.of(new Pair("a.txt", "modified"), new Pair("b.txt", "added")));
+        verifyRevision(revision, "24ce45d1a1427b643ae859777417bbc9f0d7cec8", "3\ntest multiline\ncomment", 1422189618000L, List.of(Pair.of("a.txt", "modified"), Pair.of("b.txt", "added")));
 
         // poll again
         git.cloneOrFetch();
@@ -429,14 +426,14 @@ public class GitHelperTest {
         bufferedOutputStream.close();
     }
 
-    protected void verifyRevision(Revision revision, String sha, String comment, long timestamp, List<Pair> files) {
+    protected void verifyRevision(Revision revision, String sha, String comment, long timestamp, List<Pair<String, String>> files) {
         assertThat(revision.getRevision()).isEqualTo(sha);
         assertThat(revision.getTimestamp().getTime()).isEqualTo(timestamp);
         assertThat(revision.getComment()).isEqualTo(comment);
         assertThat(revision.getModifiedFiles().size()).isEqualTo(files.size());
         for (int i = 0; i < files.size(); i++) {
-            assertThat(revision.getModifiedFiles().get(i).getFileName()).isEqualTo(files.get(i).a);
-            assertThat(revision.getModifiedFiles().get(i).getAction()).isEqualTo(files.get(i).b);
+            assertThat(revision.getModifiedFiles().get(i).getFileName()).isEqualTo(files.get(i).getLeft());
+            assertThat(revision.getModifiedFiles().get(i).getAction()).isEqualTo(files.get(i).getRight());
         }
     }
 }

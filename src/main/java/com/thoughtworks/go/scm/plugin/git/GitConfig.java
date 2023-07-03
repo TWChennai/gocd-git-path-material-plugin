@@ -1,6 +1,6 @@
-package com.tw.go.plugin.model;
+package com.thoughtworks.go.scm.plugin.git;
 
-import com.tw.go.plugin.util.StringUtil;
+import com.thoughtworks.go.scm.plugin.util.StringUtil;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -37,7 +37,7 @@ public class GitConfig {
     }
 
     public boolean hasCredentials() {
-        return !StringUtil.isEmpty(url) && !StringUtil.isEmpty(password);
+        return !StringUtil.isBlank(url) && !StringUtil.isBlank(password);
     }
 
     public String getEffectiveUrl() {
@@ -81,7 +81,7 @@ public class GitConfig {
     }
 
     public String getEffectiveBranch() {
-        return StringUtil.isEmpty(branch) ? "master" : branch;
+        return StringUtil.isBlank(branch) ? "master" : branch;
     }
 
     public String getBranch() {

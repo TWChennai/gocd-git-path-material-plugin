@@ -1,7 +1,6 @@
-package com.tw.go.plugin.git;
+package com.thoughtworks.go.scm.plugin.git;
 
-import com.tw.go.plugin.model.Revision;
-import com.tw.go.plugin.util.DateUtils;
+import com.thoughtworks.go.scm.plugin.util.DateUtils;
 
 import java.util.LinkedList;
 import java.util.List;

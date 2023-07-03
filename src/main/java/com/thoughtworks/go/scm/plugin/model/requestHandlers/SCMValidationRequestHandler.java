@@ -2,10 +2,9 @@ package com.thoughtworks.go.scm.plugin.model.requestHandlers;
 
 import com.thoughtworks.go.plugin.api.request.GoPluginApiRequest;
 import com.thoughtworks.go.plugin.api.response.GoPluginApiResponse;
-import com.thoughtworks.go.scm.plugin.FieldValidator;
+import com.thoughtworks.go.scm.plugin.git.GitConfig;
 import com.thoughtworks.go.scm.plugin.util.JsonUtils;
 import com.thoughtworks.go.scm.plugin.util.Validator;
-import com.tw.go.plugin.model.GitConfig;
 
 import java.util.ArrayList;
 import java.util.HashMap;

@@ -1,10 +1,12 @@
 package com.thoughtworks.go.scm.plugin.model.requestHandlers;
 
-import com.tw.go.plugin.model.Revision;
+import com.thoughtworks.go.scm.plugin.git.Revision;
 
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
-import java.util.*;
+import java.util.Collections;
+import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class RevisionUtil {

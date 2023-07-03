@@ -1,4 +1,4 @@
-package com.tw.go.plugin.util;
+package com.thoughtworks.go.scm.plugin.util;
 
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormatter;
@@ -25,19 +25,11 @@ public class DateUtils {
             //fall through and try and parse other ISO standard formats
         }
         try {
-            return dateFormatFor("yyyy-MM-dd'T'HH:mm:ss", "UTC").parse(date);
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+            dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+            return dateFormat.parse(date);
         } catch (ParseException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    public static String formatRFC822(Date date) {
-        return new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss ZZZZZ").format(date);
-    }
-
-    private static SimpleDateFormat dateFormatFor(String simpleDateFormat, String timeZone) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat(simpleDateFormat);
-        dateFormat.setTimeZone(TimeZone.getTimeZone(timeZone));
-        return dateFormat;
     }
 }

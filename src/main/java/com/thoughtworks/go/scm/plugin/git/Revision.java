@@ -1,4 +1,4 @@
-package com.tw.go.plugin.model;
+package com.thoughtworks.go.scm.plugin.git;
 
 import java.util.ArrayList;
 import java.util.Date;

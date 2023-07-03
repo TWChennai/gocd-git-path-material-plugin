@@ -1,4 +1,4 @@
-package com.tw.go.plugin.model;
+package com.thoughtworks.go.scm.plugin.git;
 
 import org.joda.time.DateTime;
 import org.junit.jupiter.api.BeforeEach;
