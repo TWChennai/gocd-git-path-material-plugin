@@ -20,6 +20,8 @@ jobs:
       with:
         java-version: ${{ matrix.Java }}
         distribution: temurin
+    - run: git config --global user.email "you@example.com"
+    - run: git config --global user.name "Your Name"
     - name: Build with Gradle
       uses: gradle/gradle-build-action@v2
       with:

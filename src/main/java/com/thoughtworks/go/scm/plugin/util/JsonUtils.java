@@ -4,9 +4,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.thoughtworks.go.plugin.api.logging.Logger;
 import com.thoughtworks.go.plugin.api.request.GoPluginApiRequest;
 import com.thoughtworks.go.plugin.api.response.GoPluginApiResponse;
+import com.thoughtworks.go.scm.plugin.git.GitConfig;
+import com.thoughtworks.go.scm.plugin.git.ShallowClone;
 import com.thoughtworks.go.scm.plugin.model.requestHandlers.SCMConfigurationRequestHandler;
-import com.tw.go.plugin.model.GitConfig;
-import com.tw.go.plugin.model.ShallowClone;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 

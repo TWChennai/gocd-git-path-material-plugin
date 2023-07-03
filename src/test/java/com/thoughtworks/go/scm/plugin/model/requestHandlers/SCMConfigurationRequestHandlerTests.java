@@ -19,7 +19,7 @@ public class SCMConfigurationRequestHandlerTests {
     @Mock
     private GoPluginApiRequest apiRequest;
 
-    private RequestHandler requestHandler = new SCMConfigurationRequestHandler();
+    private final RequestHandler requestHandler = new SCMConfigurationRequestHandler();
 
     @Test
     public void shouldReturnSuccessJsonResponseForScmConfigurationRequest() {

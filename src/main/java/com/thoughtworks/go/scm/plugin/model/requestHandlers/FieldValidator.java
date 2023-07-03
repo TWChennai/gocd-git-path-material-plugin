@@ -1,4 +1,4 @@
-package com.thoughtworks.go.scm.plugin;
+package com.thoughtworks.go.scm.plugin.model.requestHandlers;
 
 import java.util.Map;
 
