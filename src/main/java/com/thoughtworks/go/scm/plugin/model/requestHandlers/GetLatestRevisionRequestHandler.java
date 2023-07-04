@@ -47,7 +47,7 @@ public class GetLatestRevisionRequestHandler implements RequestHandler {
                 return JsonUtils.renderSuccessApiResponse(Map.of("revision", RevisionUtil.toMap(revision)));
             }
         } catch (Throwable t) {
-            return JsonUtils.renderErrorApiResponse(apiRequest, t);
+            return JsonUtils.renderErrorApiResponse(apiRequest, t, gitConfig.redactables());
         }
     }
 }

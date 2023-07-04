@@ -97,7 +97,7 @@ public class GetLatestRevisionRequestHandlerTest {
             Exception cause = new IllegalArgumentException("git@github.com:lifealike/gocd-config.git: UnknownHostKey: github.com. RSA key fingerprint is 16:27:ac:a5:76:28:2d:36:63:1b:56:4d:eb:df:a6:48");
             RuntimeException runtimeException = new RuntimeException("clone failed", cause);
 
-            when(JsonUtils.renderErrorApiResponse(eq(pluginApiRequestMock), errorCaptor.capture())).thenReturn(mock(GoPluginApiResponse.class));
+            when(JsonUtils.renderErrorApiResponse(eq(pluginApiRequestMock), errorCaptor.capture(), any())).thenReturn(mock(GoPluginApiResponse.class));
             when(gitConfigMock.getUrl()).thenReturn("https://github.com/TWChennai/gocd-git-path-material-plugin.git");
             doThrow(runtimeException).when(gitHelperMock).cloneOrFetch();
 

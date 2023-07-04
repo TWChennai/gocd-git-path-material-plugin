@@ -1,11 +1,14 @@
 package com.thoughtworks.go.scm.plugin.git.cmd;
 
-import org.apache.commons.exec.CommandLine;
-import org.apache.commons.exec.DefaultExecutor;
-import org.apache.commons.exec.Executor;
-import org.apache.commons.exec.PumpStreamHandler;
+import com.thoughtworks.go.scm.plugin.util.StringUtil;
+import org.apache.commons.exec.*;
+import org.apache.commons.exec.util.StringUtils;
 
 import java.io.File;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Console {
     public static CommandLine createCommand(String... args) {
@@ -14,7 +17,7 @@ public class Console {
         return gitCmd;
     }
 
-    public static ConsoleResult runOrBomb(CommandLine commandLine, File workingDir, ProcessOutputStreamConsumer stdOut, ProcessOutputStreamConsumer stdErr) {
+    public static ConsoleResult runOrBomb(CommandLine commandLine, File workingDir, ProcessOutputStreamConsumer stdOut, ProcessOutputStreamConsumer stdErr, List<String> redactables) {
         Executor executor = new DefaultExecutor();
         executor.setStreamHandler(new PumpStreamHandler(stdOut, stdErr));
         if (workingDir != null) {
@@ -24,12 +27,24 @@ public class Console {
         try {
             int exitCode = executor.execute(commandLine);
             return new ConsoleResult(exitCode, stdOut.output(), stdErr.output());
+        } catch (ExecuteException e) {
+            throw new RuntimeException(String.format("%s exited with code %d (%s%s)",
+                    StringUtil.replaceSecretText(commandLine.getExecutable(), redactables),
+                    e.getExitValue(),
+                    StringUtil.replaceSecretText(niceCommandLine(commandLine), redactables),
+                    workingDir == null ? "" : " in " + workingDir));
         } catch (Exception e) {
-            throw new RuntimeException(getMessage(String.format("Exception (%s)", e.getMessage()), commandLine, workingDir), e);
+            throw new RuntimeException(String.format("%s failed: %s (%s%s)",
+                    StringUtil.replaceSecretText(commandLine.getExecutable(), redactables),
+                    StringUtil.replaceSecretText(e.getMessage(), redactables),
+                    StringUtil.replaceSecretText(niceCommandLine(commandLine), redactables),
+                    workingDir == null ? "" : " in " + workingDir), e);
         }
     }
 
-    private static String getMessage(String type, CommandLine commandLine, File workingDir) {
-        return String.format("%s Occurred: %s - %s", type, commandLine.toString(), workingDir);
+    private static String niceCommandLine(CommandLine commandLine) {
+        return Stream.concat(Stream.of(commandLine.getExecutable()), Arrays.stream(commandLine.getArguments()))
+                .map(StringUtils::quoteArgument)
+                .collect(Collectors.joining(" "));
     }
 }

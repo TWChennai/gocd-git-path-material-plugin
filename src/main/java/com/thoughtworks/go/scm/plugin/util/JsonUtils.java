@@ -32,13 +32,19 @@ public class JsonUtils {
         return renderJSON(INTERNAL_ERROR_RESPONSE_CODE, response);
     }
 
-    public static GoPluginApiResponse renderErrorApiResponse(GoPluginApiRequest apiRequest, Throwable t) {
+    public static GoPluginApiResponse renderErrorApiResponse(GoPluginApiRequest apiRequest, Throwable t, List<String> redactables) {
         LOGGER.error(apiRequest.requestName() + " failed", t);
         return renderJSON(INTERNAL_ERROR_RESPONSE_CODE,
-                String.format("%s failed due to [%s], rootCause [%s]",
+                String.format("%s failed due to [%s]%s",
                         apiRequest.requestName(),
-                        ExceptionUtils.getMessage(t),
-                        ExceptionUtils.getRootCauseMessage(t)));
+                        StringUtil.replaceSecretText(t.getMessage(), redactables),
+                        rootCauseSuffix(t, redactables)));
+    }
+
+    private static String rootCauseSuffix(Throwable t, List<String> redactables) {
+        return t.equals(ExceptionUtils.getRootCause(t))
+                ? ""
+                : String.format(", root cause [%s]", StringUtil.replaceSecretText(ExceptionUtils.getRootCauseMessage(t), redactables));
     }
 
     public static Map<String, String> parseScmConfiguration(GoPluginApiRequest apiRequest) {

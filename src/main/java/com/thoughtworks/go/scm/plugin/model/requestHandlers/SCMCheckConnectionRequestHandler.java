@@ -7,8 +7,8 @@ import com.thoughtworks.go.scm.plugin.git.GitConfig;
 import com.thoughtworks.go.scm.plugin.git.GitHelper;
 import com.thoughtworks.go.scm.plugin.git.HelperFactory;
 import com.thoughtworks.go.scm.plugin.util.JsonUtils;
-import com.thoughtworks.go.scm.plugin.util.StringUtil;
 import com.thoughtworks.go.scm.plugin.util.Validator;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -40,7 +40,7 @@ public class SCMCheckConnectionRequestHandler implements RequestHandler {
     private void checkConnection(GitConfig gitConfig, Map<String, Object> response, ArrayList<String> messages) {
         LOGGER.debug("SCMCheckConnectionRequestHandler In handle");
         try {
-            if (StringUtil.isBlank(gitConfig.getUrl())) {
+            if (StringUtils.isBlank(gitConfig.getUrl())) {
                 response.put("status", "failure");
                 messages.add("URL is empty");
             } else if (gitConfig.getUrl().startsWith("/")) {
@@ -51,27 +51,16 @@ public class SCMCheckConnectionRequestHandler implements RequestHandler {
                     GitHelper gitHelper = new GitHelper(gitConfig, null);
                     gitHelper.checkConnection();
                 }
+            } else if (!isValidURL(gitConfig.getUrl())) {
+                response.put("status", "failure");
+                messages.add("Invalid URL format. Should match " + Validator.GIT_URL_REGEX);
             } else {
-                if (!isValidURL(gitConfig.getUrl())) {
-                    response.put("status", "failure");
-                    messages.add("Invalid URL format. Should match "+Validator.GIT_URL_REGEX);
-                } else {
-                    try {
-                        GitHelper gitHelper = HelperFactory.git(gitConfig, null);
-                        gitHelper.checkConnection();
-                    } catch (Exception e) {
-                        response.put("status", "failure");
-                        messages.add("ls-remote failed");
-                    }
-                }
+                GitHelper gitHelper = HelperFactory.git(gitConfig, null);
+                gitHelper.checkConnection();
             }
         } catch (Exception e) {
             response.put("status", "failure");
-            if (e.getMessage() != null) {
-                messages.add(e.getMessage());
-            } else {
-                messages.add(e.getClass().getCanonicalName());
-            }
+            messages.add(e.getMessage() != null ? e.getMessage() : e.getClass().getCanonicalName());
         }
     }
 }

@@ -141,4 +141,19 @@ public class GitConfigTest {
 
         assertThat(gitConfig.getBranch()).isEqualTo("branch");
     }
+
+    @Test
+    public void usernameAndPasswordShouldBeRedactable() {
+        assertThat(new GitConfig("http://url.test", "username", "password", "branch").redactables())
+                .containsExactly("password", "username");
+
+        assertThat(new GitConfig("http://url.test", "password", "password", "branch").redactables())
+                .containsExactly("password", "password");
+
+        assertThat(new GitConfig("http://url.test", " ", "password", "branch").redactables())
+                .containsExactly("password");
+
+        assertThat(new GitConfig("http://url.test", "", " ", "branch").redactables())
+                .isEmpty();
+    }
 }
