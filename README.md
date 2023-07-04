@@ -65,7 +65,7 @@ This plugin is intended as
 
 | Plugin Version    | Requirements  | Recommended |
 | ----------------- | ------------- | ----------- |
-| `2.2` | GoCD >= `19.9` <br/> Server and agent running Java 11+  | GoCD `20.9` for full functionality  <br/> `git` binary available on path  |
+| `2.2+` | GoCD >= `19.9` <br/> Server and agent running Java 11+  | GoCD `20.9` for full functionality  <br/> `git` binary available on path  |
 | `2.1` | GoCD >= `18.10` <br/> Server and agent running Java 9+  | At least GoCD `19.2`, but >= `20.9` for full functionality <br/> `git` binary available on path  | 
 | `1.x` | GoCD >= `15.1` <br> Server and agent running Java 7+  | |
 
