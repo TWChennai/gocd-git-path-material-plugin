@@ -71,10 +71,8 @@
     <div class="form_item_block checkbox_row material_options">
         <input id="shallow_clone2" type="checkbox" ng-model="shallow_clone2" ng-init="shallow_clone2 = shallow_clone"
                ng-change="shallow_clone = shallow_clone2" ng-true-value="true" ng-false-value="false" tabindex="6"/>
-        <input id="shallow_clone" type="hidden" ng-model="shallow_clone" value="{{shallow_clone}}"/>
         <label>Shallow clone (recommended for large repositories)</label>
-<!--        <input type="radio" ng-model="email_smtp_ssl" value="true" checked="checked"/> Yes-->
-<!--        <input type="radio" ng-model="email_smtp_ssl" value="false"/> No-->
+        <input id="shallow_clone" type="hidden" ng-model="shallow_clone" value="{{shallow_clone}}"/>
 
         <span class="form_error" ng-show="GOINPUTNAME[shallow_clone].$error.server">
             {{ GOINPUTNAME[shallow_clone].$error.server }}
