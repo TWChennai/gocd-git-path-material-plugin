@@ -65,7 +65,7 @@ dependencies {
     testCompileOnly "cd.go.plugin:go-plugin-api:${gocdPluginVersion}"
     testImplementation 'org.mockito:mockito-junit-jupiter:5.8.0'
     testImplementation 'org.assertj:assertj-core:3.25.1'
-    testImplementation 'uk.org.webcompere:system-stubs-jupiter:2.1.5'
+    testImplementation 'uk.org.webcompere:system-stubs-jupiter:2.1.6'
 }
 
 test {
