@@ -51,7 +51,7 @@ dependencies {
 
     implementation 'joda-time:joda-time:2.12.7'
     implementation 'org.apache.commons:commons-exec:1.4.0'
-    implementation 'commons-io:commons-io:2.15.1'
+    implementation 'commons-io:commons-io:2.16.0'
 
     implementation platform('com.fasterxml.jackson:jackson-bom:2.17.0')
     implementation 'com.fasterxml.jackson.core:jackson-databind'
