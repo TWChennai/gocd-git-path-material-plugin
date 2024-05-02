@@ -2,7 +2,7 @@ version: '3.7'
 
 services:
   agent:
-    image: gocd/gocd-agent-centos-9:v23.1.0
+    image: gocd/gocd-agent-centos-9:v23.5.0
     depends_on:
       - server
     environment:
@@ -15,10 +15,10 @@ services:
       - ~/.ssh:/home/go/.ssh
 
   server:
-    image: gocd/gocd-server-centos-9:v23.1.0
+    image: gocd/gocd-server-centos-9:v23.5.0
     environment:
       GOCD_PLUGIN_INSTALL_script-executor-task:
-        https://github.com/gocd-contrib/script-executor-task/releases/download/v1.0.3-148/script-executor-1.0.3-148.jar
+        https://github.com/gocd-contrib/script-executor-task/releases/download/v1.0.3-184/script-executor-1.0.3-184.jar
       GIT_SSH_COMMAND: ssh -o StrictHostKeyChecking=no
     ports:
       - 8153:8153
