@@ -43,7 +43,7 @@ repositories {
 }
 
 ext {
-    gocdPluginVersion = '23.5.0'
+    gocdPluginVersion = '24.1.0'
 }
 
 dependencies {
