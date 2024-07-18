@@ -18,11 +18,11 @@ public class Console {
     }
 
     public static ConsoleResult runOrBomb(CommandLine commandLine, File workingDir, ProcessOutputStreamConsumer stdOut, ProcessOutputStreamConsumer stdErr, List<String> redactables) {
-        Executor executor = new DefaultExecutor();
-        executor.setStreamHandler(new PumpStreamHandler(stdOut, stdErr));
-        if (workingDir != null) {
-            executor.setWorkingDirectory(workingDir);
-        }
+        Executor executor = DefaultExecutor
+                .builder()
+                .setExecuteStreamHandler(new PumpStreamHandler(stdOut, stdErr))
+                .setWorkingDirectory(workingDir)
+                .get();
 
         try {
             int exitCode = executor.execute(commandLine);
