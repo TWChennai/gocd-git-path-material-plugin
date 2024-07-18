@@ -14,7 +14,7 @@ java {
 
 gocdPlugin {
     id = 'git-path'
-    pluginVersion = '2.3.1'
+    pluginVersion = '2.3.2'
     goCdVersion = '19.9.0'
     name = 'Git Path Material Plugin'
     description = 'Plugin that polls a Git repository and triggers pipelines based on sub-directory path matches'
