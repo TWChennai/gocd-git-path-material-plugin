@@ -20,7 +20,7 @@ jobs:
         with:
           java-version: ${{ matrix.Java }}
           distribution: temurin
-      - uses: gradle/actions/setup-gradle@v3
+      - uses: gradle/actions/setup-gradle@v4
         with:
           gradle-home-cache-cleanup: true
       - run: git config --global user.email "you@example.com"
