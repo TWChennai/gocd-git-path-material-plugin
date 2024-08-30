@@ -56,7 +56,7 @@ dependencies {
     implementation platform('com.fasterxml.jackson:jackson-bom:2.17.2')
     implementation 'com.fasterxml.jackson.core:jackson-databind'
     implementation 'com.fasterxml.jackson.core:jackson-annotations'
-    implementation 'org.apache.commons:commons-lang3:3.16.0'
+    implementation 'org.apache.commons:commons-lang3:3.17.0'
 
     testImplementation platform('org.junit:junit-bom:5.11.0')
     testImplementation 'org.junit.jupiter:junit-jupiter-api'
