@@ -63,7 +63,7 @@ dependencies {
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
     testCompileOnly "cd.go.plugin:go-plugin-api:${gocdPluginVersion}"
-    testImplementation 'org.mockito:mockito-junit-jupiter:5.13.0'
+    testImplementation 'org.mockito:mockito-junit-jupiter:5.14.0'
     testImplementation 'org.assertj:assertj-core:3.26.3'
     testImplementation 'uk.org.webcompere:system-stubs-jupiter:2.1.7'
 }
