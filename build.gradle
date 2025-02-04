@@ -49,7 +49,7 @@ ext {
 dependencies {
     compileOnly "cd.go.plugin:go-plugin-api:${gocdPluginVersion}"
 
-    implementation 'joda-time:joda-time:2.13.0'
+    implementation 'joda-time:joda-time:2.13.1'
     implementation 'org.apache.commons:commons-exec:1.4.0'
     implementation 'commons-io:commons-io:2.18.0'
 
