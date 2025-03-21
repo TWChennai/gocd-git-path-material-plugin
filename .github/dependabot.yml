@@ -5,11 +5,15 @@
 
 version: 2
 updates:
-  - package-ecosystem: "github-actions"
-    directory: "/"
+  - package-ecosystem: github-actions
+    directory: /
     schedule:
       interval: monthly
-  - package-ecosystem: "gradle"
-    directory: "/"
+    groups:
+      github-actions:
+        patterns:
+          - *
+  - package-ecosystem: gradle
+    directory: /
     schedule:
       interval: monthly
