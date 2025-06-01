@@ -50,20 +50,20 @@ dependencies {
     compileOnly "cd.go.plugin:go-plugin-api:${gocdPluginVersion}"
 
     implementation 'joda-time:joda-time:2.14.0'
-    implementation 'org.apache.commons:commons-exec:1.4.0'
-    implementation 'commons-io:commons-io:2.18.0'
+    implementation 'org.apache.commons:commons-exec:1.5.0'
+    implementation 'commons-io:commons-io:2.19.0'
 
     implementation platform('com.fasterxml.jackson:jackson-bom:2.19.0')
     implementation 'com.fasterxml.jackson.core:jackson-databind'
     implementation 'com.fasterxml.jackson.core:jackson-annotations'
     implementation 'org.apache.commons:commons-lang3:3.17.0'
 
-    testImplementation platform('org.junit:junit-bom:5.12.2')
+    testImplementation platform('org.junit:junit-bom:5.13.0')
     testImplementation 'org.junit.jupiter:junit-jupiter-api'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
     testCompileOnly "cd.go.plugin:go-plugin-api:${gocdPluginVersion}"
-    testImplementation 'org.mockito:mockito-junit-jupiter:5.17.0'
+    testImplementation 'org.mockito:mockito-junit-jupiter:5.18.0'
     testImplementation 'org.assertj:assertj-core:3.27.3'
     testImplementation 'uk.org.webcompere:system-stubs-jupiter:2.1.8'
 }
