@@ -7,14 +7,19 @@ apply from: "https://raw.githubusercontent.com/gocd/gocd-plugin-gradle-task-help
 
 group 'com.thoughtworks.go'
 
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
+
 tasks.withType(JavaCompile).configureEach {
-    options.release = 11
+    options.release = 17
 }
 
 gocdPlugin {
     id = 'git-path'
-    pluginVersion = '2.3.2'
-    goCdVersion = '19.9.0'
+    pluginVersion = '3.0.0'
+    goCdVersion = '22.1.0'
     name = 'Git Path Material Plugin'
     description = 'Plugin that polls a Git repository and triggers pipelines based on sub-directory path matches'
     vendorName = 'Thoughtworks, Inc / GoCD contributors'
