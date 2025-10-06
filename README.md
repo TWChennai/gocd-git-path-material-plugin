@@ -1,6 +1,6 @@
 # gocd-git-path-material-plugin
 
-[![Build Status](https://github.com/TWChennai/gocd-git-path-material-plugin/actions/workflows/gradle.yml/badge.svg)](https://github.com/TWChennai/gocd-git-path-material-plugin/actions/workflows/gradle.yml) ![GitHub All Releases](https://img.shields.io/github/downloads/TWChennai/gocd-git-path-material-plugin/total) ![License](https://img.shields.io/github/license/TWChennai/gocd-git-path-material-plugin)
+[![Build Status](https://github.com/TWChennai/gocd-git-path-material-plugin/actions/workflows/test_and_build.yml/badge.svg)](https://github.com/TWChennai/gocd-git-path-material-plugin/actions/workflows/test_and_build.yml) ![GitHub All Releases](https://img.shields.io/github/downloads/TWChennai/gocd-git-path-material-plugin/total) ![License](https://img.shields.io/github/license/TWChennai/gocd-git-path-material-plugin)
 
 GoCD plugin to introduce a material that watches on a sub-directory of a Git repository.
  
