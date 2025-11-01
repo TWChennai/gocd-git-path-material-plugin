@@ -58,12 +58,12 @@ dependencies {
     implementation 'org.apache.commons:commons-exec:1.5.0'
     implementation 'commons-io:commons-io:2.20.0'
 
-    implementation platform('com.fasterxml.jackson:jackson-bom:2.20.0')
+    implementation platform('com.fasterxml.jackson:jackson-bom:2.20.1')
     implementation 'com.fasterxml.jackson.core:jackson-databind'
     implementation 'com.fasterxml.jackson.core:jackson-annotations'
     implementation 'org.apache.commons:commons-lang3:3.19.0'
 
-    testImplementation platform('org.junit:junit-bom:6.0.0')
+    testImplementation platform('org.junit:junit-bom:6.0.1')
     testImplementation 'org.junit.jupiter:junit-jupiter-api'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
