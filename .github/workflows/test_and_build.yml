@@ -50,6 +50,7 @@ jobs:
         with:
           java-version: 21
           distribution: temurin
+          cache: gradle
       - name: Release with Gradle
         run: ./gradlew githubRelease
         env:
