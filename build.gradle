@@ -48,14 +48,14 @@ repositories {
 }
 
 ext {
-    gocdPluginVersion = '25.3.0'
+    gocdPluginVersion = '25.4.0'
 }
 
 dependencies {
     compileOnly "cd.go.plugin:go-plugin-api:${gocdPluginVersion}"
 
     implementation 'joda-time:joda-time:2.14.0'
-    implementation 'org.apache.commons:commons-exec:1.5.0'
+    implementation 'org.apache.commons:commons-exec:1.6.0'
     implementation 'commons-io:commons-io:2.21.0'
 
     implementation platform('com.fasterxml.jackson:jackson-bom:2.20.1')
@@ -68,7 +68,7 @@ dependencies {
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
     testCompileOnly "cd.go.plugin:go-plugin-api:${gocdPluginVersion}"
-    testImplementation 'org.mockito:mockito-junit-jupiter:5.20.0'
+    testImplementation 'org.mockito:mockito-junit-jupiter:5.21.0'
     testImplementation 'org.assertj:assertj-core:3.27.6'
     testImplementation 'uk.org.webcompere:system-stubs-jupiter:2.1.8'
 }
