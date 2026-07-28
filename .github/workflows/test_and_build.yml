@@ -1,4 +1,4 @@
-name: Test and Build
+name: Test and Release
 
 on:
   push:
@@ -33,11 +33,6 @@ jobs:
       - run: git config --global user.name "Your Name"
       - name: Test with Gradle
         run: ./gradlew assemble check
-      - name: Generate and submit dependency graph
-        uses: gradle/actions/dependency-submission@4d9f0ba0025fe599b4ebab900eb7f3a1d93ef4c2 # v5.0.0
-        if: github.ref == 'refs/heads/master'
-        env:
-          DEPENDENCY_GRAPH_INCLUDE_CONFIGURATIONS: none
   githubRelease:
     needs: test
     runs-on: ubuntu-latest
