@@ -27,4 +27,5 @@ jobs:
         with:
           dependency-graph: generate-and-upload
         env:
+          GITHUB_DEPENDENCY_GRAPH_JOB_CORRELATOR: master
           DEPENDENCY_GRAPH_INCLUDE_CONFIGURATIONS: runtimeClasspath
