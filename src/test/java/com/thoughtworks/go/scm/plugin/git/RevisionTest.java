@@ -1,20 +1,19 @@
 package com.thoughtworks.go.scm.plugin.git;
 
-import org.joda.time.DateTime;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.Date;
+import java.time.Instant;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class RevisionTest {
     private Revision revision;
-    private Date date;
+    private Instant date;
 
     @BeforeEach
     public void setUp() {
-        date = DateTime.now().toDate();
+        date = Instant.now();
         revision = new Revision("revision", date, "comments", "user", "email", null);
     }
 

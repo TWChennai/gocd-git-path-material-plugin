@@ -1,7 +1,6 @@
 package com.thoughtworks.go.scm.plugin.git;
 
-import com.thoughtworks.go.scm.plugin.util.DateUtils;
-
+import java.time.OffsetDateTime;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -45,7 +44,7 @@ public class GitModificationParser {
         }
         Matcher dateMatcher = DATE_PATTERN.matcher(line);
         if (dateMatcher.matches()) {
-            revisions.getLast().setTimestamp(DateUtils.parseISO8601(dateMatcher.group(1)));
+            revisions.getLast().setTimestamp(OffsetDateTime.parse(dateMatcher.group(1)).toInstant());
         }
         Matcher commentMatcher = COMMENT_PATTERN.matcher(line);
         if (commentMatcher.matches()) {

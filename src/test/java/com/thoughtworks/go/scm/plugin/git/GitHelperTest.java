@@ -451,7 +451,7 @@ public class GitHelperTest {
 
     protected void verifyRevision(Revision revision, String sha, String comment, long timestamp, List<Pair<String, String>> files) {
         assertThat(revision.getRevision()).isEqualTo(sha);
-        assertThat(revision.getTimestamp().getTime()).isEqualTo(timestamp);
+        assertThat(revision.getTimestamp().toEpochMilli()).isEqualTo(timestamp);
         assertThat(revision.getComment()).isEqualTo(comment);
         assertThat(revision.getModifiedFiles().size()).isEqualTo(files.size());
         for (int i = 0; i < files.size(); i++) {

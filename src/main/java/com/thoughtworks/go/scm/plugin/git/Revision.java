@@ -1,12 +1,12 @@
 package com.thoughtworks.go.scm.plugin.git;
 
+import java.time.Instant;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class Revision {
     private String revision;
-    private Date timestamp;
+    private Instant timestamp;
     private String comment;
     private String user;
     private String emailId;
@@ -18,7 +18,7 @@ public class Revision {
         this.isMergeCommit = false;
     }
 
-    public Revision(String revision, Date timestamp, String comment, String user, String emailId, List<ModifiedFile> modifiedFiles) {
+    public Revision(String revision, Instant timestamp, String comment, String user, String emailId, List<ModifiedFile> modifiedFiles) {
         this.revision = revision;
         this.timestamp = timestamp;
         this.comment = comment;
@@ -36,11 +36,11 @@ public class Revision {
         this.revision = revision;
     }
 
-    public Date getTimestamp() {
+    public Instant getTimestamp() {
         return timestamp;
     }
 
-    public void setTimestamp(Date timestamp) {
+    public void setTimestamp(Instant timestamp) {
         this.timestamp = timestamp;
     }
 

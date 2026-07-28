@@ -120,7 +120,7 @@ public class GitHelper {
 
     private String[] logArgs(List<String> subPaths, String... revisionLimits) {
         String[] logs = of(
-                of("log", "--date=iso", "--pretty=medium", "--no-decorate", "--no-color"),
+                of("log", "--date=iso-strict", "--pretty=medium", "--no-decorate", "--no-color"),
                 of(revisionLimits),
                 Stream.ofNullable(subPaths).flatMap(paths -> of("--")),
                 Stream.ofNullable(subPaths).flatMap(paths -> subPaths.stream().map(String::trim))

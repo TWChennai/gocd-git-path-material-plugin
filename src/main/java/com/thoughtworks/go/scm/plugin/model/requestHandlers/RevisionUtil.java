@@ -17,7 +17,7 @@ public class RevisionUtil {
     public static Map<String, Object> toMap(Revision revision) {
         return Map.of(
                 "revision", revision.getRevision(),
-                "timestamp", ISO8601_FORMAT.format(revision.getTimestamp().toInstant()),
+                "timestamp", ISO8601_FORMAT.format(revision.getTimestamp()),
                 "user", revision.getUser(),
                 "revisionComment", revision.getComment(),
                 "modifiedFiles",

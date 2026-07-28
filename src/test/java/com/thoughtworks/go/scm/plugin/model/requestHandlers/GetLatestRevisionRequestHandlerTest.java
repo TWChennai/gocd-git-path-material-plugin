@@ -17,8 +17,8 @@ import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.io.File;
+import java.time.Instant;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -67,7 +67,7 @@ public class GetLatestRevisionRequestHandlerTest {
 
             setupMockedRequestAndGitConfig(mockedUtils, mockedFactory);
 
-            Revision revision = new Revision("1", new Date(), "comment", "user", "blah@blah.com", Collections.emptyList());
+            Revision revision = new Revision("1", Instant.now(), "comment", "user", "blah@blah.com", Collections.emptyList());
             RequestHandler checkoutRequestHandler = new GetLatestRevisionRequestHandler();
             ArgumentCaptor<Map<String, Object>> responseArgumentCaptor = ArgumentCaptor.forClass(Map.class);
             List<String> paths = List.of("path1", "path2");
