@@ -11,6 +11,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -55,9 +56,8 @@ public class JsonUtils {
         try {
             return objectMapper.readValue(json, Object.class);
         } catch (IOException e) {
-            LOGGER.error(e.getMessage());
+            throw new UncheckedIOException(e);
         }
-        return null;
     }
 
     @SuppressWarnings("unchecked")
