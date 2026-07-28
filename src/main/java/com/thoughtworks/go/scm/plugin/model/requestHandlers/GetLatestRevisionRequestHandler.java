@@ -22,8 +22,8 @@ public class GetLatestRevisionRequestHandler implements RequestHandler {
     @SuppressWarnings("unchecked")
     public GoPluginApiResponse handle(GoPluginApiRequest apiRequest) {
         GitConfig gitConfig = JsonUtils.toServerSideGitConfig(apiRequest);
-        Map<String, Object> responseMap = (Map<String, Object>) JsonUtils.parseJSON(apiRequest.requestBody());
-        File flyweightFolder = new File((String) responseMap.get("flyweight-folder"));
+        Map<String, Object> requestParams = (Map<String, Object>) JsonUtils.parseJSON(apiRequest.requestBody());
+        File flyweightFolder = new File((String) requestParams.get("flyweight-folder"));
 
         Map<String, Object> fieldMap = new HashMap<>();
         Validator.validateUrl(gitConfig, fieldMap);

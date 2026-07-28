@@ -21,11 +21,11 @@ public class CheckoutRequestHandler implements RequestHandler {
     @Override
     @SuppressWarnings("unchecked")
     public GoPluginApiResponse handle(GoPluginApiRequest apiRequest) {
-        Map<String, Object> responseMap = (Map<String, Object>) JsonUtils.parseJSON(apiRequest.requestBody());
+        Map<String, Object> requestParams = (Map<String, Object>) JsonUtils.parseJSON(apiRequest.requestBody());
         GitConfig gitConfig = JsonUtils.toAgentGitConfig(apiRequest);
 
-        String destinationFolder = (String) responseMap.get("destination-folder");
-        Map<String, Object> revisionMap = (Map<String, Object>) responseMap.get("revision");
+        String destinationFolder = (String) requestParams.get("destination-folder");
+        Map<String, Object> revisionMap = (Map<String, Object>) requestParams.get("revision");
         String revision = (String) revisionMap.get("revision");
 
         LOGGER.debug(String.format("destination: %s , commit: %s", destinationFolder, revision));

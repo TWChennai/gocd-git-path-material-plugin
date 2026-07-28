@@ -62,8 +62,8 @@ public class JsonUtils {
 
     @SuppressWarnings("unchecked")
     private static Map<String, String> parseJSON(GoPluginApiRequest apiRequest, String key) {
-        Map<String, Object> responseMap = (Map<String, Object>) JsonUtils.parseJSON(apiRequest.requestBody());
-        return keyValuePairs(responseMap, key);
+        Map<String, Object> requestParams = (Map<String, Object>) JsonUtils.parseJSON(apiRequest.requestBody());
+        return keyValuePairs(requestParams, key);
     }
 
     @SuppressWarnings("unchecked")

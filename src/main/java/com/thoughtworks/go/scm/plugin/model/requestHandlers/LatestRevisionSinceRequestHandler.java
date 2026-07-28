@@ -23,12 +23,12 @@ public class LatestRevisionSinceRequestHandler implements RequestHandler {
     @Override
     @SuppressWarnings("unchecked")
     public GoPluginApiResponse handle(GoPluginApiRequest apiRequest) {
-        Map<String, Object> responseMap = (Map<String, Object>) JsonUtils.parseJSON(apiRequest.requestBody());
+        Map<String, Object> requestParams = (Map<String, Object>) JsonUtils.parseJSON(apiRequest.requestBody());
 
         GitConfig gitConfig = JsonUtils.toServerSideGitConfig(apiRequest);
 
-        File flyweightFolder = new File((String) responseMap.get("flyweight-folder"));
-        Map<String, Object> previousRevisionMap = (Map<String, Object>) responseMap.get("previous-revision");
+        File flyweightFolder = new File((String) requestParams.get("flyweight-folder"));
+        Map<String, Object> previousRevisionMap = (Map<String, Object>) requestParams.get("previous-revision");
         String previousRevision = (String) previousRevisionMap.get("revision");
         LOGGER.debug(String.format("flyweight: %s, previous commit: %s", flyweightFolder, previousRevision));
 
