@@ -3,6 +3,10 @@ name: Gradle Dependency Submission
 on:
   push:
     branches: [ master ]
+    paths:
+      - 'build.gradle'
+      - 'settings.gradle'
+      - '**/gradle/**'
 
 permissions:
   contents: write
@@ -21,11 +25,10 @@ jobs:
         with:
           java-version: 25
           distribution: temurin
+          cache: gradle
       - name: Generate and submit dependency graph
         uses: gradle/actions/dependency-submission@3f131e8634966bd73d06cc69884922b02e6faf92 # v6.2.0
         if: github.ref == 'refs/heads/master'
-        with:
-          dependency-graph: generate-and-upload
         env:
           GITHUB_DEPENDENCY_GRAPH_JOB_CORRELATOR: master
           DEPENDENCY_GRAPH_INCLUDE_CONFIGURATIONS: runtimeClasspath
