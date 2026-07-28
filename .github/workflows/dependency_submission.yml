@@ -4,6 +4,7 @@ on:
   push:
     branches: [ master ]
     paths:
+      - '.github/workflows/dependency_submission.yml'
       - 'build.gradle'
       - 'settings.gradle'
       - '**/gradle/**'
