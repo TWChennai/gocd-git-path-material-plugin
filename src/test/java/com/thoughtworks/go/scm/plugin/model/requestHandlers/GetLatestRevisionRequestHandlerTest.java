@@ -4,11 +4,13 @@ import com.thoughtworks.go.plugin.api.request.GoPluginApiRequest;
 import com.thoughtworks.go.plugin.api.response.GoPluginApiResponse;
 import com.thoughtworks.go.scm.plugin.git.GitConfig;
 import com.thoughtworks.go.scm.plugin.git.GitHelper;
+import com.thoughtworks.go.scm.plugin.git.GitHelper.CloneFailureBehavior;
 import com.thoughtworks.go.scm.plugin.git.HelperFactory;
 import com.thoughtworks.go.scm.plugin.git.Revision;
 import com.thoughtworks.go.scm.plugin.util.JsonUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.io.TempDir;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockedStatic;
@@ -77,7 +79,7 @@ public class GetLatestRevisionRequestHandlerTest {
 
             checkoutRequestHandler.handle(pluginApiRequestMock);
 
-            verify(gitHelperMock).cloneOrFetch();
+            verify(gitHelperMock).cloneOrFetch(CloneFailureBehavior.REMOVE_IF_CREATED);
             verify(gitHelperMock).getLatestRevision(paths);
 
             Map<String, Object> responseMap = responseArgumentCaptor.getValue();
@@ -99,7 +101,7 @@ public class GetLatestRevisionRequestHandlerTest {
 
             when(JsonUtils.renderErrorApiResponse(eq(pluginApiRequestMock), errorCaptor.capture(), any())).thenReturn(mock(GoPluginApiResponse.class));
             when(gitConfigMock.getUrl()).thenReturn("https://github.com/TWChennai/gocd-git-path-material-plugin.git");
-            doThrow(runtimeException).when(gitHelperMock).cloneOrFetch();
+            doThrow(runtimeException).when(gitHelperMock).cloneOrFetch(CloneFailureBehavior.REMOVE_IF_CREATED);
 
             checkoutRequestHandler.handle(pluginApiRequestMock);
 
@@ -108,8 +110,53 @@ public class GetLatestRevisionRequestHandlerTest {
     }
 
 
+    @Test
+    public void shouldRemoveFlyweightDirWhenNoRevisionMatchesPathSpecAndThisInvocationCreatedIt(@TempDir File tempDir) {
+        try (MockedStatic<JsonUtils> mockedUtils = mockStatic(JsonUtils.class);
+             MockedStatic<HelperFactory> mockedFactory = mockStatic(HelperFactory.class)) {
+
+            File flyweightFolder = new File(tempDir, "flyweight");
+            setupMockedRequestAndGitConfig(mockedUtils, mockedFactory, flyweightFolder.getPath());
+            assertThat(flyweightFolder.mkdirs()).isTrue();
+
+            when(JsonUtils.renderSuccessApiResponse(null)).thenReturn(mock(GoPluginApiResponse.class));
+            when(JsonUtils.getPaths(pluginApiRequestMock)).thenReturn(List.of("path1"));
+            when(gitConfigMock.getUrl()).thenReturn("https://github.com/TWChennai/gocd-git-path-material-plugin.git");
+            when(gitHelperMock.cloneOrFetch(CloneFailureBehavior.REMOVE_IF_CREATED)).thenReturn(true);
+            when(gitHelperMock.getLatestRevision(any())).thenReturn(null);
+
+            new GetLatestRevisionRequestHandler().handle(pluginApiRequestMock);
+
+            assertThat(flyweightFolder).doesNotExist();
+        }
+    }
+
+    @Test
+    public void shouldNotRemoveFlyweightDirWhenNoRevisionMatchesButThisInvocationReusedExistingClone(@TempDir File tempDir) {
+        try (MockedStatic<JsonUtils> mockedUtils = mockStatic(JsonUtils.class);
+             MockedStatic<HelperFactory> mockedFactory = mockStatic(HelperFactory.class)) {
+
+            File flyweightFolder = new File(tempDir, "flyweight");
+            setupMockedRequestAndGitConfig(mockedUtils, mockedFactory, flyweightFolder.getPath());
+            assertThat(flyweightFolder.mkdirs()).isTrue();
+
+            when(JsonUtils.renderSuccessApiResponse(null)).thenReturn(mock(GoPluginApiResponse.class));
+            when(JsonUtils.getPaths(pluginApiRequestMock)).thenReturn(List.of("path1"));
+            when(gitConfigMock.getUrl()).thenReturn("https://github.com/TWChennai/gocd-git-path-material-plugin.git");
+            when(gitHelperMock.cloneOrFetch(CloneFailureBehavior.REMOVE_IF_CREATED)).thenReturn(false);
+            when(gitHelperMock.getLatestRevision(any())).thenReturn(null);
+
+            new GetLatestRevisionRequestHandler().handle(pluginApiRequestMock);
+
+            assertThat(flyweightFolder).exists();
+        }
+    }
+
     private void setupMockedRequestAndGitConfig(MockedStatic<JsonUtils> mockedUtils, MockedStatic<HelperFactory> mockedFactory) {
-        final String flyWeightFolder = "flyweightFolder";
+        setupMockedRequestAndGitConfig(mockedUtils, mockedFactory, "flyweightFolder");
+    }
+
+    private void setupMockedRequestAndGitConfig(MockedStatic<JsonUtils> mockedUtils, MockedStatic<HelperFactory> mockedFactory, String flyWeightFolder) {
         final String responseBody = "mocked body";
 
         Map<String, Object> requestBody = Map.of(

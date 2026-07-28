@@ -18,7 +18,7 @@ tasks.withType(JavaCompile).configureEach {
 
 gocdPlugin {
     id = 'git-path'
-    pluginVersion = '3.0.0'
+    pluginVersion = '3.0.1'
     goCdVersion = '22.1.0'
     name = 'Git Path Material Plugin'
     description = 'Plugin that polls a Git repository and triggers pipelines based on sub-directory path matches'
