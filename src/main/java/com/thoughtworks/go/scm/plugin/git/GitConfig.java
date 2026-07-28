@@ -5,7 +5,6 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class GitConfig {
@@ -152,6 +151,6 @@ public class GitConfig {
     }
 
     public List<String> redactables() {
-        return Stream.of(password, username).filter(StringUtils::isNotBlank).collect(Collectors.toUnmodifiableList());
+        return Stream.of(password, username).filter(StringUtils::isNotBlank).toList();
     }
 }
