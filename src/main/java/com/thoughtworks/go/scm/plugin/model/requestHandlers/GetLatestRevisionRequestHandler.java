@@ -9,6 +9,7 @@ import com.thoughtworks.go.scm.plugin.git.HelperFactory;
 import com.thoughtworks.go.scm.plugin.git.Revision;
 import com.thoughtworks.go.scm.plugin.util.JsonUtils;
 import com.thoughtworks.go.scm.plugin.util.Validator;
+import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.util.HashMap;
@@ -35,17 +36,19 @@ public class GetLatestRevisionRequestHandler implements RequestHandler {
 
         try {
             GitHelper git = HelperFactory.git(gitConfig, flyweightFolder);
-            git.cloneOrFetch();
+            boolean freshClone = git.cloneOrFetch(GitHelper.CloneFailureBehavior.REMOVE_IF_CREATED);
             final List<String> paths = JsonUtils.getPaths(apiRequest);
             final Revision revision = git.getLatestRevision(paths);
 
             LOGGER.debug(String.format("Fetching latestRevision for paths %s", paths));
 
-            if (revision == null) {
-                return JsonUtils.renderSuccessApiResponse(null);
-            } else {
-                return JsonUtils.renderSuccessApiResponse(Map.of("revision", RevisionUtil.toMap(revision)));
+            if (freshClone && revision == null) {
+                // A brand new material with a path spec that matches no revision would otherwise leave an orphaned
+                // flyweight dir behind forever, because the server will allocate a new one.
+                FileUtils.deleteQuietly(flyweightFolder);
             }
+
+            return JsonUtils.renderSuccessApiResponse(revision == null ? Map.of() : Map.of("revision", RevisionUtil.toMap(revision)));
         } catch (Throwable t) {
             return JsonUtils.renderErrorApiResponse(apiRequest, t, gitConfig.redactables());
         }

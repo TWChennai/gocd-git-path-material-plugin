@@ -441,17 +441,52 @@ public class GitHelper {
         return Console.runOrBomb(gitCmd, workingDir, stdOut, stdErr, gitConfig == null ? List.of() : gitConfig.redactables());
     }
 
-    public void cloneOrFetch() {
-        cloneOrFetch(null);
+    /**
+     * @return {@code true} if this invocation freshly cloned the repository (i.e. it was responsible for creating the
+     * working/flyweight directory), {@code false} if an existing clone was reused and only fetched.
+     */
+    @SuppressWarnings("UnusedReturnValue")
+    public boolean cloneOrFetch() {
+        return cloneOrFetch((String) null);
     }
 
-    public void cloneOrFetch(String refSpec) {
-        if (!isGitRepository() || !isSameRepository()) {
-            setupWorkingDir();
-            cloneRepository();
-        }
+    /**
+     * @return {@code true} if this invocation freshly cloned the repository (i.e. it was responsible for creating the
+     * working/flyweight directory), {@code false} if an existing clone was reused and only fetched.
+     */
+    public boolean cloneOrFetch(String refSpec) {
+        return cloneOrFetch(refSpec, CloneFailureBehavior.RETAIN_WORKING_DIR);
+    }
 
-        fetchAndResetToHead(refSpec);
+    /**
+     * @return {@code true} if this invocation freshly cloned the repository (i.e. it was responsible for creating the
+     * working/flyweight directory), {@code false} if an existing clone was reused and only fetched.
+     */
+    public boolean cloneOrFetch(CloneFailureBehavior onFailure) {
+        return cloneOrFetch(null, onFailure);
+    }
+
+    /**
+     * @return {@code true} if this invocation freshly cloned the repository (i.e. it was responsible for creating the
+     * working/flyweight directory), {@code false} if an existing clone was reused and only fetched.
+     */
+    public boolean cloneOrFetch(String refSpec, CloneFailureBehavior onFailure) {
+        boolean freshClone = false;
+        try {
+            if (!isGitRepository() || !isSameRepository()) {
+                setupWorkingDir();
+                freshClone = true;
+                cloneRepository();
+            }
+
+            fetchAndResetToHead(refSpec);
+            return freshClone;
+        } catch (RuntimeException e) {
+            if (freshClone && onFailure == CloneFailureBehavior.REMOVE_IF_CREATED) {
+                FileUtils.deleteQuietly(workingDir);
+            }
+            throw e;
+        }
     }
 
     private boolean isGitRepository() {
@@ -518,5 +553,18 @@ public class GitHelper {
 
         stdOut.consumeLine("[GIT] Cleaning unversioned files and sub-modules");
         printSubmoduleStatus();
+    }
+
+    public enum CloneFailureBehavior {
+        /**
+         * Leave the working directory as-is on failure. Appropriate for materials already known to GoCD, whose
+         * flyweight directory is stable and must not be disturbed by a transient failure.
+         */
+        RETAIN_WORKING_DIR,
+        /**
+         * If <em>this</em> invocation created the working directory and the clone/fetch then fails, delete it before
+         * rethrowing, so a first-usage poll does not leave an orphaned, partially-cloned flyweight directory behind.
+         */
+        REMOVE_IF_CREATED
     }
 }

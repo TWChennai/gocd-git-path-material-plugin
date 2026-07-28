@@ -19,6 +19,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 import static uk.org.webcompere.systemstubs.SystemStubs.restoreSystemProperties;
@@ -103,6 +104,28 @@ public class GitHelperTest {
 
         Revision revision = git.getDetailsForRevision("012e893acea10b140688d11beaa728e8c60bd9f6");
         verifyRevision(revision, "012e893acea10b140688d11beaa728e8c60bd9f6", "1", 1422184635000L, List.of(Pair.of("a.txt", "added")));
+    }
+
+    @Test
+    public void shouldRemoveFreshlyCreatedWorkingDirWhenCloneFailsAndRemovalRequested() {
+        GitConfig gitConfig = new GitConfig(new File(System.getProperty("java.io.tmpdir"), "non-existing-repository").getAbsolutePath());
+        GitHelper git = getHelper(gitConfig, testRepository);
+
+        assertThatThrownBy(() -> git.cloneOrFetch(GitHelper.CloneFailureBehavior.REMOVE_IF_CREATED))
+                .isInstanceOf(RuntimeException.class);
+
+        assertThat(testRepository).doesNotExist();
+    }
+
+    @Test
+    public void shouldRetainFreshlyCreatedWorkingDirWhenCloneFailsButRemovalNotRequested() {
+        GitConfig gitConfig = new GitConfig(new File(System.getProperty("java.io.tmpdir"), "non-existing-repository").getAbsolutePath());
+        GitHelper git = getHelper(gitConfig, testRepository);
+
+        assertThatThrownBy(() -> git.cloneOrFetch(GitHelper.CloneFailureBehavior.RETAIN_WORKING_DIR))
+                .isInstanceOf(RuntimeException.class);
+
+        assertThat(testRepository).exists();
     }
 
     @Test
