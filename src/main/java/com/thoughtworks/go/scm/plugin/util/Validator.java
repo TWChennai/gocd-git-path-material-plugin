@@ -1,7 +1,6 @@
 package com.thoughtworks.go.scm.plugin.util;
 
 import com.thoughtworks.go.scm.plugin.git.GitConfig;
-import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
 import java.util.Map;
@@ -17,7 +16,7 @@ public class Validator {
     }
 
     public static void validateUrl(GitConfig gitConfig, Map<String, Object> fieldMap) {
-        if (StringUtils.isBlank(gitConfig.getUrl())) {
+        if (StringUtil.isBlank(gitConfig.getUrl())) {
             fieldMap.put("key", "url");
             fieldMap.put("message", "URL is a required field");
         } else {

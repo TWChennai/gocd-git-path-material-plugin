@@ -7,8 +7,8 @@ import com.thoughtworks.go.scm.plugin.git.GitConfig;
 import com.thoughtworks.go.scm.plugin.git.GitHelper;
 import com.thoughtworks.go.scm.plugin.git.HelperFactory;
 import com.thoughtworks.go.scm.plugin.util.JsonUtils;
+import com.thoughtworks.go.scm.plugin.util.StringUtil;
 import com.thoughtworks.go.scm.plugin.util.Validator;
-import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -40,7 +40,7 @@ public class SCMCheckConnectionRequestHandler implements RequestHandler {
     private void checkConnection(GitConfig gitConfig, Map<String, Object> response, ArrayList<String> messages) {
         LOGGER.debug("SCMCheckConnectionRequestHandler In handle");
         try {
-            if (StringUtils.isBlank(gitConfig.getUrl())) {
+            if (StringUtil.isBlank(gitConfig.getUrl())) {
                 response.put("status", "failure");
                 messages.add("URL is empty");
             } else if (gitConfig.getUrl().startsWith("/")) {

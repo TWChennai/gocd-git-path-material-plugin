@@ -7,8 +7,6 @@ import com.thoughtworks.go.plugin.api.response.GoPluginApiResponse;
 import com.thoughtworks.go.scm.plugin.git.GitConfig;
 import com.thoughtworks.go.scm.plugin.git.ShallowClone;
 import com.thoughtworks.go.scm.plugin.model.requestHandlers.SCMConfigurationRequestHandler;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
@@ -43,9 +41,23 @@ public class JsonUtils {
     }
 
     private static String rootCauseSuffix(Throwable t, List<String> redactables) {
-        return t.equals(ExceptionUtils.getRootCause(t))
+        Throwable root = rootCause(t);
+        return t == root
                 ? ""
-                : String.format(", root cause [%s]", StringUtil.replaceSecretText(ExceptionUtils.getRootCauseMessage(t), redactables));
+                : String.format(", root cause [%s]", StringUtil.replaceSecretText(rootCauseMessage(root), redactables));
+    }
+
+    private static Throwable rootCause(Throwable t) {
+        Throwable cause = t;
+        while (cause.getCause() != null && cause.getCause() != cause) {
+            cause = cause.getCause();
+        }
+        return cause;
+    }
+
+    private static String rootCauseMessage(Throwable t) {
+        String message = t.getMessage();
+        return t.getClass().getSimpleName() + ": " + (message == null ? "" : message);
     }
 
     public static Map<String, String> parseScmConfiguration(GoPluginApiRequest apiRequest) {
@@ -108,17 +120,17 @@ public class JsonUtils {
 
     private static GitConfig toBaseGitConfig(Map<String, String> configuration) {
         return new GitConfig(
-                StringUtils.trim(configuration.get(SCMConfigurationRequestHandler.CONFIG_URL)),
-                StringUtils.trim(configuration.get(SCMConfigurationRequestHandler.CONFIG_USERNAME)),
-                StringUtils.trim(configuration.get(SCMConfigurationRequestHandler.CONFIG_PASSWORD)),
-                StringUtils.trim(configuration.get(SCMConfigurationRequestHandler.CONFIG_BRANCH)));
+                StringUtil.trim(configuration.get(SCMConfigurationRequestHandler.CONFIG_URL)),
+                StringUtil.trim(configuration.get(SCMConfigurationRequestHandler.CONFIG_USERNAME)),
+                StringUtil.trim(configuration.get(SCMConfigurationRequestHandler.CONFIG_PASSWORD)),
+                StringUtil.trim(configuration.get(SCMConfigurationRequestHandler.CONFIG_BRANCH)));
     }
 
     public static GitConfig toAgentGitConfig(GoPluginApiRequest apiRequest) {
         Map<String, String> configuration = parseScmConfiguration(apiRequest);
         GitConfig config = toBaseGitConfig(configuration);
 
-        if ("true".equalsIgnoreCase(StringUtils.trim(configuration.get(SCMConfigurationRequestHandler.CONFIG_SHALLOW_CLONE)))) {
+        if ("true".equalsIgnoreCase(StringUtil.trim(configuration.get(SCMConfigurationRequestHandler.CONFIG_SHALLOW_CLONE)))) {
             config.setShallowClone(new ShallowClone());
         }
         return config;
@@ -138,7 +150,7 @@ public class JsonUtils {
         return Stream.ofNullable(paths)
                 .flatMap(rawPaths -> Arrays.stream(rawPaths.split(",")))
                 .map(String::trim)
-                .filter(StringUtils::isNotEmpty)
+                .filter(StringUtil::isNotEmpty)
                 .collect(Collectors.toList());
     }
 }
